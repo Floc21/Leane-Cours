@@ -85,6 +85,7 @@
 </style>
 </head>
 <body>
+<script src="chapters-data.js"></script>
 <main>
   <header class="app-header">
     <h1>Le Cahier de Léane</h1>
@@ -100,20 +101,9 @@
 (function(){
   "use strict";
 
-  // Ajoute une ligne ici à chaque nouveau chapitre publié.
-  var CHAPTERS = [
-    { subject: "Mathématiques", title: "Chapitre 1 — Ensembles, logique, méthodes de raisonnement", url: "chapitre-1-ensembles-logique.html", addedAt: "2026-09-20" },
-    { subject: "Mathématiques", title: "Chapitre 2 — Calcul algébrique", url: "chapitre-2-calcul-algebrique.html", addedAt: "2026-09-20" },
-    { subject: "Mathématiques", title: "Chapitre 3 — Applications", url: "chapitre-3-applications.html", addedAt: "2026-09-20" },
-    { subject: "Mathématiques", title: "Chapitre 4 — Systèmes linéaires", url: "chapitre-4-systemes-lineaires.html", addedAt: "2026-09-20" },
-    { subject: "Mathématiques", title: "Chapitre 5 — Relations d'ordre, relations d'équivalence", url: "chapitre-5-relations.html", addedAt: "2026-09-20" }
-  ];
+  var CHAPTERS = window.SITE_CHAPTERS || [];
 
-  var SUBJECTS = [
-    {key:"Mathématiques", short:"MATH"},
-    {key:"Physique", short:"PHYS"},
-    {key:"Sciences de l'Ingénieur", short:"SI"}
-  ];
+  var SUBJECTS = window.SITE_SUBJECTS || [];
 
   function escapeHtml(s){
     return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){
