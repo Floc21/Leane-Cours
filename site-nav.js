@@ -62,7 +62,16 @@
       ".site-nav-link.is-current{background:color-mix(in srgb, var(--subject-color, var(--accent)) 16%, var(--surface));color:var(--ink);font-weight:600;}",
       ".site-nav-link .n{flex-shrink:0;width:22px;height:22px;border-radius:6px;background:var(--surface-2);color:var(--ink-muted);font-family:\"JetBrains Mono\",monospace;font-size:.65rem;display:flex;align-items:center;justify-content:center;}",
       ".site-nav-link.is-current .n{background:var(--subject-color, var(--accent));color:#fff;}",
-      ".site-nav-empty{font-size:.8rem;color:var(--ink-muted);padding:6px 10px;}"
+      ".site-nav-empty{font-size:.8rem;color:var(--ink-muted);padding:6px 10px;}",
+      ".site-nav-subjects{max-width:780px;margin:0 auto;display:flex;gap:8px;padding:0 0 12px;}",
+      ".site-nav .subject-tile{flex:1 1 0;min-width:0;display:flex;align-items:center;gap:7px;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:6px 9px;text-decoration:none;color:inherit;transition:border-color .15s ease;}",
+      ".site-nav a.subject-tile:hover{border-color:var(--subject-color, var(--accent));}",
+      ".site-nav .subject-tile.is-empty{opacity:.5;}",
+      ".site-nav .subject-tile.is-current{border-color:var(--subject-color, var(--accent));background:color-mix(in srgb, var(--subject-color, var(--accent)) 12%, var(--surface));}",
+      ".site-nav .subject-icon{flex-shrink:0;width:20px;height:20px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.68rem;background:var(--subject-color, var(--accent));}",
+      ".site-nav .subject-text{display:flex;flex-direction:column;min-width:0;line-height:1.2;}",
+      ".site-nav .subject-name{font-family:\"JetBrains Mono\",monospace;font-weight:700;font-size:.66rem;letter-spacing:.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}",
+      ".site-nav .subject-meta{font-size:.62rem;color:var(--ink-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}"
     ].join("\n");
     document.head.appendChild(style);
 
@@ -130,6 +139,27 @@
 
     bar.appendChild(actions);
     root.appendChild(bar);
+
+    var subjectRow = document.createElement("div");
+    subjectRow.className = "site-nav-subjects";
+    SUBJECTS.forEach(function (subj) {
+      var chapters = CHAPTERS.filter(function (c) { return c.subject === subj.key; });
+      var hasContent = chapters.length > 0;
+      var isCurrentSubject = !!(current && current.subject === subj.key);
+      var tile = document.createElement(hasContent ? "a" : "div");
+      tile.className = "subject-tile" + (hasContent ? "" : " is-empty") + (isCurrentSubject ? " is-current" : "");
+      tile.style.setProperty("--subject-color", subj.color);
+      if (hasContent) tile.href = "index.html#subj-" + subj.slug;
+      tile.title = hasContent ? "Revenir à l'accueil sur " + subj.key : subj.key + " — bientôt disponible";
+      tile.innerHTML =
+        '<span class="subject-icon">' + subj.icon + '</span>' +
+        '<span class="subject-text">' +
+          '<span class="subject-name">' + escapeHtml(subj.short) + '</span>' +
+          '<span class="subject-meta">' + (hasContent ? chapters.length : "—") + '</span>' +
+        '</span>';
+      subjectRow.appendChild(tile);
+    });
+    root.appendChild(subjectRow);
 
     var panelWrap = document.createElement("div");
     panelWrap.className = "site-nav-panel-wrap";
