@@ -1,0 +1,802 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ensembles et Logique</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$','$'], ['\\(','\\)']], displayMath: [['$$','$$'], ['\\[','\\]']],
+    macros: { llbracket: "\\unicode{x27E6}", rrbracket: "\\unicode{x27E7}" }
+  },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js"></script>
+<style>
+  :root{
+    --paper:#F3F5EF; --surface:#FFFFFF; --surface-2:#EAEEE4;
+    --ink:#20261F; --ink-muted:#5B6459; --border:#D9DECD;
+    --accent:#1F4E8C; --accent-ink:#0E2D57; --accent-soft:#E4ECF7;
+    --red:#A6303C; --red-soft:#F6E4E4;
+    --green:#3D7A4D; --green-soft:#E3EFDF;
+    --gold:#8A6A1E; --gold-soft:#F3ECD8;
+    --shadow: 0 1px 2px rgba(32,38,31,.06), 0 6px 20px -8px rgba(32,38,31,.18);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#12160F; --surface:#191F17; --surface-2:#212820;
+      --ink:#E8ECE2; --ink-muted:#98A092; --border:#2B3327;
+      --accent:#7CA6E6; --accent-ink:#DCE8FB; --accent-soft:#1E2B41;
+      --red:#E28B92; --red-soft:#3A2224;
+      --green:#7FC090; --green-soft:#1E2F22;
+      --gold:#D8B45C; --gold-soft:#332B16;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 24px -8px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#12160F; --surface:#191F17; --surface-2:#212820;
+    --ink:#E8ECE2; --ink-muted:#98A092; --border:#2B3327;
+    --accent:#7CA6E6; --accent-ink:#DCE8FB; --accent-soft:#1E2B41;
+    --red:#E28B92; --red-soft:#3A2224;
+    --green:#7FC090; --green-soft:#1E2F22;
+    --gold:#D8B45C; --gold-soft:#332B16;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 24px -8px rgba(0,0,0,.5);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    background:var(--paper); color:var(--ink);
+    font-family:"Public Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+    padding-inline:20px; padding-block:28px; line-height:1.6;
+  }
+  main{max-width:780px;margin:0 auto;}
+  h1,h2,h3,h4{font-family:"Spectral",Georgia,serif;text-wrap:balance;margin:1.4em 0 .5em;}
+  h1{font-size:1.7rem;color:var(--accent-ink);margin-top:0;}
+  h2{font-size:1.3rem;color:var(--accent-ink);border-bottom:2px solid var(--border);padding-bottom:.3em;margin-top:2em;}
+  h3{font-size:1.08rem;}
+  h4{font-size:.98rem;font-style:italic;}
+  p{margin:.7em 0;}
+  a{color:var(--accent);}
+  .mono{font-family:"JetBrains Mono",monospace;}
+
+  header.top{margin-bottom:6px;}
+  header.top .eyebrow{font-family:"JetBrains Mono",monospace;font-size:.78rem;color:var(--ink-muted);letter-spacing:.03em;}
+  header.top nav{font-size:.82rem;margin-top:6px;}
+  header.top nav a{margin-right:14px;}
+
+  .toc{
+    background:var(--surface);border:1px solid var(--border);border-radius:10px;
+    padding:14px 18px;margin:20px 0 30px;box-shadow:var(--shadow);font-size:.9rem;
+  }
+  .toc h2{margin:0 0 8px;font-size:1rem;border:none;padding:0;}
+  .toc ol{margin:0;padding-left:1.3em;}
+  .toc li{margin-bottom:2px;}
+  .toc a{text-decoration:none;}
+  .toc a:hover{text-decoration:underline;}
+
+  .def-box, .prop-box{
+    background:var(--surface);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;
+    padding:12px 16px;margin:1em 0;box-shadow:var(--shadow);
+  }
+  .def-box .label, .prop-box .label{font-weight:700;color:var(--accent-ink);font-family:"Spectral",serif;}
+
+  .method-box{
+    background:var(--gold-soft);border:1px solid color-mix(in srgb, var(--gold) 45%, transparent);
+    border-radius:8px;padding:12px 16px;margin:1em 0;
+  }
+  .method-box .label{font-weight:700;color:var(--gold);}
+
+  .warning-box{
+    background:var(--red-soft);border:1px solid color-mix(in srgb, var(--red) 45%, transparent);
+    border-radius:8px;padding:12px 16px;margin:1em 0;
+  }
+  .warning-box .label{font-weight:700;color:var(--red);}
+
+  .remark{
+    border-left:3px solid var(--border);padding:6px 14px;margin:1em 0;color:var(--ink-muted);font-size:.93rem;
+  }
+
+  .exercise{
+    background:var(--surface);border:1px solid var(--border);border-radius:10px;
+    padding:14px 18px;margin:1.2em 0;box-shadow:var(--shadow);
+  }
+  .exercise .tag{font-family:"JetBrains Mono",monospace;font-size:.72rem;font-weight:700;letter-spacing:.05em;color:var(--accent);text-transform:uppercase;}
+  .exercise .statement{font-style:italic;margin:.4em 0 .8em;}
+  .exercise .solution{border-top:1px dashed var(--border);padding-top:.7em;margin-top:.4em;}
+  .exercise .solution .lbl{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-muted);margin-bottom:4px;}
+
+  figure{margin:1.4em 0;text-align:center;}
+  figure svg{max-width:100%;height:auto;color:var(--ink);}
+  figcaption{font-size:.82rem;color:var(--ink-muted);margin-top:6px;}
+
+  table.truth{border-collapse:collapse;margin:1em auto;font-family:"JetBrains Mono",monospace;font-size:.9rem;}
+  table.truth th,table.truth td{border:1px solid var(--border);padding:5px 16px;text-align:center;}
+  table.truth th{background:var(--surface-2);}
+
+  .wide{overflow-x:auto;}
+
+  .hint-box{background:var(--accent-soft);border:1px dashed var(--accent);border-radius:8px;padding:10px 14px;margin:0;font-size:.9rem;}
+  .exercise .src{font-size:.76rem;color:var(--ink-muted);margin-top:10px;font-family:"JetBrains Mono",monospace;}
+
+  .exercise details{margin:.5em 0 0;}
+  .exercise summary{
+    cursor:pointer;list-style:none;display:flex;align-items:center;gap:6px;
+    font-family:"JetBrains Mono",monospace;font-size:.72rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+    color:var(--accent-ink);padding:6px 0;user-select:none;
+  }
+  .exercise summary::-webkit-details-marker{display:none;}
+  .exercise summary::before{content:"▸";display:inline-block;color:var(--accent);font-size:.85rem;transition:transform .15s ease;}
+  .exercise details[open] summary::before{transform:rotate(90deg);}
+  .exercise details > .hint-box, .exercise details > .solution{margin-top:2px;}
+  .exercise details > .solution{border-top:none;padding-top:0;}
+
+  .sources{font-size:.86rem;color:var(--ink-muted);}
+  .sources ul{padding-left:1.2em;}
+
+  footer{margin-top:40px;color:var(--ink-muted);font-size:.78rem;text-align:center;}
+</style>
+</head>
+<body>
+<main>
+  <header class="top">
+    <div class="eyebrow">MPSI · MATHÉMATIQUES · CHAPITRE 01</div>
+    <h1>Ensembles, logique, méthodes de raisonnement</h1>
+    <nav><a href="#s1">I. Ensembles</a> · <a href="#s2">II. Logique</a> · <a href="#s3">III. Démonstrations</a> · <a href="#exercices">Exercices</a> · <a href="#sources">Sources</a></nav>
+  </header>
+
+  <div class="toc">
+    <h2>Sommaire</h2>
+    <ol>
+      <li><a href="#s1">Ensembles</a>
+        <ol>
+          <li><a href="#s1-1">Vocabulaire</a></li>
+          <li><a href="#s1-2">Opérations entre parties d'un ensemble</a></li>
+          <li><a href="#s1-3">Ensemble des parties et produit cartésien</a></li>
+          <li><a href="#s1-4">Ensembles de nombres</a></li>
+        </ol>
+      </li>
+      <li><a href="#s2">Rudiments de logique</a>
+        <ol>
+          <li><a href="#s2-1">Quantificateurs et opérateurs logiques</a></li>
+          <li><a href="#s2-2">Implications</a></li>
+        </ol>
+      </li>
+      <li><a href="#s3">Démonstrations</a>
+        <ol>
+          <li><a href="#s3-1">Schémas de démonstration</a></li>
+          <li><a href="#s3-2">Démonstration par récurrence</a></li>
+          <li><a href="#s3-3">Démonstration par analyse-synthèse</a></li>
+          <li><a href="#s3-4">Démonstration par l'absurde</a></li>
+        </ol>
+      </li>
+      <li><a href="#exercices">Exercices d'entraînement (annales)</a></li>
+    </ol>
+  </div>
+
+  <h2 id="s1">I. Ensembles</h2>
+
+  <h3 id="s1-1">1. Vocabulaire</h3>
+  <p>Un ensemble est une <em>collection</em> d'objets ; les objets d'un ensemble sont ses <b>éléments</b>. Soit $a$ un élément, $A$ et $B$ des ensembles :</p>
+  <ul>
+    <li>$a \in A$ (ou $A \ni a$) : $a$ appartient à $A$ ; $a \notin A$ : $a$ n'appartient pas à $A$.</li>
+    <li>$A = B$ : $A$ et $B$ ont les mêmes éléments. <em>Il n'y a pas de notion d'ordre pour les ensembles.</em></li>
+    <li>$A \subset B$ (ou $B \supset A$) : $A$ est un sous-ensemble (une partie) de $B$ — tout élément de $A$ appartient à $B$.</li>
+    <li>$\varnothing$ : l'ensemble vide. <b>Attention :</b> $\varnothing \neq \{\varnothing\}$.</li>
+    <li>Un ensemble à un seul élément est un <b>singleton</b> (ex. $\{1\}$).</li>
+    <li>Si $A$ est fini, son <b>cardinal</b>, noté $\mathrm{Card}(A)$, est son nombre d'éléments.</li>
+  </ul>
+
+  <div class="method-box">
+    <div class="label">Point méthode</div>
+    <p>Pour montrer $A \subset B$ : on montre $\forall a \in A,\ a \in B$. Rédaction : « Soit $a \in A$ (un élément quelconque). […] Donc $a \in B$. Conclusion : $A \subset B$. »</p>
+    <p>Pour montrer $A = B$, deux méthodes possibles : montrer $A \subset B$ <b>et</b> $B \subset A$ (double inclusion), ou montrer $x \in A \Leftrightarrow x \in B$.</p>
+  </div>
+
+  <div class="exercise">
+    <div class="tag">Exemple 1</div>
+    <p class="statement">Soit $A = \{n \in \mathbb{N} \mid n \text{ est un multiple de } 4\}$ et $B = \{n \in \mathbb{N} \mid n \text{ est pair}\}$. Montrer que $A \subset B$.</p>
+    <div class="solution">
+      <div class="lbl">Démonstration</div>
+      <p>Soit $a \in A$ (un élément quelconque). Alors $a$ est un multiple de $4$, c'est-à-dire qu'il existe $k \in \mathbb{N}$ tel que $a = 4k = 2 \times (2k)$. Donc $a$ est pair (car de la forme $2k'$ avec $k' = 2k \in \mathbb{N}$), d'où $a \in B$.</p>
+      <p>Conclusion : $A \subset B$.</p>
+    </div>
+  </div>
+
+  <h4>Description d'un ensemble</h4>
+  <p>On décrit un ensemble par <b>énumération</b> de ses éléments (ex. $X = \{1,3,8,13\}$) ou par <b>caractérisation</b>, c'est-à-dire par une ou plusieurs propriétés qui caractérisent tous ses éléments et eux seuls (ex. $A = \{x \in \mathbb{R} \mid x \lt 0\}$).</p>
+
+  <div class="exercise">
+    <div class="tag">Exemple 2</div>
+    <p class="statement">$A = \{x \in \mathbb{N} \mid x \leq 5\}$ et $B = \{x \in \mathbb{R} \mid x^2 \leq 4\}$.</p>
+    <div class="solution">
+      <p>$A$ est l'ensemble des entiers naturels $x$ tels que $x$ est inférieur ou égal à $5$ : $A = \{0,1,2,3,4,5\} = \llbracket 0,5 \rrbracket$.</p>
+      <p>$B$ est l'ensemble des réels $x$ tels que $x^2 \leq 4$ : $B = [-2, 2]$.</p>
+    </div>
+  </div>
+
+  <h3 id="s1-2">2. Opérations entre parties d'un ensemble</h3>
+  <p>Soient $A$ et $B$ deux ensembles.</p>
+
+  <p><b>Intersection :</b> $A \cap B$ est l'ensemble des éléments qui appartiennent à la fois à $A$ et à $B$.</p>
+
+  <figure role="img" aria-label="Deux cercles A et B qui se chevauchent ; seule la zone de recouvrement, appartenant aux deux, est colorée : c'est A inter B.">
+    <svg viewBox="0 0 360 170">
+      <defs><clipPath id="circA"><circle cx="150" cy="85" r="65"/></clipPath></defs>
+      <circle cx="150" cy="85" r="65" fill="none" stroke="currentColor" stroke-width="2"/>
+      <circle cx="210" cy="85" r="65" fill="var(--accent)" fill-opacity="0.35" clip-path="url(#circA)"/>
+      <circle cx="210" cy="85" r="65" fill="none" stroke="currentColor" stroke-width="2"/>
+      <text x="95" y="60" font-size="16" fill="currentColor">A</text>
+      <text x="265" y="60" font-size="16" fill="currentColor">B</text>
+    </svg>
+    <figcaption>$A \cap B$ : la zone commune aux deux ensembles.</figcaption>
+  </figure>
+
+  <div class="exercise">
+    <p class="statement">$A = \{1,2,3\}$, $B = \{3,4\}$ $\Rightarrow$ $A \cap B = \{3\}$.</p>
+  </div>
+  <p>Remarques : $A \cap B = B \cap A$ (commutativité). $A$ et $B$ sont <b>disjoints</b> si $A \cap B = \varnothing$ (ex. $\{1,2\}$ et $\{3,4\}$).</p>
+
+  <p><b>Union :</b> $A \cup B$ est l'ensemble des éléments qui appartiennent à $A$ <b>ou</b> à $B$ (« ou » inclusif).</p>
+
+  <figure role="img" aria-label="Deux cercles A et B qui se chevauchent, entièrement colorés tous les deux : c'est A union B.">
+    <svg viewBox="0 0 360 170">
+      <circle cx="150" cy="85" r="65" fill="var(--accent)" fill-opacity="0.35" stroke="currentColor" stroke-width="2"/>
+      <circle cx="210" cy="85" r="65" fill="var(--accent)" fill-opacity="0.35" stroke="currentColor" stroke-width="2"/>
+      <text x="95" y="60" font-size="16" fill="currentColor">A</text>
+      <text x="265" y="60" font-size="16" fill="currentColor">B</text>
+    </svg>
+    <figcaption>$A \cup B$ : tout ce qui appartient à l'un des deux ensembles (ou aux deux).</figcaption>
+  </figure>
+
+  <p>Remarques : $A \cup B = B \cup A$ (commutativité). Si $A$ et $B$ sont disjoints (et finis), $\mathrm{Card}(A \cup B) = \mathrm{Card}(A) + \mathrm{Card}(B)$ — ex. $A=\{1,2,3\}$, $B=\{5,6,7\}$ : $\mathrm{Card}(A \cup B) = 3+3 = 6$.</p>
+
+  <div class="prop-box">
+    <div class="label">Proposition 1</div>
+    <p>Soient $A$ et $B$ deux ensembles finis quelconques. On a :</p>
+    <p style="text-align:center">$\mathrm{Card}(A \cup B) = \mathrm{Card}(A) + \mathrm{Card}(B) - \mathrm{Card}(A \cap B)$.</p>
+    <p><b>Démonstration :</b> on pose $C = A \setminus B$, $D = A \cap B$, $E = B \setminus A$ — trois parties deux à deux disjointes dont la réunion est $A \cup B$. Donc $\mathrm{Card}(A \cup B) = \mathrm{Card}(C) + \mathrm{Card}(D) + \mathrm{Card}(E)$. D'autre part, $\mathrm{Card}(A) + \mathrm{Card}(B) - \mathrm{Card}(A \cap B) = \big(\mathrm{Card}(C)+\mathrm{Card}(D)\big) + \big(\mathrm{Card}(D)+\mathrm{Card}(E)\big) - \mathrm{Card}(D) = \mathrm{Card}(C)+\mathrm{Card}(D)+\mathrm{Card}(E)$. Les deux expressions coïncident, d'où l'égalité.</p>
+  </div>
+
+  <p><b>Différence :</b> $A \setminus B$ est l'ensemble des éléments de $A$ qui n'appartiennent pas à $B$.</p>
+
+  <figure role="img" aria-label="Deux cercles A et B qui se chevauchent ; seul le croissant de A qui ne touche pas B est colore : c'est A moins B.">
+    <svg viewBox="0 0 360 170">
+      <defs><clipPath id="circB2"><circle cx="210" cy="85" r="65"/></clipPath></defs>
+      <circle cx="150" cy="85" r="65" fill="var(--accent)" fill-opacity="0.35"/>
+      <rect x="0" y="0" width="360" height="170" fill="var(--paper)" clip-path="url(#circB2)"/>
+      <circle cx="150" cy="85" r="65" fill="none" stroke="currentColor" stroke-width="2"/>
+      <circle cx="210" cy="85" r="65" fill="none" stroke="currentColor" stroke-width="2"/>
+      <text x="95" y="60" font-size="16" fill="currentColor">A</text>
+      <text x="265" y="60" font-size="16" fill="currentColor">B</text>
+    </svg>
+    <figcaption>$A \setminus B$ : ce qui est dans A mais pas dans B.</figcaption>
+  </figure>
+  <div class="exercise"><p class="statement">$A=\{1,2,3,4\}$, $B=\{3,4,5,6\}$ $\Rightarrow$ $A \setminus B = \{1,2\}$.</p></div>
+
+  <p><b>Complémentaire :</b> $\complement_E^A$ est le complémentaire de $A$ dans $E$, c'est-à-dire l'ensemble des éléments de $E$ n'appartenant pas à $A$, i.e. $E \setminus A$. Quand $E$ est clair, on note $\complement A$ ou $\overline{A}$.</p>
+
+  <figure role="img" aria-label="Un rectangle représentant E contient un cercle A ; tout l'intérieur du rectangle en dehors du cercle est colore : c'est le complémentaire de A.">
+    <svg viewBox="0 0 300 170">
+      <rect x="10" y="10" width="280" height="150" fill="var(--accent)" fill-opacity="0.35" stroke="currentColor" stroke-width="2"/>
+      <circle cx="150" cy="85" r="55" fill="var(--paper)" stroke="currentColor" stroke-width="2"/>
+      <text x="150" y="90" font-size="16" text-anchor="middle" fill="currentColor">A</text>
+      <text x="270" y="30" font-size="16" fill="currentColor">E</text>
+    </svg>
+    <figcaption>$\overline{A}$ : tout ce qui, dans $E$, n'est pas dans $A$.</figcaption>
+  </figure>
+  <div class="exercise"><p class="statement">$E=\{1,2,3,4,5,6\}$, $A=\{1,3,4\}$ $\Rightarrow$ $\overline{A} = E \setminus A = \{2,5,6\}$.</p></div>
+
+  <div class="remark"><b>Remarque 1 :</b> si $E$ est fini, $\mathrm{Card}(\overline{A}) = \mathrm{Card}(E) - \mathrm{Card}(A)$. <br><em>Démonstration :</em> $E = A \cup \overline{A}$ (réunion disjointe), donc $\mathrm{Card}(E) = \mathrm{Card}(A) + \mathrm{Card}(\overline{A})$, d'où le résultat.</div>
+
+  <div class="prop-box">
+    <div class="label">Proposition 2 (Distributivité)</div>
+    <p>Soient $A,B,C$ des parties d'un même ensemble $E$. On a :</p>
+    <p>$A \cap (B \cup C) = (A \cap B) \cup (A \cap C)$.</p>
+    <p>$A \cup (B \cap C) = (A \cup B) \cap (A \cup C)$.</p>
+  </div>
+
+  <div class="prop-box">
+    <div class="label">Proposition 3 (lois de De Morgan)</div>
+    <p>Soient $A,B$ des parties d'un même ensemble $E$. On a :</p>
+    <p>$\overline{A \cup B} = \overline{A} \cap \overline{B}$ &nbsp; et &nbsp; $\overline{A \cap B} = \overline{A} \cup \overline{B}$.</p>
+  </div>
+
+  <div class="def-box">
+    <div class="label">Définition 1 (partition)</div>
+    <p>Soit $n \in \mathbb{N}^*$, $A$ un ensemble, $A_1,\dots,A_n$ des parties de $A$. On dit que $A_1,\dots,A_n$ forment une <b>partition</b> de $A$ si :</p>
+    <ol>
+      <li>pour tout $i$, $A_i \neq \varnothing$ ;</li>
+      <li>pour tout couple d'entiers distincts $(i,j)$, $A_i \cap A_j = \varnothing$ (deux à deux disjointes) ;</li>
+      <li>$\displaystyle\bigcup_{i=1}^{n} A_i = A$.</li>
+    </ol>
+  </div>
+
+  <figure role="img" aria-label="Un cercle A découpé en cinq parts, comme un camembert : les parts A1 a A5 forment une partition de A.">
+    <svg viewBox="0 0 220 220">
+      <circle cx="110" cy="110" r="95" fill="none" stroke="currentColor" stroke-width="2"/>
+      <line x1="110" y1="110" x2="110" y2="15" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="110" y1="110" x2="35" y2="65" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="110" y1="110" x2="45" y2="165" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="110" y1="110" x2="140" y2="200" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="110" y1="110" x2="200" y2="130" stroke="currentColor" stroke-width="1.5"/>
+      <text x="95" y="45" font-size="14">A1</text>
+      <text x="55" y="90" font-size="14">A2</text>
+      <text x="75" y="150" font-size="14">A3</text>
+      <text x="120" y="175" font-size="14">A4</text>
+      <text x="150" y="105" font-size="14">A5</text>
+    </svg>
+    <figcaption>$A_1,\dots,A_5$ forment une partition de $A$ : non vides, disjointes deux à deux, de réunion $A$.</figcaption>
+  </figure>
+
+  <div class="exercise">
+    <p class="statement">$A = \{1,2,3,4,5,6\}$, $A_1=\{5\}$, $A_2=\{1,3,6\}$, $A_3=\{2,4\}$ : $(A_1,A_2,A_3)$ est une partition de $A$. Autre exemple : si $A \subset E$, $A \neq \varnothing$, $A \neq E$, alors $(A,\overline{A})$ est une partition de $E$.</p>
+  </div>
+
+  <div class="remark"><b>Remarque 2 :</b> $(A_1,\dots,A_n)$ est un <b>recouvrement disjoint</b> de $A$ si (i) les $A_i$ sont deux à deux disjoints et (ii) $A_1 \cup \dots \cup A_n = A$ — c'est une partition sans l'exigence que chaque $A_i$ soit non vide.</div>
+
+  <h3 id="s1-3">3. Ensemble des parties et produit cartésien</h3>
+  <div class="def-box">
+    <div class="label">Définition 2</div>
+    <p>Soit $X$ un ensemble. On note $\mathcal{P}(X)$ l'ensemble de toutes les <b>parties</b> de $X$ (y compris $\varnothing$ et $X$) : l'<b>ensemble des parties</b> de $X$.</p>
+  </div>
+
+  <div class="exercise">
+    <div class="tag">Exemple 3</div>
+    <p>$A=\{0,1\}$ : $\mathcal{P}(A) = \{\varnothing, \{0\}, \{1\}, \{0,1\}\}$.</p>
+    <p>$B=\{0,1,2\}$ : $\mathcal{P}(B) = \{\varnothing, \{0\}, \{1\}, \{2\}, \{1,2\}, \{0,1\}, \{0,2\}, \{0,1,2\}\}$.</p>
+    <p><b>Conjecture :</b> si $\mathrm{Card}(C) = n$ alors $\mathrm{Card}\big(\mathcal{P}(C)\big) = 2^n$ (vraie — admise pour l'instant, une preuve par récurrence en sera donnée plus tard dans l'année).</p>
+  </div>
+
+  <div class="def-box">
+    <div class="label">Définition 3</div>
+    <p>Soient $X,Y$ deux ensembles. On note $X \times Y$ leur <b>produit cartésien</b>, l'ensemble de toutes les paires ordonnées (couples) $(x,y)$ avec $x \in X$, $y \in Y$ :</p>
+    <p style="text-align:center">$X \times Y = \{(x,y) \mid x \in X,\ y \in Y\}$.</p>
+  </div>
+
+  <div class="exercise">
+    <div class="tag">Exemple 4</div>
+    <p>$X=\{a,b\}$, $Y=\{c,d,e\}$ : $X \times Y = \{(a,c),(a,d),(a,e),(b,c),(b,d),(b,e)\}$.</p>
+  </div>
+
+  <div class="warning-box"><div class="label">Attention</div><p>Dans les couples, l'ordre compte ! $(1,2) \neq (2,1)$. Dire $(x,y)=(x',y')$ équivaut à $x=x'$ et $y=y'$. Lorsque $X=Y$ on note $X^2 = X \times Y$. Le produit cartésien s'étend à un nombre fini quelconque d'ensembles, ex. $\mathbb{R}^3 = \mathbb{R}\times\mathbb{R}\times\mathbb{R}$. En général $X \times Y \neq Y \times X$ (pas commutatif).</p></div>
+
+  <h3 id="s1-4">4. Ensembles de nombres</h3>
+  <h4>a) Ensembles de nombres usuels</h4>
+  <ul>
+    <li>$\mathbb{N} = \{0,1,2,3,\dots\}$ : entiers naturels.</li>
+    <li>$\mathbb{Z} = \{\dots,-2,-1,0,1,2,\dots\}$ : entiers relatifs.</li>
+    <li>$\mathbb{Q} = \left\{ \dfrac{p}{q} \ \middle|\ p \in \mathbb{Z},\ q \in \mathbb{N}^* \right\}$ : nombres rationnels.</li>
+    <li>Les éléments de $\mathbb{R} \setminus \mathbb{Q}$ sont les <b>irrationnels</b> (ex. $\sqrt{2}$, $\pi$).</li>
+    <li>$\mathbb{D}$ : nombres <b>décimaux</b> (rationnels à écriture décimale finie).</li>
+    <li>$\mathbb{R}$ : nombres <b>réels</b> (contient aussi les irrationnels).</li>
+    <li>$\mathbb{C} = \{a+ib \mid (a,b)\in\mathbb{R}^2\}$ avec $i^2=-1$ : nombres <b>complexes</b>.</li>
+  </ul>
+
+  <figure role="img" aria-label="Cinq cercles concentriques emboîtés : N est à l'intérieur de Z, lui-même à l'intérieur de D, lui-même à l'intérieur de Q, lui-même à l'intérieur de R, illustrant les inclusions N sous-ensemble de Z sous-ensemble de D sous-ensemble de Q sous-ensemble de R.">
+    <svg viewBox="0 0 320 260">
+      <circle cx="160" cy="140" r="110" fill="none" stroke="currentColor" stroke-width="1.6"/>
+      <circle cx="160" cy="150" r="85"  fill="none" stroke="currentColor" stroke-width="1.6"/>
+      <circle cx="160" cy="160" r="60"  fill="none" stroke="currentColor" stroke-width="1.6"/>
+      <circle cx="160" cy="168" r="38"  fill="none" stroke="currentColor" stroke-width="1.6"/>
+      <circle cx="160" cy="175" r="18"  fill="var(--accent)" fill-opacity="0.4" stroke="currentColor" stroke-width="1.6"/>
+      <text x="160" y="45" font-size="15" text-anchor="middle" fill="currentColor">R</text>
+      <text x="160" y="80" font-size="15" text-anchor="middle" fill="currentColor">Q</text>
+      <text x="160" y="112" font-size="14" text-anchor="middle" fill="currentColor">D</text>
+      <text x="160" y="140" font-size="14" text-anchor="middle" fill="currentColor">Z</text>
+      <text x="160" y="179" font-size="12" text-anchor="middle" fill="currentColor">N</text>
+    </svg>
+    <figcaption>$\mathbb{N} \subset \mathbb{Z} \subset \mathbb{D} \subset \mathbb{Q} \subset \mathbb{R}$ — chaque ensemble contient tous les précédents ($\mathbb{C}$, plus grand encore, n'est pas représenté ici).</figcaption>
+  </figure>
+
+  <h4>b) Intervalles</h4>
+  <p>Soient $a,b \in \mathbb{R}$, $a \lt b$. On note :</p>
+  <div class="wide"><table class="truth"><tr><td>$[a,b] = \{x\in\mathbb{R} \mid a \leq x \leq b\}$</td><td>$[b,+\infty[\, = \{x\in\mathbb{R} \mid x \geq b\}$</td></tr>
+  <tr><td>$[a,b[\, = \{x\in\mathbb{R} \mid a \leq x \lt b\}$</td><td>$]b,+\infty[\, = \{x\in\mathbb{R} \mid x \gt b\}$</td></tr>
+  <tr><td>$]a,b] = \{x\in\mathbb{R} \mid a \lt x \leq b\}$</td><td>$]-\infty,a] = \{x\in\mathbb{R} \mid x \leq a\}$</td></tr>
+  <tr><td>$]a,b[\, = \{x\in\mathbb{R} \mid a \lt x \lt b\}$</td><td>$]-\infty,a[\, = \{x\in\mathbb{R} \mid x \lt a\}$</td></tr></table></div>
+
+  <p>On note aussi $\mathbb{R}_+=\{x\in\mathbb{R}\mid x\geq0\}$, $\mathbb{R}_-=\{x\in\mathbb{R}\mid x\leq0\}$, $\mathbb{R}^*=\mathbb{R}\setminus\{0\}$, $\mathbb{N}^*=\mathbb{N}\setminus\{0\}$ (et de même $\mathbb{R}_+^*$, $\mathbb{R}_-^*$…). Pour $n \leq p$ entiers, $\llbracket n,p \rrbracket$ désigne $\{n,n+1,\dots,p\}$.</p>
+
+  <div class="warning-box"><div class="label">Attention</div><p>$\llbracket n,p \rrbracket$ est un ensemble <b>fini</b>, à la différence de $[n,p]$ qui est infini. On peut aussi écrire $\llbracket n,p \rrbracket = [n,p] \cap \mathbb{Z}$.</p></div>
+
+  <h2 id="s2">II. Rudiments de logique</h2>
+  <h3 id="s2-1">1. Quantificateurs et opérateurs logiques</h3>
+  <p>Quantificateurs : $\forall$ (« pour tout »), $\exists$ (« il existe au moins »), $\exists!$ (« il existe un unique »).</p>
+
+  <div class="exercise">
+    <div class="tag">Exemple 5</div>
+    <p>$\forall n \in \mathbb{N},\ n^2 \neq 5$ se lit : pour tout $n$ appartenant aux entiers naturels, $n^2$ est différent de $5$.</p>
+    <p>$\exists x \in \mathbb{R},\ x^2 = 5$ se lit : il existe un $x$ appartenant aux réels tel que $x^2$ soit égal à $5$.</p>
+  </div>
+
+  <div class="warning-box"><div class="label">Attention</div><p>$\forall x\, \exists y\, P(x,y)$ n'a pas le même sens que $\exists y\, \forall x\, P(x,y)$ — l'ordre des quantificateurs compte.</p></div>
+
+  <div class="exercise">
+    <p class="statement">$\forall x\in\mathbb{R},\ \exists y\in\mathbb{R},\ x = 2y$ est <b>vraie</b>, mais pas $\exists y\in\mathbb{R},\ \forall x\in\mathbb{R},\ x = 2y$.</p>
+    <div class="solution">
+      <div class="lbl">Pourquoi la première est vraie</div>
+      <p>On prend $x \in \mathbb{R}$ quelconque, on pose $y = x/2$, et on a bien $2y = x$.</p>
+      <div class="lbl" style="margin-top:8px;">Pourquoi la seconde est fausse</div>
+      <p>Ici on suppose l'existence d'un réel fixé $y_0$ qui vérifierait $\forall x\in\mathbb{R},\ x=2y_0$ — un seul $y_0$ pour <b>tous</b> les $x$. Mais si pour un certain $x_0$ cela marche ($x_0 = 2y_0$), alors $x_0+1 = 2y_0$ ne peut plus être vérifié par le même $y_0$ : contradiction. Donc c'est faux.</p>
+    </div>
+  </div>
+
+  <div class="exercise">
+    <div class="tag">Exercice 1</div>
+    <p class="statement">Soit $E=\{1,2,3,4\}$. Pour chaque assertion, dire si elle est vraie ou fausse et le justifier.</p>
+    <div class="solution">
+      <p><b>1.</b> $\forall x\in E\, \exists y\in E,\ x\leq y$ — <b>Vraie</b> : soit $x\in E$ quelconque, on prend $y=x$, on a bien $x\leq y$.</p>
+      <p><b>2.</b> $\exists y\in E\, \forall x\in E,\ x\leq y$ — <b>Vraie</b> : on prend $y=4$, on a bien $\forall x\in E,\ x\leq 4$.</p>
+      <p><b>3.</b> $\forall x\in E\, \exists y\in E,\ x\lt y$ — <b>Fausse</b> : pour $x=4$, il n'existe aucun $y\in E$ vérifiant $4\lt y$.</p>
+      <p><b>4.</b> $\forall y\in E\, \forall x\in E,\ x\leq y$ — <b>Fausse</b> : pour $x=4$ et $y=2$, la propriété est fausse.</p>
+    </div>
+  </div>
+
+  <div class="exercise">
+    <div class="tag">Exercice 2</div>
+    <p class="statement">Reprendre l'exercice précédent avec $E=\mathbb{R}$.</p>
+    <div class="solution">
+      <p><b>1.</b> <b>Vraie</b> : soit $x\in\mathbb{R}$ quelconque, on prend $y=x$, on a bien $x\leq y$.</p>
+      <p><b>2.</b> <b>Fausse</b> : quel que soit $y_0\in\mathbb{R}$ choisi, $x=y_0+1$ ne vérifie pas $x\leq y_0$.</p>
+      <p><b>3.</b> <b>Vraie</b> : soit $x\in E$ quelconque, on prend $y=x+1$, on a bien $x\lt y$.</p>
+      <p><b>4.</b> <b>Fausse</b> : $x=4$, $y=2$ ne conviennent pas.</p>
+    </div>
+  </div>
+
+  <h4>Opérateurs logiques : et, ou, non</h4>
+  <p><b>et</b> ($\wedge$) : « $A$ et $B$ » est vraie si $A$ est vraie <u>et</u> $B$ est vraie ; sinon elle est fausse.</p>
+  <table class="truth"><tr><th>A</th><th>B</th><th>A et B</th></tr>
+  <tr><td>V</td><td>V</td><td>V</td></tr><tr><td>V</td><td>F</td><td>F</td></tr>
+  <tr><td>F</td><td>V</td><td>F</td></tr><tr><td>F</td><td>F</td><td>F</td></tr></table>
+  <div class="exercise"><p class="statement">Avec $x=3$ : $A$ = « $x\lt2$ » (F), $B$ = « $x\gt1$ » (V) $\Rightarrow$ « A et B » est fausse.</p></div>
+
+  <p><b>ou</b> ($\vee$) : « $A$ ou $B$ » est vraie dès que l'une au moins des deux est vraie.</p>
+  <table class="truth"><tr><th>A</th><th>B</th><th>A ou B</th></tr>
+  <tr><td>V</td><td>V</td><td>V</td></tr><tr><td>V</td><td>F</td><td>V</td></tr>
+  <tr><td>F</td><td>V</td><td>V</td></tr><tr><td>F</td><td>F</td><td>F</td></tr></table>
+  <div class="exercise"><p class="statement">Exemple précédent : « A ou B » est vraie car $B$ est vraie.</p></div>
+  <div class="warning-box"><p>« ou » en mathématiques est un « ou » <b>inclusif</b> : « P ou Q » est vraie si l'une au moins des deux propositions est vraie (elles peuvent l'être simultanément).</p></div>
+
+  <p><b>Négation</b> ($\neg$) :</p>
+  <div class="exercise">
+    <div class="tag">Exemple 6</div>
+    <p>$P$ : « Le magasin est ouvert tous les jours de la semaine. » &nbsp; non $P$ : « il existe au moins un jour de la semaine où le magasin est fermé. »</p>
+    <p>$Q$ : « Le pantalon est court et blanc. » &nbsp; non $Q$ : « le pantalon n'est pas court ou n'est pas blanc. »</p>
+  </div>
+
+  <div class="method-box">
+    <div class="label">Point méthode</div>
+    <p>Lorsqu'on passe d'une proposition à sa négation : chaque $\forall$ devient $\exists$ ; chaque $\exists$ devient $\forall$ ; chaque « ou » devient « et » ; chaque « et » devient « ou ».</p>
+  </div>
+
+  <div class="prop-box">
+    <div class="label">Proposition 4</div>
+    <p>non(non $P$) $\Leftrightarrow$ $P$. &nbsp; non($P$ et $Q$) $\Leftrightarrow$ non $P$ ou non $Q$. &nbsp; non($P$ ou $Q$) $\Leftrightarrow$ non $P$ et non $Q$.</p>
+    <p>non($\exists x\in E, P$) $\Leftrightarrow$ $\forall x\in E,$ non $P$. &nbsp; non($\forall x\in E, P$) $\Leftrightarrow$ $\exists x\in E,$ non $P$.</p>
+  </div>
+
+  <div class="exercise">
+    <div class="tag">Exercice 3</div>
+    <p>Non($\forall x\in A,\ x\leq10$) $\Leftrightarrow$ $\exists x\in A,\ x\gt10$.</p>
+    <p>Non($-1\lt x\leq3$) $\Leftrightarrow$ Non($-1\lt x$ et $x\leq3$) $\Leftrightarrow$ $-1\geq x$ ou $x\gt3$ $\Leftrightarrow$ $x \in\ ]-\infty,-1]\cup]3,+\infty[$.</p>
+  </div>
+
+  <div class="remark"><b>Remarque 3 :</b> notations parfois utilisées — et : $\wedge$, ou : $\vee$, non : $\neg$.</div>
+
+  <h3 id="s2-2">2. Implications</h3>
+  <p>On écrit $P\Rightarrow Q$ pour « $P$ implique $Q$ » : « Si $P$ est vraie, alors $Q$ est vraie ».</p>
+  <div class="method-box"><div class="label">Point méthode</div><p>Pour montrer $P\Rightarrow Q$ : on suppose $P$ vraie et on montre que $Q$ est vraie.</p></div>
+
+  <div class="exercise">
+    <div class="tag">Exemple 7</div>
+    <p class="statement">Soit $n\in\mathbb{N}$. Montrer que « $n$ pair $\Rightarrow$ $n^2$ pair ».</p>
+    <div class="solution">
+      <p>On suppose $n$ pair. Alors $\exists k\in\mathbb{N}$ tel que $n=2k$. Mais alors $n^2=(2k)^2=4k^2=2\times(2k^2)$ avec $2k^2\in\mathbb{N}$, donc $n^2$ est pair.</p>
+      <p>Conclusion : $n$ pair $\Rightarrow$ $n^2$ pair.</p>
+    </div>
+  </div>
+
+  <div class="warning-box"><div class="label">Attention</div><p>Ceci diffère du « si…, alors… » du langage courant : quand $P$ est fausse, $Q$ peut être vraie ou fausse — $P\Rightarrow Q$ reste vraie dans les deux cas.</p></div>
+
+  <div class="exercise">
+    <div class="tag">Exemple 8</div>
+    <p>$A$ = « $x\lt5$ », $B$ = « $x\lt7$ ». Il est évident que $A\Rightarrow B$. Mais lorsque $A$ est fausse, on ne sait rien de $B$ : pour $x=6$, $A$ faux mais $B$ vrai ; pour $x=10$, $A$ faux et $B$ faux.</p>
+  </div>
+
+  <div class="remark"><b>Remarque 4 :</b> non($P\Rightarrow Q$) $\Leftrightarrow$ $P$ et (non $Q$).</div>
+
+  <div class="remark">
+    <b>Remarque 5 :</b> si $P\Rightarrow Q$ est vraie, $P$ est une <b>condition suffisante</b> de $Q$ (il suffit que $P$ soit vraie pour que $Q$ le soit), et $Q$ est une <b>condition nécessaire</b> de $P$ (pour que $P$ soit vraie, il faut nécessairement que $Q$ le soit).
+    <p style="margin-top:6px"><em>Exemple 9 :</em> « S'il pleut alors le sol est mouillé. » : « il pleut » est une condition suffisante de l'humidité du sol (il peut être mouillé pour d'autres raisons) ; « le sol est mouillé » est une condition nécessaire de la pluie (il ne peut pas pleuvoir sans que le sol soit mouillé).</p>
+  </div>
+
+  <div class="def-box"><div class="label">Définition 4</div><p>On écrit $P \Leftrightarrow Q$ pour $(P\Rightarrow Q)$ et $(Q\Rightarrow P)$ — « $P$ équivaut à $Q$ », « $P$ si et seulement si $Q$ », ou « $P$ est une condition nécessaire et suffisante de $Q$ ».</p></div>
+
+  <div class="def-box"><div class="label">Définition 5</div><p>La <b>réciproque</b> de $P\Rightarrow Q$ est $Q\Rightarrow P$.</p></div>
+  <div class="warning-box"><p>Si $P\Rightarrow Q$ est vraie, cela n'est pas forcément le cas de sa réciproque $Q\Rightarrow P$ !</p></div>
+
+  <div class="def-box"><div class="label">Définition 6</div><p>La <b>contraposée</b> de $P\Rightarrow Q$ est non $Q \Rightarrow$ non $P$.</p></div>
+
+  <div class="prop-box">
+    <div class="label">Proposition 5</div>
+    <p>Une implication et sa contraposée sont équivalentes.</p>
+    <div class="wide"><table class="truth">
+      <tr><th>P</th><th>Q</th><th>P⇒Q</th><th>non P</th><th>non Q</th><th>non Q⇒non P</th></tr>
+      <tr><td>V</td><td>V</td><td>V</td><td>F</td><td>F</td><td>V</td></tr>
+      <tr><td>V</td><td>F</td><td>F</td><td>F</td><td>V</td><td>F</td></tr>
+      <tr><td>F</td><td>V</td><td>V</td><td>V</td><td>F</td><td>V</td></tr>
+      <tr><td>F</td><td>F</td><td>V</td><td>V</td><td>V</td><td>V</td></tr>
+    </table></div>
+    <p style="font-size:.85rem;color:var(--ink-muted)">Les deux colonnes « P⇒Q » et « non Q⇒non P » sont identiques ligne à ligne : les deux propositions ont le même tableau de vérité.</p>
+  </div>
+
+  <h2 id="s3">III. Démonstrations</h2>
+  <div class="warning-box"><div class="label">Attention</div><p>Évitez de dire (ou écrire) « il <b>faut</b> montrer que », lorsque vous voulez dire « il <b>suffit</b> de montrer que ». Pour montrer qu'un objet possède une propriété, ne commencez pas par « Si l'objet possède telle propriété alors… » (ex. pour montrer que $f$ est croissante, on ne peut pas commencer par « Si $f$ est croissante alors… »).</p></div>
+
+  <h3 id="s3-1">1. Schémas de démonstration</h3>
+
+  <h4>a) Démonstration de $\forall x\in E,\ P(x)$</h4>
+  <p>« Soit $x\in E$ » (quelconque), puis on établit $P(x)$ pour ce $x$.</p>
+  <div class="exercise">
+    <div class="tag">Exercice 4</div>
+    <p class="statement">Montrer que $\forall x\geq1,\ x^2\geq x$.</p>
+    <div class="solution">
+      <p>Soit $x\geq1$ (quelconque). Comme $x\gt0$, on peut multiplier les deux membres de $x\geq1$ par $x$ sans changer le sens de l'inégalité : $x\times x\geq1\times x$, donc $x^2\geq x$.</p>
+      <p>Conclusion : $\forall x\geq1,\ x^2\geq x$.</p>
+    </div>
+  </div>
+
+  <h4>b) Démonstration de $\exists! x\in E,\ P(x)$</h4>
+  <p><b>Existence :</b> on construit un $x\in E$ vérifiant $P(x)$ (formule explicite) ou on applique un théorème. <b>Unicité :</b> « soient $x,y\in E$ tels que $P(x)$ et $P(y)$ », puis on montre que nécessairement $x=y$.</p>
+  <div class="exercise">
+    <p class="statement">$\exists! x\in\mathbb{R}$ tel que $x+2=3$.</p>
+    <div class="solution">
+      <p><b>Existence :</b> $x=1$ convient.</p>
+      <p><b>Unicité :</b> soient $x,y\in\mathbb{R}$ tels que $x+2=3$ et $y+2=3$. Alors $x+2=y+2$, d'où (en soustrayant $2$) $x=y$.</p>
+    </div>
+  </div>
+
+  <h4>c) Démonstration de $P_1\Rightarrow P_2$</h4>
+  <div class="exercise">
+    <div class="tag">Exemple 10</div>
+    <p class="statement">Soit $x$ un réel. $P_1$ : $x\geq1$ ; $P_2$ : $\sqrt{x^2+3}\geq2$. Montrer $P_1\Rightarrow P_2$.</p>
+    <div class="solution">
+      <p><b>Première méthode : preuve directe.</b> On suppose $P_1$ vraie (c'est-à-dire $x\geq1$). Comme $x\geq1$, alors $x^2\geq1$ (car la fonction carré est croissante sur $\mathbb{R}^+$). Mais alors $x^2+3\geq1+3=4$. On applique la racine carrée (croissante sur $\mathbb{R}^+$, et les deux termes sont bien positifs) : $\sqrt{x^2+3}\geq\sqrt{4}=2$, donc $P_2$ vraie.</p>
+      <p>Conclusion : $P_1\Rightarrow P_2$. <span style="color:var(--red)">⚠ Note : la réciproque $P_2\Rightarrow P_1$ est fausse</span> (ex. $x=-10$ vérifie $P_2$ mais pas $P_1$).</p>
+      <p style="margin-top:10px"><b>Deuxième méthode : par contraposition.</b> Principe : « $P_1\Rightarrow P_2$ » équivaut à sa contraposée « non $P_2\Rightarrow$ non $P_1$ ». On suppose donc « non $P_2$ », c'est-à-dire $\sqrt{x^2+3}\lt2$ (on veut montrer « non $P_1$ », c'est-à-dire $x\lt1$).</p>
+      <p>Les deux membres sont positifs, on applique la fonction carré (croissante sur $\mathbb{R}^+$) : $x^2+3\lt4$, donc $x^2\lt1$, c'est-à-dire $x\in\,]-1,1[$. Donc en particulier $x\lt1$ : « non $P_1$ » est vérifiée.</p>
+      <p>Conclusion : « non $P_2$ » $\Rightarrow$ « non $P_1$ », d'où $P_1\Rightarrow P_2$ (par contraposée).</p>
+    </div>
+  </div>
+
+  <h4>d) Démonstration de $P_1\Leftrightarrow P_2$</h4>
+  <p>On montre $P_1\Rightarrow P_2$ puis $P_2\Rightarrow P_1$ (ou l'inverse).</p>
+  <div class="exercise">
+    <p class="statement">$x\lt a \Leftrightarrow x+1\lt a+1$.</p>
+    <div class="solution">
+      <p>($\Rightarrow$) Si $x\lt a$ alors (en ajoutant $1$) $x+1\lt a+1$.</p>
+      <p>($\Leftarrow$) Si $x+1\lt a+1$ alors (en soustrayant $1$) $x\lt a$.</p>
+      <p>Par double implication : $x\lt a \Leftrightarrow x+1\lt a+1$.</p>
+    </div>
+  </div>
+  <div class="remark"><b>Remarque 6 :</b> si l'une des implications est difficile à prouver directement, il faut penser à raisonner par contraposée.</div>
+
+  <h4>e) Démonstration de $P_1\Leftrightarrow P_2\Leftrightarrow P_3$</h4>
+  <p>Preuve <b>cyclique</b> : il suffit de prouver, par exemple, $P_1\Rightarrow P_2\Rightarrow P_3\Rightarrow P_1$.</p>
+
+  <h4>f) Prouver que « les éléments de $E$ sont les fonctions telles que … »</h4>
+  <p>Il y a deux choses à démontrer : les éléments de $E$ sont bien des fonctions telles que… ; et les fonctions telles que… sont effectivement des éléments de $E$.</p>
+
+  <h4>g) Montrer que deux applications sont égales</h4>
+  <p>Soient $f:E\to F$ et $g:E\to F$. Pour montrer $f=g$, il suffit de montrer $\forall x\in E,\ f(x)=g(x)$. Rédaction : « Soit $x\in E$ quelconque. On veut montrer $f(x)=g(x)$. »</p>
+
+  <h4>h) Démonstration par disjonction de cas</h4>
+  <p>On démontre une propriété en distinguant plusieurs cas (qui doivent recouvrir toutes les possibilités).</p>
+  <div class="exercise">
+    <div class="tag">Exemple 11</div>
+    <p class="statement">Montrer que pour tout $n\in\mathbb{N}$, $n(n+1)$ est un entier pair.</p>
+    <div class="solution">
+      <p>Soit $n\in\mathbb{N}$. On fait une disjonction de cas.</p>
+      <p><b>Si $n$ est pair :</b> $\exists k\in\mathbb{N}$ tel que $n=2k$. Alors $n(n+1)=2k(2k+1)=4k^2+2k=2(2k^2+k)$ avec $2k^2+k\in\mathbb{N}$ : $n(n+1)$ est pair.</p>
+      <p><b>Si $n$ est impair :</b> $\exists k\in\mathbb{N}$ tel que $n=2k+1$. Alors $n(n+1)=(2k+1)(2k+2)=4k^2+6k+2=2(2k^2+3k+1)$ avec $2k^2+3k+1\in\mathbb{N}$ : $n(n+1)$ est pair.</p>
+      <p>Conclusion : dans tous les cas possibles, $n(n+1)$ est pair.</p>
+    </div>
+  </div>
+
+  <h3 id="s3-2">2. Démonstration par récurrence</h3>
+  <div class="prop-box"><div class="label">Propriété 6</div><p>Soit $A$ une partie non vide de $\mathbb{N}$. Alors $A$ possède un plus petit élément (bon ordre de $\mathbb{N}$).</p></div>
+  <p>Le raisonnement par récurrence permet de démontrer des propositions de la forme « $\forall n\geq n_0,\ P(n)$ », où $P$ est une propriété portant sur un entier naturel. En général, $n_0=0$ (« $\forall n\in\mathbb{N}, P(n)$ ») ou $n_0=1$ (« $\forall n\in\mathbb{N}^*, P(n)$ »).</p>
+
+  <div class="prop-box">
+    <div class="label">Théorème 7 (récurrence simple)</div>
+    <p>Soit $P(n)$ une propriété portant sur $n\geq n_0$ telle que $P(n_0)$ est vraie (initialisation) et $\forall n\geq n_0,\ P(n)\Rightarrow P(n+1)$ (hérédité). Alors pour tout $n\geq n_0$, $P(n)$ est vraie.</p>
+  </div>
+  <div class="method-box"><div class="label">Point méthode — rédaction type</div>
+    <p><b>Initialisation :</b> montrons que $P(n_0)$ est vraie… <br><b>Hérédité :</b> soit $n\geq n_0$ tel que $P(n)$ soit vraie (HR). Montrons que $P(n+1)$ est vraie… <br><b>Conclusion :</b> d'après le principe de récurrence (simple), $\forall n\geq n_0,\ P(n)$.</p>
+  </div>
+
+  <div class="exercise">
+    <div class="tag">Exercice 5 (inégalité de Bernoulli)</div>
+    <p class="statement">Soit $x$ un réel tel que $x\gt-1$. Montrer que $\forall n\in\mathbb{N}^*$, $(1+x)^n\geq1+nx$.</p>
+    <div class="solution">
+      <p>On raisonne par récurrence sur $n\in\mathbb{N}^*$.</p>
+      <p><b>Initialisation ($n=1$) :</b> $(1+x)^1=1+x$ et $1+1\times x=1+x$ : on obtient bien $1+x\geq1+x$, l'initialisation est vraie.</p>
+      <p><b>Hérédité :</b> soit $n\in\mathbb{N}^*$ tel que $(1+x)^n\geq1+nx$ (HR). On veut montrer que $(1+x)^{n+1}\geq1+(n+1)x$.</p>
+      <p>Comme $1+x\gt0$, on peut multiplier l'HR par $(1+x)$ sans changer le sens : $(1+x)^n\times(1+x)\geq(1+nx)(1+x)$, c'est-à-dire $(1+x)^{n+1}\geq1+(n+1)x+nx^2$.</p>
+      <p>Or $nx^2\geq0$, donc $1+(n+1)x+nx^2\geq1+(n+1)x$. Par transitivité, $(1+x)^{n+1}\geq1+(n+1)x$ : l'hérédité est prouvée.</p>
+      <p>Conclusion : la propriété est initialisée et héréditaire, donc d'après le principe de récurrence, $\forall n\in\mathbb{N}^*,\ (1+x)^n\geq1+nx$.</p>
+    </div>
+  </div>
+
+  <div class="prop-box"><div class="label">Proposition 8 (récurrence à deux crans)</div><p>Soit $P(n)$ une propriété portant sur $n\geq n_0$ telle que $P(n_0)$ et $P(n_0+1)$ sont vraies, et $\forall n\geq n_0,\ \big(P(n)$ et $P(n+1)\big)\Rightarrow P(n+2)$. Alors pour tout $n\geq n_0$, $P(n)$ est vraie.</p></div>
+
+  <div class="exercise">
+    <div class="tag">Exercice 6</div>
+    <p class="statement">Soit $(u_n)_{n\in\mathbb{N}}$ définie par $u_0=1$, $u_1=1$ et $\forall n\in\mathbb{N},\ u_{n+2}=u_n+u_{n+1}$. Montrer que $\forall n\in\mathbb{N}^*,\ u_n\lt\left(\dfrac{7}{4}\right)^n$.</p>
+    <div class="solution">
+      <p>On fait une récurrence (à deux crans) sur $n\in\mathbb{N}^*$.</p>
+      <p><b>Initialisation :</b> pour $n=1$ : $u_1=1$ et $(7/4)^1=7/4$ : $1\lt7/4$. Pour $n=2$ : $u_2=2$ et $(7/4)^2=49/16$ : $2\lt49/16$.</p>
+      <p><b>Hérédité :</b> soit $n\in\mathbb{N}^*$ tel que $u_n\lt(7/4)^n$ et $u_{n+1}\lt(7/4)^{n+1}$ (HR). On veut montrer $u_{n+2}\lt(7/4)^{n+2}$.</p>
+      <p>Or $u_{n+2}=u_n+u_{n+1}\lt(7/4)^n+(7/4)^{n+1}$. Il suffit donc de montrer $(7/4)^n+(7/4)^{n+1}\leq(7/4)^{n+2}$, c'est-à-dire $(7/4)^n\big(1+7/4\big)\leq(7/4)^n\times(7/4)^2$, soit $1+7/4\leq(7/4)^2$. Or $1+7/4=11/4=44/16$ et $(7/4)^2=49/16$ : $44/16\leq49/16$, toujours vrai.</p>
+      <p>On a bien $(7/4)^n+(7/4)^{n+1}\leq(7/4)^{n+2}$, donc par transitivité $u_{n+2}\lt(7/4)^{n+2}$ : l'hérédité est prouvée.</p>
+      <p>Conclusion : d'après le principe de récurrence à deux crans, $\forall n\in\mathbb{N}^*,\ u_n\lt(7/4)^n$.</p>
+    </div>
+  </div>
+
+  <div class="prop-box"><div class="label">Proposition 9 (récurrence forte)</div><p>Soit $P(n)$ une propriété portant sur $n\geq n_0$ telle que $P(n_0)$ est vraie, et $\forall n\geq n_0,\ \big(\forall k\in\mathbb{N},\ n_0\leq k\leq n,\ P(k)\big)\Rightarrow P(n+1)$. Alors $\forall n\geq n_0,\ P(n)$.</p></div>
+
+  <div class="exercise">
+    <div class="tag">Exercice 7</div>
+    <p class="statement">Démontrer, par récurrence forte, que pour tout entier naturel $n$ non nul, il existe deux entiers naturels $p$ et $q$ tels que $n=2^p\times(2q+1)$.</p>
+    <div class="solution">
+      <p><b>Initialisation :</b> pour $p=0,q=0$ : $2^0\times(2\times0+1)=1$ : initialisation vraie.</p>
+      <p><b>Hérédité :</b> soit $n\in\mathbb{N}^*$ tel que pour tout $k\in\llbracket1,n\rrbracket$, $\exists\, p_k,q_k\in\mathbb{N}$ tels que $k=2^{p_k}\times(2q_k+1)$ (HR). On veut montrer $\exists\, p,q\in\mathbb{N}$ tels que $n+1=2^p\times(2q+1)$. On fait une disjonction de cas.</p>
+      <p><b>Si $n+1$ est pair :</b> $\exists\,\ell\in\mathbb{N}^*$ tel que $n+1=2\ell$. Or $\ell\geq1$ et $\ell\lt n+1$, c'est-à-dire $\ell\in\llbracket1,n\rrbracket$ : d'après l'HR, $\exists(p_\ell,q_\ell)$ tel que $\ell=2^{p_\ell}\times(2q_\ell+1)$. Mais alors $n+1=2\ell=2\times2^{p_\ell}\times(2q_\ell+1)=2^{p_\ell+1}\times(2q_\ell+1)$. En prenant $p=p_\ell+1$ et $q=q_\ell$, on a bien $n+1=2^p(2q+1)$.</p>
+      <p><b>Si $n+1$ est impair :</b> $\exists\,m\in\mathbb{N}$ tel que $n+1=2m+1=2^0(2m+1)$. On prend $p=0$ et $q=m$ : $n+1=2^p(2q+1)$.</p>
+      <p>Dans les deux cas l'hérédité est prouvée.</p>
+      <p>Conclusion : d'après le principe de récurrence forte, $\forall n\in\mathbb{N}^*,\ \exists(p,q)\in\mathbb{N}^2$ tel que $n=2^p(2q+1)$.</p>
+    </div>
+  </div>
+
+  <div class="remark"><b>Cas d'utilisation des récurrences :</b> suites et séries (monotonie, encadrements), fonctions (dérivées successives, fonctions $C^\infty$), intégration (formules par intégration par parties), polynômes (récurrence sur le degré), espaces vectoriels et matrices (récurrence sur la dimension)…</div>
+
+  <h3 id="s3-3">3. Démonstration par analyse-synthèse</h3>
+  <p>Une démonstration par analyse-synthèse se compose de deux étapes : <b>Analyse</b> — on suppose avoir une solution du problème et on en déduit les propriétés qu'elle doit posséder ; <b>Synthèse</b> — on étudie tous les objets possédant les conditions nécessaires déterminées à l'étape précédente, et on choisit parmi eux ceux qui sont bien solutions.</p>
+  <div class="remark"><em>Exemple 12 :</em> dans la recherche des extrema d'une fonction, on cherche d'abord toutes les valeurs qui annulent la dérivée (condition nécessaire), puis on les étudie une par une pour voir si ce sont des extrema.</div>
+
+  <div class="exercise">
+    <div class="tag">Exercice 8</div>
+    <p class="statement">Résoudre l'équation $\sqrt{x+6}=x$ &nbsp;(E).</p>
+    <div class="solution">
+      <p><b>Analyse :</b> on suppose que $x$ est une solution de (E). Alors, en passant au carré, $x+6=x^2$. On résout $x^2-x-6=0$, ce qui donne $x\in\{-2,3\}$.</p>
+      <p><b>Synthèse :</b> $-2$ ne convient pas (car $\sqrt{4}=2\neq-2$ : le membre de gauche $\sqrt{x+6}$ est toujours $\geq0$, or $x=-2\lt0$). $3$ convient ($\sqrt{9}=3$).</p>
+      <p>Conclusion : l'équation (E) admet une unique solution : $x=3$.</p>
+    </div>
+  </div>
+
+  <h3 id="s3-4">4. Démonstration par l'absurde</h3>
+  <p>On suppose que l'affirmation qu'on veut démontrer est fausse, et on se ramène à une contradiction des hypothèses, ou à une affirmation absurde.</p>
+
+  <div class="exercise">
+    <div class="tag">Exercice 9</div>
+    <p class="statement">Démontrer que le nombre $\dfrac{\ln 2}{\ln 3}$ est irrationnel. (Un réel $r$ est dit rationnel s'il existe $p\in\mathbb{Z}$, $q\in\mathbb{Z}^*$ tels que $r=p/q$ ; irrationnel sinon.)</p>
+    <div class="solution">
+      <p>On raisonne par l'absurde. On suppose $\dfrac{\ln2}{\ln3}\in\mathbb{Q}$. Comme $\dfrac{\ln2}{\ln3}\gt0$, $\exists(p,q)\in(\mathbb{N}^*)^2$ tel que $\dfrac{\ln2}{\ln3}=\dfrac{p}{q}$.</p>
+      <p>Mais alors $q\times\ln2=p\times\ln3$, donc $\ln(2^q)=\ln(3^p)$. Comme la fonction exponentielle (donc $\ln$) est strictement croissante, on en déduit $2^q=3^p$.</p>
+      <p>Or $2^q$ est <b>pair</b> et $3^p$ est <b>impair</b> (pour $p,q\geq1$) : c'est <b>absurde</b>.</p>
+      <p>Conclusion : $\dfrac{\ln2}{\ln3}$ est irrationnel.</p>
+    </div>
+  </div>
+
+  <h2 id="exercices">Exercices d'entraînement (annales)</h2>
+  <p style="color:var(--ink-muted);font-size:.9rem">Cinq exercices réels, choisis pour recouvrir tout le chapitre, avec leur source précise. Cherchez d'abord par vous-même ; dépliez l'indice si besoin, puis la correction.</p>
+
+  <div class="exercise">
+    <div class="tag">Exercice A — opérations sur les ensembles</div>
+    <p class="statement">Soient $A,B$ deux parties d'un ensemble $E$. Montrer que $\overline{A\cup B}=\overline{A}\cap\overline{B}$ et $\overline{A\cap B}=\overline{A}\cup\overline{B}$ (lois de De Morgan).</p>
+    <details class="disclosure"><summary>Indice</summary>
+      <div class="hint-box">Raisonnez élément par élément : prenez $x\in E$ quelconque et traduisez chaque appartenance ($x\in\overline{X}$, $x\in X\cup Y$, $x\in X\cap Y$) par sa définition, une équivalence à la fois.</div>
+    </details>
+    <details class="disclosure"><summary>Correction</summary>
+      <div class="solution">
+        <p>Soit $x\in E$. On a la chaîne d'équivalences :</p>
+        <p>$x\in\overline{A\cup B}\ \Leftrightarrow\ x\notin A\cup B\ \Leftrightarrow\ (x\notin A$ et $x\notin B)\ \Leftrightarrow\ (x\in\overline{A}$ et $x\in\overline{B})\ \Leftrightarrow\ x\in\overline{A}\cap\overline{B}$.</p>
+        <p>D'où $\overline{A\cup B}=\overline{A}\cap\overline{B}$. La seconde égalité s'obtient de la même manière, en échangeant « et » et « ou » (ou en appliquant la première aux complémentaires $\overline A,\overline B$).</p>
+        <p style="font-size:.85rem;color:var(--ink-muted)">C'est exactement la Proposition 3 du cours — cet exercice en redonne la démonstration complète, non admise cette fois.</p>
+      </div>
+    </details>
+    <div class="src">Source : Exo7 (exo7.emath.fr), fiche « Logique, ensembles, raisonnements 1 », exercice 9.</div>
+  </div>
+
+  <div class="exercise">
+    <div class="tag">Exercice B — ordre des quantificateurs</div>
+    <p class="statement">Pour chacune des deux assertions suivantes, dire si elle est vraie ou fausse, le justifier, et donner sa négation :</p>
+    <p class="statement">(a) $\exists x\in\mathbb{R},\ \forall y\in\mathbb{R},\ x+y\gt0$ &nbsp;&nbsp; (b) $\forall x\in\mathbb{R},\ \exists y\in\mathbb{R},\ x+y\gt0$</p>
+    <details class="disclosure"><summary>Indice</summary>
+      <div class="hint-box">Pour l'assertion vraie, construisez $y$ explicitement en fonction de $x$ (il peut en dépendre). Pour l'assertion fausse, cherchez un contre-exemple : après avoir fixé un $x$ candidat, faites varier $y$ pour casser la propriété.</div>
+    </details>
+    <details class="disclosure"><summary>Correction</summary>
+      <div class="solution">
+        <p><b>(a) est fausse.</b> Sa négation est $\forall x\in\mathbb{R},\ \exists y\in\mathbb{R},\ x+y\leq0$, qui est vraie : pour tout $x$, il suffit de choisir $y=-(x+1)$, alors $x+y=-1\leq0$. Donc aucun $x$ ne peut convenir pour tous les $y$ dans (a) : elle est bien fausse.</p>
+        <p><b>(b) est vraie.</b> Soit $x\in\mathbb{R}$ quelconque : posons $y=|x|+1$ (ce $y$ dépend de $x$, ce qui est autorisé puisque $\exists y$ vient après $\forall x$). Alors $x+y=x+|x|+1$. Or $x+|x|\geq0$ (égal à $2x\geq0$ si $x\geq0$, égal à $0$ si $x\lt0$), donc $x+y\geq1\gt0$ : la propriété est vérifiée pour ce $x$. Ceci étant vrai pour tout $x$, (b) est vraie. Sa négation, $\exists x\in\mathbb{R},\ \forall y\in\mathbb{R},\ x+y\leq0$, est donc fausse.</p>
+        <p style="font-size:.85rem;color:var(--ink-muted)">Comparez avec l'avertissement du cours (§II.1) : ici, échanger $\exists x\,\forall y$ (faux) et $\forall x\,\exists y$ (vrai) change bien la valeur de vérité.</p>
+      </div>
+    </details>
+    <div class="src">Source : Exo7 (exo7.emath.fr), fiche « Logique, ensembles, raisonnements 1 », exercice 2 (a et b).</div>
+  </div>
+
+  <div class="exercise">
+    <div class="tag">Exercice C — contraposée</div>
+    <p class="statement">Soient $A,B$ deux parties d'un ensemble $E$. Montrer, par contraposition, que $(A\cap B=A\cup B)\Rightarrow A=B$.</p>
+    <details class="disclosure"><summary>Indice</summary>
+      <div class="hint-box">La contraposée de « $A\cap B=A\cup B\Rightarrow A=B$ » est « $A\neq B\Rightarrow A\cap B\neq A\cup B$ ». Or $A\neq B$ signifie qu'il existe un élément dans l'un des deux ensembles mais pas dans l'autre : où peut-il se trouver par rapport à $A\cap B$ et $A\cup B$ ?</div>
+    </details>
+    <details class="disclosure"><summary>Correction</summary>
+      <div class="solution">
+        <p>On raisonne par contraposée : on suppose $A\neq B$ et on montre $A\cap B\neq A\cup B$.</p>
+        <p>$A\neq B$ signifie qu'il existe un élément $x\in A\setminus B$ ou un élément $x\in B\setminus A$ (sinon $A$ et $B$ auraient exactement les mêmes éléments). Dans les deux cas, cet élément $x$ appartient à $A\cup B$ (il est dans $A$ ou dans $B$) mais pas à $A\cap B$ (il manque à l'un des deux). Donc $A\cup B\neq A\cap B$.</p>
+        <p>Par contraposition, $(A\cap B=A\cup B)\Rightarrow A=B$.</p>
+        <p style="font-size:.85rem;color:var(--ink-muted)">À titre de comparaison, une preuve directe est aussi possible : en supposant $A\cap B=A\cup B$, on prend $x\in A$ quelconque ; alors $x\in A\cup B$, donc $x\in A\cap B$ (égalité des deux ensembles), donc $x\in B$. Ainsi $A\subset B$, et par symétrie $B\subset A$, d'où $A=B$. Les deux méthodes (directe et par contraposée) sont valables — voir le schéma c) du cours.</p>
+      </div>
+    </details>
+    <div class="src">Source : Exo7 (exo7.emath.fr), fiche « Logique, ensembles, raisonnements 1 », exercice 10 (partie 1).</div>
+  </div>
+
+  <div class="exercise">
+    <div class="tag">Exercice D — raisonnement par l'absurde</div>
+    <p class="statement">Montrer, par l'absurde, qu'il existe une infinité de nombres premiers.</p>
+    <details class="disclosure"><summary>Indice</summary>
+      <div class="hint-box">Supposez qu'il n'en existe qu'un nombre fini, notez-les tous $p_1,\dots,p_r$, et construisez à partir d'eux un entier qui ne peut être divisible par aucun des $p_i$ — que peut-on en conclure sur cet entier ?</div>
+    </details>
+    <details class="disclosure"><summary>Correction</summary>
+      <div class="solution">
+        <p>On raisonne par l'absurde : on suppose qu'il n'existe qu'un nombre fini $r$ de nombres premiers, notés $p_1,p_2,\dots,p_r$.</p>
+        <p>Posons $N=p_1\times p_2\times\cdots\times p_r+1$. Pour chaque $i$, $p_i$ divise le produit $p_1\cdots p_r$ ; s'il divisait aussi $N$, il diviserait leur différence $N-p_1\cdots p_r=1$, ce qui est impossible ($p_i\geq2$). Donc $N$ n'est divisible par aucun des $p_i$.</p>
+        <p>Or $N\gt1$ possède nécessairement un diviseur premier (tout entier $\geq2$ en a un). Ce diviseur premier n'est, on vient de le voir, aucun des $p_i$ : c'est donc un nombre premier supplémentaire, distinct de tous les $p_i$ déjà listés.</p>
+        <p>Ceci contredit l'hypothèse selon laquelle $p_1,\dots,p_r$ sont <em>tous</em> les nombres premiers : <b>absurde</b>.</p>
+        <p>Conclusion : il existe une infinité de nombres premiers.</p>
+      </div>
+    </details>
+    <div class="src">Source : Exo7 (exo7.emath.fr), fiche « Logique, ensembles, raisonnements 1 », exercice 14 (partie 2 ; démonstration classique attribuée à Euclide).</div>
+  </div>
+
+  <div class="exercise">
+    <div class="tag">Exercice E — récurrence simple</div>
+    <p class="statement">Montrer que $\displaystyle\forall n\in\mathbb{N}^*,\ \sum_{k=1}^{n}k=\frac{n(n+1)}{2}$.</p>
+    <details class="disclosure"><summary>Indice</summary>
+      <div class="hint-box">Rédigez la structure type d'une récurrence simple (voir le Point méthode du §III.2) : initialisation en $n=1$, puis hérédité en écrivant $\sum_{k=1}^{n+1}k$ comme $\sum_{k=1}^{n}k$ plus le terme $(n+1)$.</div>
+    </details>
+    <details class="disclosure"><summary>Correction</summary>
+      <div class="solution">
+        <p>On raisonne par récurrence simple sur $n\in\mathbb{N}^*$. Notons $P(n)$ la propriété $\sum_{k=1}^{n}k=\dfrac{n(n+1)}{2}$.</p>
+        <p><b>Initialisation ($n=1$) :</b> $\sum_{k=1}^{1}k=1$ et $\dfrac{1\times2}{2}=1$ : $P(1)$ est vraie.</p>
+        <p><b>Hérédité :</b> soit $n\in\mathbb{N}^*$ tel que $P(n)$ soit vraie (HR). Alors :</p>
+        <p style="text-align:center">$\displaystyle\sum_{k=1}^{n+1}k=\left(\sum_{k=1}^{n}k\right)+(n+1)=\frac{n(n+1)}{2}+(n+1)=\frac{n(n+1)+2(n+1)}{2}=\frac{(n+1)(n+2)}{2}$.</p>
+        <p>C'est exactement $P(n+1)$ : l'hérédité est prouvée.</p>
+        <p>Conclusion : d'après le principe de récurrence, $\forall n\in\mathbb{N}^*,\ \sum_{k=1}^{n}k=\dfrac{n(n+1)}{2}$.</p>
+      </div>
+    </details>
+    <div class="src">Source : Exo7 (exo7.emath.fr), fiche « Logique, ensembles, raisonnements 1 », exercice 15 (partie 1).</div>
+  </div>
+
+  <h2 id="sources">Sources</h2>
+  <div class="sources">
+    <p>Le contenu du cours (définitions, propositions, exemples) reprend le support de cours distribué en classe, complété par les démonstrations manuscrites de Léane. Chaque énoncé, formule et démonstration a été relu et recalculé pas à pas avant mise en forme ; aucune erreur n'a été trouvée dans ce chapitre — les résultats sont conformes aux définitions et théorèmes standards du programme officiel de mathématiques MPSI :</p>
+    <ul>
+      <li>Théorie des ensembles (opérations, cardinal, partition, produit cartésien) et logique élémentaire (quantificateurs, connecteurs, implication/réciproque/contraposée) : notions de base communes à tous les manuels de référence de CPGE scientifique (collections H-Prépa, Précis Bréal).</li>
+      <li>Principe de récurrence (simple, à deux crans, forte) : propriété fondatrice de $\mathbb{N}$, démontrée à partir du bon ordre (Propriété 6) — cohérente avec le programme officiel CPGE (bloc « Nombres et raisonnement »).</li>
+      <li>Inégalité de Bernoulli (Exercice 5 du cours) et irrationalité de $\ln2/\ln3$ (Exercice 9 du cours) : résultats classiques dont les démonstrations ci-dessus ont été vérifiées terme à terme.</li>
+    </ul>
+    <p>Les cinq exercices d'entraînement de la section précédente proviennent de la fiche <a href="https://exo7.emath.fr/ficpdf/fic00002.pdf" target="_blank" rel="noopener">« Logique, ensembles, raisonnements 1 »</a> d'Exo7 (exo7.emath.fr), une banque d'exercices universitaires corrigés en libre accès, largement utilisée en CPGE. Chaque énoncé, indice et correction a été vérifié et reformulé pour rester fidèle à la source ; les numéros d'exercice sont indiqués sous chaque énoncé pour retrouver l'original.</p>
+  </div>
+
+  <footer>Cahier Commun — MPSI · Mathématiques · Chapitre 01</footer>
+</main>
+
+</body>
+</html>
