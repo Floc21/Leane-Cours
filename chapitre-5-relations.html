@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Relations d'ordre et d'équivalence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$','$'], ['\\(','\\)']], displayMath: [['$$','$$'], ['\\[','\\]']],
+    macros: { llbracket: "\\unicode{x27E6}", rrbracket: "\\unicode{x27E7}" }
+  },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js"></script>
+<style>
+  :root{
+    --paper:#F3F5EF; --surface:#FFFFFF; --surface-2:#EAEEE4;
+    --ink:#20261F; --ink-muted:#5B6459; --border:#D9DECD;
+    --accent:#1F4E8C; --accent-ink:#0E2D57; --accent-soft:#E4ECF7;
+    --red:#A6303C; --red-soft:#F6E4E4;
+    --green:#3D7A4D; --green-soft:#E3EFDF;
+    --gold:#8A6A1E; --gold-soft:#F3ECD8;
+    --shadow: 0 1px 2px rgba(32,38,31,.06), 0 6px 20px -8px rgba(32,38,31,.18);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#12160F; --surface:#191F17; --surface-2:#212820;
+      --ink:#E8ECE2; --ink-muted:#98A092; --border:#2B3327;
+      --accent:#7CA6E6; --accent-ink:#DCE8FB; --accent-soft:#1E2B41;
+      --red:#E28B92; --red-soft:#3A2224;
+      --green:#7FC090; --green-soft:#1E2F22;
+      --gold:#D8B45C; --gold-soft:#332B16;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 24px -8px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#12160F; --surface:#191F17; --surface-2:#212820;
+    --ink:#E8ECE2; --ink-muted:#98A092; --border:#2B3327;
+    --accent:#7CA6E6; --accent-ink:#DCE8FB; --accent-soft:#1E2B41;
+    --red:#E28B92; --red-soft:#3A2224;
+    --green:#7FC090; --green-soft:#1E2F22;
+    --gold:#D8B45C; --gold-soft:#332B16;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 24px -8px rgba(0,0,0,.5);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    background:var(--paper); color:var(--ink);
+    font-family:"Public Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+    padding-inline:20px; padding-block:28px; line-height:1.6;
+  }
+  main{max-width:780px;margin:0 auto;}
+  h1,h2,h3,h4{font-family:"Spectral",Georgia,serif;text-wrap:balance;margin:1.4em 0 .5em;}
+  h1{font-size:1.7rem;color:var(--accent-ink);margin-top:0;}
+  h2{font-size:1.3rem;color:var(--accent-ink);border-bottom:2px solid var(--border);padding-bottom:.3em;margin-top:2em;}
+  h3{font-size:1.08rem;}
+  h4{font-size:.98rem;font-style:italic;}
+  p{margin:.7em 0;}
+  a{color:var(--accent);}
+  .mono{font-family:"JetBrains Mono",monospace;}
+
+  header.top{margin-bottom:6px;}
+  header.top .eyebrow{font-family:"JetBrains Mono",monospace;font-size:.78rem;color:var(--ink-muted);letter-spacing:.03em;}
+  header.top nav{font-size:.82rem;margin-top:6px;}
+  header.top nav a{margin-right:14px;}
+
+  .toc{
+    background:var(--surface);border:1px solid var(--border);border-radius:10px;
+    padding:14px 18px;margin:20px 0 30px;box-shadow:var(--shadow);font-size:.9rem;
+  }
+  .toc h2{margin:0 0 8px;font-size:1rem;border:none;padding:0;}
+  .toc ol{margin:0;padding-left:1.3em;}
+  .toc li{margin-bottom:2px;}
+  .toc a{text-decoration:none;}
+  .toc a:hover{text-decoration:underline;}
+
+  .def-box, .prop-box{
+    background:var(--surface);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;
+    padding:12px 16px;margin:1em 0;box-shadow:var(--shadow);
+  }
+  .def-box .label, .prop-box .label{font-weight:700;color:var(--accent-ink);font-family:"Spectral",serif;}
+
+  .method-box{
+    background:var(--gold-soft);border:1px solid color-mix(in srgb, var(--gold) 45%, transparent);
+    border-radius:8px;padding:12px 16px;margin:1em 0;
+  }
+  .method-box .label{font-weight:700;color:var(--gold);}
+
+  .warning-box{
+    background:var(--red-soft);border:1px solid color-mix(in srgb, var(--red) 45%, transparent);
+    border-radius:8px;padding:12px 16px;margin:1em 0;
+  }
+  .warning-box .label{font-weight:700;color:var(--red);}
+
+  .remark{
+    border-left:3px solid var(--border);padding:6px 14px;margin:1em 0;color:var(--ink-muted);font-size:.93rem;
+  }
+
+  .exercise{
+    background:var(--surface);border:1px solid var(--border);border-radius:10px;
+    padding:14px 18px;margin:1.2em 0;box-shadow:var(--shadow);
+  }
+  .exercise .tag{font-family:"JetBrains Mono",monospace;font-size:.72rem;font-weight:700;letter-spacing:.05em;color:var(--accent);text-transform:uppercase;}
+  .exercise .statement{font-style:italic;margin:.4em 0 .8em;}
+  .exercise .solution{border-top:1px dashed var(--border);padding-top:.7em;margin-top:.4em;}
+  .exercise .solution .lbl{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-muted);margin-bottom:4px;}
+
+  figure{margin:1.4em 0;text-align:center;}
+  figure svg{max-width:100%;height:auto;color:var(--ink);}
+  figcaption{font-size:.82rem;color:var(--ink-muted);margin-top:6px;}
+
+  table.truth{border-collapse:collapse;margin:1em auto;font-family:"JetBrains Mono",monospace;font-size:.9rem;}
+  table.truth th,table.truth td{border:1px solid var(--border);padding:5px 16px;text-align:center;}
+  table.truth th{background:var(--surface-2);}
+
+  .wide{overflow-x:auto;}
+
+  .hint-box{background:var(--accent-soft);border:1px dashed var(--accent);border-radius:8px;padding:10px 14px;margin:0;font-size:.9rem;}
+  .exercise .src{font-size:.76rem;color:var(--ink-muted);margin-top:10px;font-family:"JetBrains Mono",monospace;}
+
+  .exercise details{margin:.5em 0 0;}
+  .exercise summary{
+    cursor:pointer;list-style:none;display:flex;align-items:center;gap:6px;
+    font-family:"JetBrains Mono",monospace;font-size:.72rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+    color:var(--accent-ink);padding:6px 0;user-select:none;
+  }
+  .exercise summary::-webkit-details-marker{display:none;}
+  .exercise summary::before{content:"▸";display:inline-block;color:var(--accent);font-size:.85rem;transition:transform .15s ease;}
+  .exercise details[open] summary::before{transform:rotate(90deg);}
+  .exercise details > .hint-box, .exercise details > .solution{margin-top:2px;}
+  .exercise details > .solution{border-top:none;padding-top:0;}
+
+  .sources{font-size:.86rem;color:var(--ink-muted);}
+  .sources ul{padding-left:1.2em;}
+
+  footer{margin-top:40px;color:var(--ink-muted);font-size:.78rem;text-align:center;}
+</style>
+</head>
+<body>
+<main>
+  <header class="top">
+    <div class="eyebrow">MPSI · MATHÉMATIQUES · CHAPITRE 05</div>
+    <h1>Relations d'ordre, relations d'équivalence</h1>
+    <nav><a href="#s1">I. Relations d'ordre</a> · <a href="#s2">II. Relations d'équivalence</a> · <a href="#s3">III. Classes d'équivalence</a> · <a href="#exercices">Exercices</a> · <a href="#sources">Sources</a></nav>
+  </header>
+
+  <div class="toc">
+    <h2>Sommaire</h2>
+    <ol>
+      <li><a href="#s1">Relations d'ordre</a></li>
+      <li><a href="#s2">Relations d'équivalence</a></li>
+      <li><a href="#s3">Classes d'équivalence</a></li>
+      <li><a href="#exercices">Exercices d'entraînement (annales)</a></li>
+    </ol>
+  </div>
+
+  <h2 id="s1">I. Relations d'ordre</h2>
+  <h3>1. Définitions</h3>
+  <div class="def-box">
+    <div class="label">Définition 1</div>
+    <p>Une relation $R$ définie sur un ensemble $E$ (id est de $E$ dans $E$) est une <b>relation d'ordre</b> lorsque :</p>
+    <ul>
+      <li>$\forall x\in E,\ xRx$ ($R$ est <b>réflexive</b>) ;</li>
+      <li>$\forall x,y\in E,\ xRy$ et $yRx\Rightarrow x=y$ ($R$ est <b>antisymétrique</b>) ;</li>
+      <li>$\forall x,y,z\in E,\ xRy$ et $yRz\Rightarrow xRz$ ($R$ est <b>transitive</b>).</li>
+    </ul>
+    <p style="font-size:.85rem;color:var(--ink-muted)">Moyen mnémotechnique : R.A.T (Réflexive, Antisymétrique, Transitive).</p>
+  </div>
+  <p><b>Définition 2 :</b> une relation d'ordre est dite d'<b>ordre total</b> lorsque $\forall x,y\in E,\ xRy$ ou $yRx$ (dans le cas contraire, on parle d'<b>ordre partiel</b>).</p>
+
+  <h3>2. Exemples</h3>
+  <h4>a) Dans $\mathbb{R}$, $R=\text{« }\leq\text{ »}$</h4>
+  <div class="prop-box">
+    <div class="label">Proposition 1</div>
+    <p>$\mathbb{R}$ muni de la relation $\leq$ est un ensemble totalement ordonné.</p>
+    <p><b>Démonstration :</b> $\forall x\in\mathbb{R},\ x\leq x$ (réflexivité) ; $\forall(x,y)\in\mathbb{R}^2$, si $x\leq y$ et $y\leq x$ alors $x=y$ (antisymétrie) ; $\forall(x,y,z)\in\mathbb{R}^3$, si $x\leq y$ et $y\leq z$ alors $x\leq z$ (transitivité). De plus $\forall(x,y)\in\mathbb{R}^2$, on a $x\leq y$ ou $y\leq x$ : l'ordre est total.</p>
+  </div>
+
+  <h4>b) Dans $\mathbb{N}$, $R=\text{« divise »}$, noté $\mid$</h4>
+  <p>$a\mid b$ ($a$ divise $b$) si $\exists k\in\mathbb{N},\ b=ka$ : est une relation d'ordre sur $\mathbb{N}$ ; elle n'est pas totale.</p>
+  <div class="exercise">
+    <div class="solution">
+      <p><b>1. Réflexive :</b> soit $a\in\mathbb{N}$, on a $a=a\times1$, donc $a\mid a$.</p>
+      <p><b>2. Antisymétrique :</b> soit $(a,b)\in\mathbb{N}^2$. On suppose $a\mid b$ et $b\mid a$ (on veut montrer que $a=b$). $a\mid b$ donc $\exists k\in\mathbb{N}$ tel que $b=ka$. $b\mid a$ donc $\exists k'\in\mathbb{N}$ tel que $a=k'b$. Mais alors $b=k\cdot k'\cdot b$. Deux cas possibles : soit $b=0$, et alors $a=k'b=0=b$ ; soit $b\neq0$, et on peut simplifier par $b$ : $1=kk'$, et comme $k,k'\in\mathbb{N}$, cela impose forcément $k=k'=1$, d'où $a=k'b=b$. Dans les deux cas $a=b$ : l'antisymétrie est prouvée.</p>
+      <p><b>3. Transitivité :</b> soit $(a,b,c)\in\mathbb{N}^3$. On suppose $a\mid b$ et $b\mid c$ (on veut montrer que $a\mid c$). $a\mid b\Rightarrow\exists k\in\mathbb{N}$ tel que $b=ka$. $b\mid c\Rightarrow\exists k'\in\mathbb{N}$ tel que $c=k'b$. Mais alors $c=k'\times(ka)=(kk')\times a$ avec $kk'\in\mathbb{N}$. D'où $a\mid c$ : la transitivité est prouvée.</p>
+      <p>« Divise » est donc une relation d'ordre sur $\mathbb{N}$. Elle n'est pas totale : par exemple, $6\nmid8$ et $8\nmid6$, donc ce n'est pas un ordre total ; on parle d'<b>ordre partiel</b>.</p>
+    </div>
+  </div>
+
+  <h4>c) Dans $E=\mathcal{P}(\Omega)$ (l'ensemble des parties de $\Omega$), $R=\text{« }\subset\text{ »}$</h4>
+  <p>La relation $\subset$, définie par $A\subset B$ si $(a\in A\Rightarrow a\in B)$, est une relation d'ordre ; elle n'est pas totale.</p>
+  <div class="exercise">
+    <div class="solution">
+      <p><b>1. Réflexive :</b> soit $A$ un sous-ensemble de $\Omega$, on a $A\subset A$ : vrai.</p>
+      <p><b>2. Antisymétrique :</b> soit $A,B\in\mathcal{P}(\Omega)$. On suppose $A\subset B$ et $B\subset A$, alors $A=B$ (double inclusion).</p>
+      <p><b>3. Transitivité :</b> soit $A,B,C\in\mathcal{P}(\Omega)$. On suppose $A\subset B$ et $B\subset C$. On sait qu'alors $A\subset C$.</p>
+      <p>C'est donc bien une relation d'ordre sur $\mathcal{P}(\Omega)$. Exemple avec $\Omega=\{0,1\}$ : $A=\{0\}$, $B=\{1\}$ : $A\not\subset B$ et $B\not\subset A$, donc pas ordre total.</p>
+    </div>
+  </div>
+
+  <div class="exercise">
+    <div class="tag">Exercice 1 (cours)</div>
+    <p class="statement">On définit une relation binaire $R$ sur $\mathbb{R}_+^*$ par : $xRy\iff\exists n\in\mathbb{N},\ y=x^n$. Montrer que $R$ est une relation d'ordre. Cet ordre est-il total ?</p>
+    <div class="solution">
+      <p>Exemples : $2R8$ car $8=2^3$ ; $3R9$ car $9=3^2$ ; $7\!\not\!R10$ car il n'existe pas de $n\in\mathbb{N}$ tel que $10=7^n$.</p>
+      <p><b>1. Réflexive :</b> soit $x\in\mathbb{R}_+^*$. On a $x=x^1$ (avec $n=1\in\mathbb{N}$), d'où $xRx$.</p>
+      <p><b>2. Antisymétrie :</b> soit $(x,y)\in(\mathbb{R}_+^*)^2$. On suppose $xRy$ et $yRx$ (on veut montrer que $x=y$). $xRy$ : $\exists\ell\in\mathbb{N}$ tel que $y=x^\ell$. $yRx$ : $\exists n\in\mathbb{N}$ tel que $x=y^n$. Alors $x=(x^\ell)^n=x^{\ell n}$. Deux cas possibles : soit $x=1$ (mais alors $y=1^\ell=1$, donc $x=y$) ; soit $\ell\times n=1$, et comme $\ell,n\in\mathbb{N}$, cela impose $\ell=n=1$, d'où $y=x^1=x$. Dans les deux cas $x=y$.</p>
+      <p><b>3. Transitive :</b> soit $(x,y,z)\in(\mathbb{R}_+^*)^3$. On suppose $xRy$ et $yRz$. Alors $\exists k\in\mathbb{N}$ tel que $y=x^k$, et $\exists\ell\in\mathbb{N}$ tel que $z=y^\ell$. D'où $z=(x^k)^\ell=x^{k\ell}$ avec $k\ell\in\mathbb{N}$ : $xRz$.</p>
+      <p><b>Conclusion :</b> $R$ est une relation d'ordre sur $\mathbb{R}_+^*$. On a ni $7R10$ ni $10R7$ ($10$ n'est pas une puissance entière de $7$, ni $7$ une puissance entière de $10$) : l'ordre n'est <b>pas total</b>, c'est un ordre partiel.</p>
+    </div>
+  </div>
+
+  <h2 id="s2">II. Relations d'équivalence</h2>
+  <h3>1. Définition</h3>
+  <div class="def-box">
+    <div class="label">Définition 3</div>
+    <p>Une relation $R$ définie sur un ensemble $E$ est une <b>relation d'équivalence</b> lorsque :</p>
+    <ul>
+      <li>$\forall x\in E,\ xRx$ ($R$ est <b>réflexive</b>) ;</li>
+      <li>$\forall x,y\in E,\ xRy\Rightarrow yRx$ ($R$ est <b>symétrique</b>) ;</li>
+      <li>$\forall x,y,z\in E,\ xRy$ et $yRz\Rightarrow xRz$ ($R$ est <b>transitive</b>).</li>
+    </ul>
+    <p style="font-size:.85rem;color:var(--ink-muted)">Moyen mnémotechnique : R.S.T (Réflexive, Symétrique, Transitive).</p>
+  </div>
+
+  <h3>2. Exemples</h3>
+  <h4>a) Égalité</h4>
+  <p>Soit $E$ un ensemble muni de la relation $R=\text{« }=\text{ »}$. $R$ définit bien une relation d'équivalence : réflexive ($\forall a\in E,\ a=a$), symétrique ($\forall(a,b)\in E^2$, si $a=b$ alors $b=a$), transitive ($\forall(a,b,c)\in E^3$, si $a=b$ et $b=c$ alors $a=c$).</p>
+
+  <h4>b) Parallélisme</h4>
+  <p>Deux droites $a$ et $b$ dans l'espace tridimensionnel sont dites <b>parallèles</b> (on note $a\parallel b$) si $a=b$ ou ($a$ et $b$ sont coplanaires et d'intersection vide). La relation $R=\text{« }\parallel\text{ »}$ est une relation d'équivalence (admise ici — c'est un résultat classique de géométrie dans l'espace).</p>
+
+  <h4>c) Relations de congruence modulo un entier sur $\mathbb{Z}$</h4>
+  <p>Soit $n\in\mathbb{N}^*$. Soit $(a,b)\in\mathbb{Z}^2$.</p>
+  <div class="def-box"><div class="label">Définition 4</div><p>On dit que $a$ est <b>congru</b> à $b$ modulo $n$ (et on note $a\equiv b\,[n]$) si $n$ divise $a-b$.</p></div>
+  <div class="prop-box">
+    <div class="label">Proposition 2</div>
+    <p>La congruence modulo un entier dans $\mathbb{Z}$ est une relation d'équivalence.</p>
+    <p><b>Réflexive :</b> soit $a\in\mathbb{Z}$ (quelconque). On a bien $a\equiv a\,[n]$ (car $n\mid a-a=0$).</p>
+    <p><b>Symétrique :</b> on suppose $a\equiv b\,[n]$ (on veut montrer que $b\equiv a\,[n]$). $a\equiv b\,[n]$ signifie $n\mid a-b\iff\exists k\in\mathbb{Z}$ tel que $a-b=kn\iff\exists k\in\mathbb{Z}$ tel que $b-a=(-k)\times n$. Mais alors $n\mid b-a$ (car $-k\in\mathbb{Z}$), et donc $b\equiv a\,[n]$.</p>
+    <p><b>Transitivité :</b> $(a,b,c)\in\mathbb{Z}^3$. On suppose $a\equiv b\,[n]$ et $b\equiv c\,[n]$ (on veut montrer que $a\equiv c\,[n]$). $a\equiv b\,[n]\iff\exists k\in\mathbb{Z}$ tel que $a-b=kn$. $b\equiv c\,[n]\iff\exists\ell\in\mathbb{Z}$ tel que $b-c=\ell n$. Donc $(a-b)+(b-c)=kn+\ell n\iff a-c=n(k+\ell)$. Donc $n\mid a-c\Rightarrow a\equiv c\,[n]$.</p>
+  </div>
+  <div class="prop-box"><div class="label">Proposition 3</div><p style="text-align:center">$a\equiv b\,[n]\iff\exists k\in\mathbb{Z},\ a=b+kn$.</p><p>$a\equiv b\,[n]\iff n\mid a-b\iff\exists k\in\mathbb{Z}$ tel que $a-b=kn\iff\exists k\in\mathbb{Z}$ tel que $a=b+kn$.</p></div>
+
+  <h4>d) Relations de congruence modulo un réel sur $\mathbb{R}$</h4>
+  <p>Soit $\alpha\in\mathbb{R}$, $\alpha>0$. Soit $(x,y)\in\mathbb{R}^2$.</p>
+  <div class="def-box"><div class="label">Définition 5</div><p>On dit que $x$ est congru à $y$ modulo $\alpha$ (et on note $x\equiv y\,[\alpha]$) s'il existe $k\in\mathbb{Z}$ tel que $x=y+k\alpha$.</p></div>
+  <div class="method-box">
+    <div class="label">Démonstration (relation d'équivalence)</div>
+    <p><b>Réflexive :</b> soit $x\in\mathbb{R}$ (quelconque), $x=x+0\times\alpha$, donc $x\equiv x\,[\alpha]$.</p>
+    <p><b>Symétrie :</b> soit $(x,y)\in\mathbb{R}^2$. On suppose $x\equiv y\,[\alpha]$ (on veut montrer que $y\equiv x\,[\alpha]$). Or $x\equiv y\,[\alpha]\iff\exists k\in\mathbb{Z}$ tel que $x=y+k\alpha\iff\exists k\in\mathbb{Z}$ tel que $y=x+(-k)\alpha$, avec $-k\in\mathbb{Z}$. Donc $y\equiv x\,[\alpha]$.</p>
+    <p><b>Transitive :</b> soit $(x,y,z)\in\mathbb{R}^3$. On suppose $x\equiv y\,[\alpha]$ et $y\equiv z\,[\alpha]$ (on veut montrer que $x\equiv z\,[\alpha]$). On a $\exists k\in\mathbb{Z}$ tel que $x=y+k\alpha$, et $\exists\ell\in\mathbb{Z}$ tel que $y=z+\ell\alpha$. D'où $x=(z+\ell\alpha)+k\alpha=z+(\ell+k)\alpha$ avec $\ell+k\in\mathbb{Z}$. D'où $x\equiv z\,[\alpha]$.</p>
+  </div>
+  <div class="remark">$R=$ « $\dfrac pq\,R\,\dfrac{p'}{q'}\iff pq'=p'q$ » (sur $\mathbb{Z}\times\mathbb{Z}^*$) est un autre exemple classique de relation d'équivalence — c'est elle qui sert à construire $\mathbb{Q}$ comme ensemble de classes de fractions équivalentes (admis ici).</div>
+
+  <h2 id="s3">III. Classes d'équivalence</h2>
+  <div class="def-box">
+    <div class="label">Définition 6</div>
+    <p>Soit $E$ un ensemble, et soit $R$ une relation d'équivalence sur $E$. Alors pour tout $x\in E$, on peut définir la <b>classe d'équivalence</b> $R(x)$ de $x$, c'est-à-dire l'ensemble de tous les $y\in E$ qui sont équivalents à $x$ par la relation $R$ : $$R(x)=\{y\in E\mid yRx\}.$$ Tout élément $y$ d'une classe d'équivalence est appelé <b>représentant</b> de celle-ci.</p>
+  </div>
+  <div class="remark"><b>Remarques :</b> $x$ appartient toujours à sa classe d'équivalence ($x\in R(x)$, par réflexivité). Soit $(x_1,x_2)\in E^2$. Alors $R(x_1)=R(x_2)$ si et seulement si $x_1Rx_2$.</div>
+  <div class="method-box">
+    <div class="label">Démonstration de la remarque</div>
+    <p><b>($\Leftarrow$)</b> On suppose $x_1Rx_2$, alors $x_1\in R(x_2)$. Soit $y\in R(x_1)$ (quelconque) : $yRx_1$, mais $x_1Rx_2$, donc $yRx_2$ (transitivité), i.e. $y\in R(x_2)$. D'où $R(x_1)\subset R(x_2)$. De manière analogue (par symétrie, $x_2Rx_1$), $R(x_2)\subset R(x_1)$. D'où $R(x_1)=R(x_2)$.</p>
+    <p><b>($\Rightarrow$)</b> Si $R(x_1)=R(x_2)$, alors $x_2\in R(x_1)$ (car $x_2\in R(x_2)=R(x_1)$), donc $x_2Rx_1$, donc $x_1Rx_2$ (symétrie).</p>
+  </div>
+
+  <div class="prop-box">
+    <div class="label">Proposition 4</div>
+    <p>Soit $R$ une relation d'équivalence sur un ensemble $E$. Alors deux classes d'équivalence <b>coïncident</b> ou bien sont <b>disjointes</b>. Donc les classes d'équivalence forment une <b>partition</b> de l'ensemble $E$.</p>
+    <p><b>Démonstration :</b> soit $R_1=R(x_1)$ et $R_2=R(x_2)$. Deux cas possibles : si $x_1Rx_2$, alors d'après la remarque ci-dessus, $R_1=R_2$. Sinon, $x_1$ n'est pas en relation avec $x_2$ : montrons que $R(x_1)\cap R(x_2)=\varnothing$. On raisonne par l'absurde : supposons $R(x_1)\cap R(x_2)\neq\varnothing$. Alors $\exists z\in R(x_1)\cap R(x_2)$, donc $zRx_1$ et $zRx_2$. D'où $x_1Rz$ (symétrie) et $zRx_2$, donc $x_1Rx_2$ (transitivité) : <b>absurde</b> (par hypothèse $x_1$ n'est pas en relation avec $x_2$). Conclusion : $R(x_1)\cap R(x_2)=\varnothing$.</p>
+  </div>
+
+  <figure role="img" aria-label="Un grand ovale represente l'ensemble E, decoupe en quatre bandes verticales de largeurs inegales et non chevauchantes. Chaque bande porte l'etiquette d'une classe d'equivalence R(x1) a R(x4) et contient plusieurs points, ses representants, illustrant qu'une classe peut avoir plusieurs elements.">
+    <svg viewBox="0 0 360 180">
+      <rect x="15" y="15" width="330" height="150" rx="70" fill="none" stroke="currentColor" stroke-width="1.8"/>
+      <defs><clipPath id="ovalClip"><rect x="15" y="15" width="330" height="150" rx="70"/></clipPath></defs>
+      <g clip-path="url(#ovalClip)">
+        <rect x="15" y="15" width="70" height="150" fill="var(--accent)" fill-opacity="0.18"/>
+        <line x1="85" y1="15" x2="85" y2="165" stroke="currentColor" stroke-width="1.3"/>
+        <rect x="85" y="15" width="140" height="150" fill="var(--gold)" fill-opacity="0.18"/>
+        <line x1="225" y1="15" x2="225" y2="165" stroke="currentColor" stroke-width="1.3"/>
+        <rect x="225" y="15" width="55" height="150" fill="var(--green)" fill-opacity="0.18"/>
+        <line x1="280" y1="15" x2="280" y2="165" stroke="currentColor" stroke-width="1.3"/>
+        <rect x="280" y="15" width="65" height="150" fill="var(--red)" fill-opacity="0.14"/>
+      </g>
+      <text x="50" y="35" font-size="12" text-anchor="middle" fill="currentColor">R(x₁)</text>
+      <text x="155" y="35" font-size="12" text-anchor="middle" fill="currentColor">R(x₂)</text>
+      <text x="252" y="35" font-size="12" text-anchor="middle" fill="currentColor">R(x₃)</text>
+      <text x="312" y="35" font-size="12" text-anchor="middle" fill="currentColor">R(x₄)</text>
+      <circle cx="45" cy="100" r="3" fill="currentColor"/><circle cx="60" cy="130" r="3" fill="currentColor"/>
+      <circle cx="120" cy="80" r="3" fill="currentColor"/><circle cx="160" cy="120" r="3" fill="currentColor"/><circle cx="195" cy="95" r="3" fill="currentColor"/>
+      <circle cx="252" cy="100" r="3" fill="currentColor"/>
+      <circle cx="298" cy="90" r="3" fill="currentColor"/><circle cx="318" cy="125" r="3" fill="currentColor"/>
+    </svg>
+    <figcaption>Les classes d'équivalence partitionnent $E$ (Proposition 4) : non vides, deux à deux disjointes, de réunion $E$ — chaque point de $E$ appartient à exactement une classe.</figcaption>
+  </figure>
+
+  <h2 id="exercices">Exercices d'entraînement (annales)</h2>
+  <p style="color:var(--ink-muted);font-size:.9rem">Trois exercices réels, choisis pour recouvrir les deux types de relations du chapitre (ordre, équivalence) et la notion de classe d'équivalence, avec leur source précise. Pour chacun : l'énoncé, un indice si vous séchez, puis la correction complète.</p>
+
+  <div class="exercise">
+    <div class="tag">Exercice A — classes d'équivalence dans ℂ</div>
+    <p class="statement">Dans $\mathbb{C}$ on définit la relation $R$ par : $zRz'\iff|z|=|z'|$. (1) Montrer que $R$ est une relation d'équivalence. (2) Déterminer la classe d'équivalence de chaque $z\in\mathbb{C}$.</p>
+    <details class="disclosure"><summary>Indice</summary>
+      <div class="hint-box">C'est la relation d'égalité (Exemple a du cours) « tirée en arrière » par la fonction module $|\cdot|$ — la réflexivité, symétrie, transitivité de $R$ découlent directement de celles de « = » sur $\mathbb{R}_+$. Pour la classe, pensez géométriquement : quel est l'ensemble des points du plan complexe à une distance fixée de l'origine ?</div>
+    </details>
+    <details class="disclosure"><summary>Correction</summary>
+      <div class="solution">
+      <p><b>(1)</b> Réflexive : $\forall z\in\mathbb{C},\ |z|=|z|$, donc $zRz$. Symétrique : si $|z|=|z'|$ alors $|z'|=|z|$, donc $zRz'\Rightarrow z'Rz$. Transitive : si $|z|=|z'|$ et $|z'|=|z''|$ alors $|z|=|z''|$ (transitivité de l'égalité sur $\mathbb{R}_+$), donc $zRz'$ et $z'Rz''\Rightarrow zRz''$. $R$ est une relation d'équivalence.</p>
+      <p><b>(2)</b> Soit $z\in\mathbb{C}$. $R(z)=\{z'\in\mathbb{C}\mid|z'|=|z|\}$. Si $z=0$ : $R(0)=\{0\}$. Si $z\neq0$, en notant $r=|z|>0$ : $R(z)$ est le <b>cercle de centre $0$ et de rayon $r$</b>. Ces cercles concentriques (pour $r$ variant dans $\mathbb{R}_+$) forment exactement une partition de $\mathbb{C}$, comme attendu de la Proposition 4 du cours.</p>
+      </div>
+    </details>
+    <div class="src">Source : Exo7 (exo7.emath.fr), fiche « Relation d'équivalence, relation d'ordre » (fic00004.pdf), Exercice 1.</div>
+  </div>
+
+  <div class="exercise">
+    <div class="tag">Exercice B — équivalence par une fonction, cardinal des classes</div>
+    <p class="statement">Montrer que la relation $R$ définie sur $\mathbb{R}$ par $xRy\iff xe^y=ye^x$ est une relation d'équivalence. Pour $x$ fixé dans $\mathbb{R}$, déterminer le cardinal de la classe d'équivalence de $x$ modulo $R$.</p>
+    <details class="disclosure"><summary>Indice</summary>
+      <div class="hint-box">Pour $x,y\neq0$, l'équation $xe^y=ye^x$ se réécrit $\frac{e^x}{x}=\frac{e^y}{y}$ : posez $f(t)=e^t/t$ sur $\mathbb{R}^*$ et étudiez ses variations (signe de $f'$) pour compter les antécédents d'une valeur donnée — comme au Chapitre 3 (théorème de la bijection monotone appliqué par morceaux).</div>
+    </details>
+    <details class="disclosure"><summary>Correction</summary>
+      <div class="solution">
+      <p><b>$R$ est une relation d'équivalence :</b> réflexive ($xe^x=xe^x$), symétrique ($xe^y=ye^x\iff ye^x=xe^y$, la même égalité) — trivialement, pour tout $x,y$. Transitivité : si $x=0$, $xRy\iff0=ye^0=y\iff y=0$ ; donc $0$ n'est en relation qu'avec lui-même. Pour $x,y\neq0$, $xRy\iff\frac{e^x}x=\frac{e^y}y$, c'est-à-dire $f(x)=f(y)$ avec $f(t)=e^t/t$ — c'est l'égalité « tirée en arrière » par $f$, donc automatiquement transitive (si $f(x)=f(y)$ et $f(y)=f(z)$ alors $f(x)=f(z)$). En combinant les deux cas ($x=0$ isolé, $x\neq0$ via $f$), $R$ est bien transitive sur $\mathbb{R}$ entier.</p>
+      <p><b>Cardinal de la classe :</b> $f'(t)=\dfrac{e^t(t-1)}{t^2}$, donc $f'(t)<0$ pour $t<1$ ($t\neq0$) et $f'(t)>0$ pour $t>1$. Ainsi $f$ est strictement décroissante sur $(-\infty,0)$ et sur $(0,1)$, strictement croissante sur $(1,+\infty)$, avec minimum $f(1)=e$.</p>
+      <p>Sur $(-\infty,0)$, $f$ est une bijection décroissante vers $(-\infty,0)$ (valeurs toujours négatives). Sur $(0,1]$, $f$ décroît de $+\infty$ à $e$ ; sur $[1,+\infty)$, $f$ croît de $e$ à $+\infty$ : ces deux branches donnent, pour toute valeur $c>e$, exactement un antécédent de chaque côté de $1$.</p>
+      <p>Donc : si $x<0$, sa classe ne contient que lui-même ($f<0$ uniquement sur les négatifs, bijection) : $\mathrm{Card}\,R(x)=1$. Si $x=0$ : $R(0)=\{0\}$, $\mathrm{Card}=1$. Si $x=1$ : $f(1)=e$ est le minimum, atteint uniquement en $t=1$ : $\mathrm{Card}\,R(1)=1$. Si $x>0$ et $x\neq1$ : $x$ a exactement un « partenaire » de l'autre côté de $1$ (même valeur de $f$), donc $\mathrm{Card}\,R(x)=2$.</p>
+      </div>
+    </details>
+    <div class="src">Source : Exo7 (exo7.emath.fr), fiche « Relation d'équivalence, relation d'ordre » (fic00004.pdf), Exercice 2.</div>
+  </div>
+
+  <div class="exercise">
+    <div class="tag">Exercice C — un ordre sur les parties d'un ensemble ordonné</div>
+    <p class="statement">Soit $(E,\leq)$ un ensemble ordonné. On définit sur $\mathcal{P}(E)\setminus\{\varnothing\}$ la relation $\prec$ par $X\prec Y$ ssi ($X=Y$ ou $\forall x\in X\ \forall y\in Y,\ x\leq y$). Montrer que $\prec$ est une relation d'ordre.</p>
+    <details class="disclosure"><summary>Indice</summary>
+      <div class="hint-box">Pour l'antisymétrie et la transitivité, distinguez toujours le cas trivial ($X=Y$, ou $X=Y$, ou $Y=Z$) du cas où il faut vraiment utiliser la deuxième condition « $\forall x\in X\,\forall y\in Y$ ». Pour l'antisymétrie, une fois $X\neq Y$ écarté, montrez que $X$ et $Y$ sont forcément des singletons égaux — contradiction.</div>
+    </details>
+    <details class="disclosure"><summary>Correction</summary>
+      <div class="solution">
+      <p><b>Réflexive :</b> $X\prec X$ car $X=X$ (premier cas de la définition), pour tout $X\in\mathcal{P}(E)\setminus\{\varnothing\}$.</p>
+      <p><b>Antisymétrique :</b> soient $X,Y$ tels que $X\prec Y$ et $Y\prec X$. Si $X=Y$, c'est fini. Sinon, $X\neq Y$ force la deuxième condition des deux côtés : $\forall x\in X\,\forall y\in Y,\ x\leq y$ (de $X\prec Y$) et $\forall y\in Y\,\forall x\in X,\ y\leq x$ (de $Y\prec X$). Fixons $x_0\in X,y_0\in Y$ ($X,Y$ non vides) : $x_0\leq y_0$ et $y_0\leq x_0$, donc $x_0=y_0$ (antisymétrie de $\leq$). Pour tout autre $x\in X$ : $x\leq y_0=x_0$ et $x_0\leq x$ (en réappliquant les deux inégalités avec $y=y_0$), donc $x=x_0$ : ainsi $X=\{x_0\}$. De même $Y=\{y_0\}=\{x_0\}$. Donc $X=Y=\{x_0\}$, ce qui contredit $X\neq Y$. Le cas $X\neq Y$ est donc impossible : on a bien $X=Y$.</p>
+      <p><b>Transitive :</b> soient $X\prec Y$ et $Y\prec Z$. Si $X=Y$, alors $X\prec Z$ découle directement de $Y\prec Z$. Si $Y=Z$, alors $X\prec Z$ découle directement de $X\prec Y$. Sinon ($X\neq Y$ et $Y\neq Z$) : $\forall x\in X\,\forall y\in Y,\ x\leq y$, et $\forall y\in Y\,\forall z\in Z,\ y\leq z$. Soient $x\in X,\,z\in Z$ quelconques, et $y_0\in Y$ (non vide) : $x\leq y_0\leq z$, donc $x\leq z$ (transitivité de $\leq$). Ceci pour tout $x\in X,z\in Z$ : $X\prec Z$.</p>
+      <p>Conclusion : $\prec$ est une relation d'ordre sur $\mathcal{P}(E)\setminus\{\varnothing\}$.</p>
+      <p style="font-size:.85rem;color:var(--ink-muted)">(Elle n'est en général pas totale : deux parties « entremêlées », sans qu'aucune ne soit entièrement en dessous de l'autre, sont incomparables.)</p>
+      </div>
+    </details>
+    <div class="src">Source : Exo7 (exo7.emath.fr), fiche « Relation d'équivalence, relation d'ordre » (fic00004.pdf), Exercice 3.</div>
+  </div>
+
+  <h2 id="sources">Sources</h2>
+  <div class="sources">
+    <p>Le contenu du cours (définitions, propositions, exemples) reprend le support de cours distribué en classe, complété par les démonstrations manuscrites de Léane. Chaque démonstration a été relue et revérifiée pas à pas avant mise en forme ; aucune erreur de fond n'a été trouvée dans ce chapitre. Deux points de recopie ont été clarifiés silencieusement à partir du contexte : à l'Exercice 1 (§I), la conclusion sur la non-totalité de l'ordre a été reformulée précisément comme « ni $7R10$ ni $10R7$ » (plutôt que la notation ambiguë du manuscrit) ; à l'exemple « divise » (§I.2.b), l'exemple de non-comparabilité a été noté « $6\nmid8$ et $8\nmid6$ » (le manuscrit utilisait un symbole difficile à distinguer d'un « + »). Les résultats sont conformes aux définitions et théorèmes standards du programme officiel de mathématiques MPSI :</p>
+    <ul>
+      <li>Relations d'ordre (réflexivité, antisymétrie, transitivité, ordre total/partiel) et relations d'équivalence (réflexivité, symétrie, transitivité) : notions de base communes à tous les manuels de référence de CPGE scientifique (collections H-Prépa, Précis Bréal).</li>
+      <li>Congruence modulo un entier sur $\mathbb{Z}$ et modulo un réel sur $\mathbb{R}$ (Définitions 4-5, Propositions 2-3) : chaque démonstration a été refaite et revérifiée terme à terme.</li>
+      <li>Classes d'équivalence et partition (Définition 6, Proposition 4) : démonstration classique, revérifiée par l'absurde comme dans le cours manuscrit.</li>
+    </ul>
+    <p>Les trois exercices d'entraînement de la section précédente proviennent de la fiche <a href="http://exo7.emath.fr/ficpdf/fic00004.pdf" target="_blank" rel="noopener">« Relation d'équivalence, relation d'ordre »</a> d'Exo7 (exo7.emath.fr), une banque d'exercices universitaires corrigés en libre accès, largement utilisée en CPGE. Chaque énoncé a été repris fidèlement puis entièrement recalculé pour cette correction (aucune correction de la fiche source n'a été recopiée telle quelle) ; les numéros d'exercice sont indiqués sous chaque énoncé pour retrouver l'original.</p>
+  </div>
+
+  <footer>Cahier Commun — MPSI · Mathématiques · Chapitre 05</footer>
+</main>
+
+</body>
+</html>
