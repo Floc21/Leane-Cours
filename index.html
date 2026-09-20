@@ -55,26 +55,30 @@
   h1,h2,h3{font-family:"Spectral",Georgia,serif;text-wrap:balance;margin:0;}
   a{color:var(--accent);}
 
-  .app-header{margin-bottom:30px;}
-  .eyebrow{font-family:"JetBrains Mono",monospace;font-size:.72rem;font-weight:600;letter-spacing:.1em;color:var(--accent);text-transform:uppercase;}
-  .app-header h1{font-size:2.1rem;font-weight:700;color:var(--accent-ink);margin-top:8px;}
-  .app-header .subtitle{font-size:.98rem;color:var(--ink-muted);margin-top:8px;max-width:46ch;}
+  .pinned-header{
+    position:sticky;top:0;z-index:40;background:color-mix(in srgb, var(--surface) 94%, transparent);
+    backdrop-filter:blur(10px);border-bottom:1px solid var(--border);
+    margin:-28px -20px 22px -20px;padding:12px 20px 10px;
+  }
+  .pinned-header-inner{max-width:720px;margin:0 auto;display:flex;align-items:baseline;gap:8px;}
+  .eyebrow{font-family:"JetBrains Mono",monospace;font-size:.62rem;font-weight:600;letter-spacing:.09em;color:var(--accent);text-transform:uppercase;flex-shrink:0;white-space:nowrap;}
+  .site-title{font-size:1.2rem;font-weight:700;color:var(--accent-ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:0;min-width:0;}
+  .subtitle{font-size:.95rem;color:var(--ink-muted);margin-top:22px;max-width:46ch;}
 
-  .subject-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:24px;}
-  @media (max-width:560px){.subject-grid{grid-template-columns:repeat(2,1fr);}}
+  .subject-grid{max-width:720px;margin:9px auto 0;display:flex;gap:8px;}
   .subject-tile{
-    display:flex;flex-direction:column;gap:12px;background:var(--surface);border:1px solid var(--border);
-    border-radius:16px;padding:16px;box-shadow:var(--shadow);text-decoration:none;color:inherit;
-    transition:transform .15s ease, border-color .15s ease;
+    flex:1 1 0;min-width:0;display:flex;align-items:center;gap:7px;background:var(--surface);border:1px solid var(--border);
+    border-radius:10px;padding:6px 9px;text-decoration:none;color:inherit;transition:border-color .15s ease;
   }
-  a.subject-tile:hover{border-color:var(--subject-color, var(--accent));transform:translateY(-2px);}
-  .subject-tile.is-empty{opacity:.55;}
+  a.subject-tile:hover{border-color:var(--subject-color, var(--accent));}
+  .subject-tile.is-empty{opacity:.5;}
   .subject-icon{
-    width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;
-    font-size:1.4rem;background:var(--subject-color, var(--accent));box-shadow:0 4px 10px -4px var(--subject-color, var(--accent));
+    flex-shrink:0;width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;
+    font-size:.72rem;background:var(--subject-color, var(--accent));
   }
-  .subject-name{font-family:"Spectral",serif;font-weight:700;font-size:.98rem;line-height:1.25;}
-  .subject-meta{font-size:.76rem;color:var(--ink-muted);font-family:"JetBrains Mono",monospace;}
+  .subject-text{display:flex;flex-direction:column;min-width:0;line-height:1.2;}
+  .subject-name{font-family:"JetBrains Mono",monospace;font-weight:700;font-size:.68rem;letter-spacing:.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .subject-meta{font-size:.64rem;color:var(--ink-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 
   .toc{margin-top:36px;display:flex;flex-direction:column;gap:32px;}
   .toc-section-head{display:flex;align-items:center;gap:10px;border-bottom:2px solid var(--subject-color, var(--border));padding-bottom:10px;margin-bottom:14px;}
@@ -104,13 +108,15 @@
 </head>
 <body>
 <script src="chapters-data.js"></script>
+<div class="pinned-header">
+  <div class="pinned-header-inner">
+    <span class="eyebrow">Prépa &middot; MPSI</span>
+    <h1 class="site-title">Le Cahier de Léane</h1>
+  </div>
+  <div class="subject-grid" id="subjectGrid"></div>
+</div>
 <main>
-  <header class="app-header">
-    <div class="eyebrow">Prépa &middot; MPSI</div>
-    <h1>Le Cahier de Léane</h1>
-    <p class="subtitle">Cours de maths, physique et sciences de l'ingénieur, repris au propre et vérifiés au fil de l'année.</p>
-    <div class="subject-grid" id="subjectGrid"></div>
-  </header>
+  <p class="subtitle">Cours de maths, physique et sciences de l'ingénieur, repris au propre et vérifiés au fil de l'année.</p>
 
   <div class="toc" id="toc"></div>
 
@@ -158,10 +164,10 @@
       if (hasContent) tile.href = "#subj-" + subj.slug;
       tile.innerHTML =
         '<span class="subject-icon">' + subj.icon + '</span>' +
-        '<span class="subject-name">' + escapeHtml(subj.key) + '</span>' +
-        '<span class="subject-meta">' + (hasContent
-          ? (chapters.length + ' chapitre' + (chapters.length === 1 ? "" : "s"))
-          : "Bientôt disponible") + '</span>';
+        '<span class="subject-text">' +
+          '<span class="subject-name">' + escapeHtml(subj.short) + '</span>' +
+          '<span class="subject-meta">' + (hasContent ? chapters.length : "—") + '</span>' +
+        '</span>';
       grid.appendChild(tile);
 
       if (hasContent) groups.push({ subj: subj, chapters: chapters });
