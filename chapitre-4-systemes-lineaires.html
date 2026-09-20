@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Systèmes linéaires</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$','$'], ['\\(','\\)']], displayMath: [['$$','$$'], ['\\[','\\]']],
+    macros: { llbracket: "\\unicode{x27E6}", rrbracket: "\\unicode{x27E7}" }
+  },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js"></script>
+<style>
+  :root{
+    --paper:#F3F5EF; --surface:#FFFFFF; --surface-2:#EAEEE4;
+    --ink:#20261F; --ink-muted:#5B6459; --border:#D9DECD;
+    --accent:#1F4E8C; --accent-ink:#0E2D57; --accent-soft:#E4ECF7;
+    --red:#A6303C; --red-soft:#F6E4E4;
+    --green:#3D7A4D; --green-soft:#E3EFDF;
+    --gold:#8A6A1E; --gold-soft:#F3ECD8;
+    --shadow: 0 1px 2px rgba(32,38,31,.06), 0 6px 20px -8px rgba(32,38,31,.18);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#12160F; --surface:#191F17; --surface-2:#212820;
+      --ink:#E8ECE2; --ink-muted:#98A092; --border:#2B3327;
+      --accent:#7CA6E6; --accent-ink:#DCE8FB; --accent-soft:#1E2B41;
+      --red:#E28B92; --red-soft:#3A2224;
+      --green:#7FC090; --green-soft:#1E2F22;
+      --gold:#D8B45C; --gold-soft:#332B16;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 24px -8px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#12160F; --surface:#191F17; --surface-2:#212820;
+    --ink:#E8ECE2; --ink-muted:#98A092; --border:#2B3327;
+    --accent:#7CA6E6; --accent-ink:#DCE8FB; --accent-soft:#1E2B41;
+    --red:#E28B92; --red-soft:#3A2224;
+    --green:#7FC090; --green-soft:#1E2F22;
+    --gold:#D8B45C; --gold-soft:#332B16;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 24px -8px rgba(0,0,0,.5);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    background:var(--paper); color:var(--ink);
+    font-family:"Public Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+    padding-inline:20px; padding-block:28px; line-height:1.6;
+  }
+  main{max-width:780px;margin:0 auto;}
+  h1,h2,h3,h4{font-family:"Spectral",Georgia,serif;text-wrap:balance;margin:1.4em 0 .5em;}
+  h1{font-size:1.7rem;color:var(--accent-ink);margin-top:0;}
+  h2{font-size:1.3rem;color:var(--accent-ink);border-bottom:2px solid var(--border);padding-bottom:.3em;margin-top:2em;}
+  h3{font-size:1.08rem;}
+  h4{font-size:.98rem;font-style:italic;}
+  p{margin:.7em 0;}
+  a{color:var(--accent);}
+  .mono{font-family:"JetBrains Mono",monospace;}
+
+  header.top{margin-bottom:6px;}
+  header.top .eyebrow{font-family:"JetBrains Mono",monospace;font-size:.78rem;color:var(--ink-muted);letter-spacing:.03em;}
+  header.top nav{font-size:.82rem;margin-top:6px;}
+  header.top nav a{margin-right:14px;}
+
+  .toc{
+    background:var(--surface);border:1px solid var(--border);border-radius:10px;
+    padding:14px 18px;margin:20px 0 30px;box-shadow:var(--shadow);font-size:.9rem;
+  }
+  .toc h2{margin:0 0 8px;font-size:1rem;border:none;padding:0;}
+  .toc ol{margin:0;padding-left:1.3em;}
+  .toc li{margin-bottom:2px;}
+  .toc a{text-decoration:none;}
+  .toc a:hover{text-decoration:underline;}
+
+  .def-box, .prop-box{
+    background:var(--surface);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;
+    padding:12px 16px;margin:1em 0;box-shadow:var(--shadow);
+  }
+  .def-box .label, .prop-box .label{font-weight:700;color:var(--accent-ink);font-family:"Spectral",serif;}
+
+  .method-box{
+    background:var(--gold-soft);border:1px solid color-mix(in srgb, var(--gold) 45%, transparent);
+    border-radius:8px;padding:12px 16px;margin:1em 0;
+  }
+  .method-box .label{font-weight:700;color:var(--gold);}
+
+  .warning-box{
+    background:var(--red-soft);border:1px solid color-mix(in srgb, var(--red) 45%, transparent);
+    border-radius:8px;padding:12px 16px;margin:1em 0;
+  }
+  .warning-box .label{font-weight:700;color:var(--red);}
+
+  .remark{
+    border-left:3px solid var(--border);padding:6px 14px;margin:1em 0;color:var(--ink-muted);font-size:.93rem;
+  }
+
+  .exercise{
+    background:var(--surface);border:1px solid var(--border);border-radius:10px;
+    padding:14px 18px;margin:1.2em 0;box-shadow:var(--shadow);
+  }
+  .exercise .tag{font-family:"JetBrains Mono",monospace;font-size:.72rem;font-weight:700;letter-spacing:.05em;color:var(--accent);text-transform:uppercase;}
+  .exercise .statement{font-style:italic;margin:.4em 0 .8em;}
+  .exercise .solution{border-top:1px dashed var(--border);padding-top:.7em;margin-top:.4em;}
+  .exercise .solution .lbl{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-muted);margin-bottom:4px;}
+
+  figure{margin:1.4em 0;text-align:center;}
+  figure svg{max-width:100%;height:auto;color:var(--ink);}
+  figcaption{font-size:.82rem;color:var(--ink-muted);margin-top:6px;}
+
+  table.truth{border-collapse:collapse;margin:1em auto;font-family:"JetBrains Mono",monospace;font-size:.9rem;}
+  table.truth th,table.truth td{border:1px solid var(--border);padding:5px 16px;text-align:center;}
+  table.truth th{background:var(--surface-2);}
+
+  .wide{overflow-x:auto;}
+
+  .hint-box{background:var(--accent-soft);border:1px dashed var(--accent);border-radius:8px;padding:10px 14px;margin:0;font-size:.9rem;}
+  .exercise .src{font-size:.76rem;color:var(--ink-muted);margin-top:10px;font-family:"JetBrains Mono",monospace;}
+
+  .exercise details{margin:.5em 0 0;}
+  .exercise summary{
+    cursor:pointer;list-style:none;display:flex;align-items:center;gap:6px;
+    font-family:"JetBrains Mono",monospace;font-size:.72rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+    color:var(--accent-ink);padding:6px 0;user-select:none;
+  }
+  .exercise summary::-webkit-details-marker{display:none;}
+  .exercise summary::before{content:"▸";display:inline-block;color:var(--accent);font-size:.85rem;transition:transform .15s ease;}
+  .exercise details[open] summary::before{transform:rotate(90deg);}
+  .exercise details > .hint-box, .exercise details > .solution{margin-top:2px;}
+  .exercise details > .solution{border-top:none;padding-top:0;}
+
+  .sources{font-size:.86rem;color:var(--ink-muted);}
+  .sources ul{padding-left:1.2em;}
+
+  .trio{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;}
+  .trio figure{flex:1 1 200px;max-width:220px;margin:1em 0;}
+  .cap-none{color:var(--red);font-weight:700;}
+  .cap-one{color:var(--green);font-weight:700;}
+  .cap-inf{color:var(--gold);font-weight:700;}
+
+  footer{margin-top:40px;color:var(--ink-muted);font-size:.78rem;text-align:center;}
+</style>
+</head>
+<body>
+<main>
+  <header class="top">
+    <div class="eyebrow">MPSI · MATHÉMATIQUES · CHAPITRE 04</div>
+    <h1>Systèmes linéaires</h1>
+    <nav><a href="#s1">I. Définitions</a> · <a href="#s2">II. Pivot de Gauss</a> · <a href="#s3">III. Ensemble des solutions</a> · <a href="#s4">IV. Paramètres</a> · <a href="#exercices">Exercices</a> · <a href="#sources">Sources</a></nav>
+  </header>
+
+  <div class="toc">
+    <h2>Sommaire</h2>
+    <ol>
+      <li><a href="#s1">Définitions</a></li>
+      <li><a href="#s2">Résolution par la méthode du pivot de Gauss</a></li>
+      <li><a href="#s3">Ensemble des solutions d'un système</a></li>
+      <li><a href="#s4">Systèmes à paramètres</a></li>
+      <li><a href="#exercices">Exercices d'entraînement (annales)</a></li>
+    </ol>
+  </div>
+
+  <h2 id="s1">I. Définitions</h2>
+  <div class="def-box">
+    <div class="label">Définition 1</div>
+    <p>On appelle <b>système de $n$ équations linéaires à $p$ inconnues</b> $x_1,\dots,x_p$ tout système de la forme $$(S)\begin{cases}a_{11}x_1+a_{12}x_2+\dots+a_{1p}x_p=b_1\\ a_{21}x_1+a_{22}x_2+\dots+a_{2p}x_p=b_2\\ \quad\vdots\\ a_{n1}x_1+a_{n2}x_2+\dots+a_{np}x_p=b_n\end{cases}$$ où $a_{i,j},b_i\in\mathbb{K}$ ($\mathbb{K}=\mathbb{R}$ ou $\mathbb{C}$). Les $a_{i,j}$ sont les <b>coefficients</b> du système, $b_1,\dots,b_n$ sont les <b>seconds membres</b>. La $i$-ième équation $a_{i1}x_1+\dots+a_{ij}x_j+\dots+a_{ip}x_p=b_i$ est notée $L_i$ et appelée la $i$-ième <b>ligne</b> de $(S)$.</p>
+  </div>
+  <p><b>Définition 2 :</b> on appelle système <b>homogène</b> un système dont tous les seconds membres sont nuls ($\forall i\in\llbracket1,n\rrbracket,\ b_i=0$).</p>
+  <p><b>Définition 3 :</b> un $p$-uplet $(c_1,\dots,c_p)$ est <b>solution</b> du système $(S)$ s'il est solution des $n$ équations qui composent le système.</p>
+  <p><b>Définition 4 :</b> deux systèmes $(S)$ et $(S')$ sont dits <b>équivalents</b> lorsqu'ils ont même ensemble de solutions. On note alors $(S)\iff(S')$.</p>
+  <div class="remark">Dans $\mathbb{R}^2$, résoudre un système revient à chercher l'intersection de plusieurs <b>droites</b>. Dans $\mathbb{R}^3$, résoudre un système revient à chercher l'intersection de plusieurs <b>plans</b>.</div>
+
+  <h2 id="s2">II. Résolution par la méthode du pivot de Gauss</h2>
+  <p><b>Principe :</b> on transforme le système en un système équivalent <b>triangulaire</b> (id est $a_{i,j}=0$ pour $i>j$).</p>
+  <p><b>Transformations élémentaires sur les lignes :</b></p>
+  <ul>
+    <li>$L_i\leftrightarrow L_j$ (échange de $L_i$ et $L_j$) ;</li>
+    <li>$L_i\leftarrow\alpha L_i$ avec $\alpha\neq0$ (multiplication de $L_i$ par $\alpha$) ;</li>
+    <li>$L_i\leftarrow L_i+L_j$ (la ligne $L_j$ est ajoutée à la ligne $L_i$).</li>
+  </ul>
+  <p>En composant ces transformations on obtient aussi : $L_i\leftarrow\alpha L_i+\beta L_j$ avec $\alpha\neq0$ ($L_i$ remplacé par $\alpha L_i+\beta L_j$).</p>
+
+  <div class="remark">Parfois on fait plusieurs opérations « d'un coup ».</div>
+  <div class="warning-box"><div class="label">Attention</div><p>Tout n'est pas permis ! On risque de perdre des « informations » du système et donc de modifier l'ensemble des solutions.</p></div>
+
+  <div class="exercise">
+    <div class="tag">Exemple 1</div>
+    <p>$\begin{cases}x+y=2\\x-y=3\end{cases}$. On peut faire $L_1\leftarrow L_1-L_2$, ou bien $L_2\leftarrow L_2-L_1$ (l'une <em>ou</em> l'autre) — mais pas les deux « en même temps » à partir des lignes d'origine, sinon on perd de l'information (la transformation $(L_1,L_2)\mapsto(L_1-L_2,\,L_2-L_1)$ n'est pas inversible : ses deux résultats s'annulent quand on les additionne).</p>
+  </div>
+
+  <div class="method-box">
+    <div class="label">Point méthode</div>
+    <p>Si on utilise une ligne pour l'additionner à d'autres lignes (avec ou sans coefficient), alors il ne faut <b>pas</b> la modifier pendant cette étape.</p>
+  </div>
+
+  <div class="method-box">
+    <div class="label">Méthode du pivot de Gauss</div>
+    <p>On échange les lignes pour avoir en première une ligne « simple » et dont le premier coefficient est $\neq0$ (le <b>pivot</b>). On utilise $L_1$ pour annuler le premier coefficient de toutes les autres lignes ($L_i\leftarrow L_i-\alpha_iL_1$). On échange éventuellement les lignes restantes pour obtenir un nouveau pivot non nul, puis on utilise $L_2$ pour annuler les coefficients de $L_3,L_4,\dots$ sur la colonne suivante, et ainsi de suite jusqu'à obtenir un système triangulaire.</p>
+  </div>
+
+  <div class="exercise">
+    <div class="tag">Exemple 3</div>
+    <p class="statement">Résoudre $\begin{cases}3x+4y+7z=1\\2x+3y+4z=2\\x+y+z=3\end{cases}$.</p>
+    <div class="solution">
+      <p>$L_1\leftrightarrow L_3$ : $\begin{cases}x+y+z=3\\2x+3y+4z=2\\3x+4y+7z=1\end{cases}$</p>
+      <p>$L_2\leftarrow L_2-2L_1,\ L_3\leftarrow L_3-3L_1$ : $\begin{cases}x+y+z=3\\y+2z=-4\\y+4z=-8\end{cases}$</p>
+      <p>$L_3\leftarrow L_3-L_2$ : $\begin{cases}x+y+z=3\\y+2z=-4\\2z=-4\end{cases}\iff\begin{cases}x=5\\y=0\\z=-2\end{cases}$</p>
+      <p>$S=\{(5,0,-2)\}$.</p>
+    </div>
+  </div>
+
+  <h2 id="s3">III. Ensemble des solutions d'un système</h2>
+  <p>On a trois cas possibles : une (unique) solution, aucune solution, ou une infinité de solutions.</p>
+
+  <div class="trio">
+    <figure role="img" aria-label="Plan avec deux droites de pentes differentes qui se croisent en un seul point : cas de l'unique solution.">
+      <svg viewBox="0 0 200 170">
+        <line x1="10" y1="103.3" x2="190" y2="103.3" stroke="var(--border)" stroke-width="1.2"/>
+        <line x1="52" y1="5" x2="52" y2="160" stroke="var(--border)" stroke-width="1.2"/>
+        <line x1="20" y1="33.3" x2="180" y2="150" stroke="var(--accent)" stroke-width="2"/>
+        <line x1="84" y1="150" x2="180" y2="80" stroke="var(--red)" stroke-width="2"/>
+        <circle cx="132" cy="115" r="4" fill="var(--ink)"/>
+      </svg>
+      <figcaption><span class="cap-one">Une solution</span> : $x+y=2$ et $x-y=3$ (Exemple 4) se coupent en un point, $\left(\frac52,-\frac12\right)$.</figcaption>
+    </figure>
+    <figure role="img" aria-label="Plan avec deux droites paralleles distinctes qui ne se croisent jamais : cas d'aucune solution.">
+      <svg viewBox="0 0 200 170">
+        <line x1="10" y1="103.3" x2="190" y2="103.3" stroke="var(--border)" stroke-width="1.2"/>
+        <line x1="52" y1="5" x2="52" y2="160" stroke="var(--border)" stroke-width="1.2"/>
+        <line x1="20" y1="33.3" x2="180" y2="150" stroke="var(--accent)" stroke-width="2"/>
+        <line x1="20" y1="10" x2="180" y2="126.7" stroke="var(--red)" stroke-width="2" stroke-dasharray="6 4"/>
+      </svg>
+      <figcaption><span class="cap-none">Aucune solution</span> : $x+y=2$ et $x+y=3$ (Exemple 5) sont parallèles, elles ne se rencontrent jamais.</figcaption>
+    </figure>
+    <figure role="img" aria-label="Plan avec une seule droite dessinee, qui represente en realite deux equations confondues : cas de l'infinite de solutions.">
+      <svg viewBox="0 0 200 170">
+        <line x1="10" y1="103.3" x2="190" y2="103.3" stroke="var(--border)" stroke-width="1.2"/>
+        <line x1="52" y1="5" x2="52" y2="160" stroke="var(--border)" stroke-width="1.2"/>
+        <line x1="20" y1="33.3" x2="180" y2="150" stroke="var(--accent)" stroke-width="3.5"/>
+        <circle cx="60" cy="65.8" r="3" fill="var(--gold)"/>
+        <circle cx="100" cy="92" r="3" fill="var(--gold)"/>
+        <circle cx="140" cy="118.5" r="3" fill="var(--gold)"/>
+      </svg>
+      <figcaption><span class="cap-inf">Infinité de solutions</span> : $x+y=2$ et $2x+2y=4$ (Exemple 6) sont la <b>même droite</b> — tout point de la droite est solution.</figcaption>
+    </figure>
+  </div>
+
+  <div class="exercise">
+    <div class="tag">Exemple 4 — une solution</div>
+    <p>$\begin{cases}x+y=2\\x-y=3\end{cases}\overset{L_2\leftarrow L_2-L_1}\iff\begin{cases}x+y=2\\-2y=1\end{cases}\iff\begin{cases}x=5/2\\y=-1/2\end{cases}$, donc $S=\left\{\left(\frac52,-\frac12\right)\right\}$.</p>
+  </div>
+  <div class="exercise">
+    <div class="tag">Exemple 5 — aucune solution</div>
+    <p>$\begin{cases}x+y=2\\x+y=3\end{cases}\overset{L_2\leftarrow L_2-L_1}\iff\begin{cases}x+y=2\\0=1\end{cases}$ : <b>impossible</b>, le système est incompatible, $S=\varnothing$.</p>
+  </div>
+  <div class="exercise">
+    <div class="tag">Exemple 6 — une infinité de solutions</div>
+    <p>$\begin{cases}x+y=2\\2x+2y=4\end{cases}\overset{L_2\leftarrow L_2-2L_1}\iff\begin{cases}x+y=2\\0=0\end{cases}\iff\begin{cases}x=2-\alpha\\y=\alpha\ (\in\mathbb{R})\end{cases}$, donc $S=\{(2-\alpha,\alpha)\,;\ \alpha\in\mathbb{R}\}$.</p>
+  </div>
+
+  <div class="remark"><b>Remarque :</b> on peut avoir plusieurs variables libres.</div>
+  <div class="exercise">
+    <div class="tag">Exemple 7</div>
+    <p>$\begin{cases}x+y+z=1\\2x+2y+2z=2\\3x+3y+3z=3\end{cases}\iff\begin{cases}x+y+z=1\\0=0\\0=0\end{cases}$ ($L_2\leftarrow L_2-2L_1$, $L_3\leftarrow L_3-3L_1$ : les trois équations d'origine sont proportionnelles). Il y a <b>deux</b> variables libres : on pose $x=\alpha,\ y=\beta$, d'où $z=1-\alpha-\beta$. $$S=\{(\alpha,\beta,1-\alpha-\beta)\,;\ \alpha,\beta\in\mathbb{R}\}.$$</p>
+  </div>
+
+  <div class="warning-box">
+    <div class="label">Attention</div>
+    <p>Parfois on ne peut <b>pas</b> choisir n'importe quelle variable comme variable libre !</p>
+  </div>
+  <div class="exercise">
+    <div class="tag">Exemple 8</div>
+    <p class="statement">$\begin{cases}x-y=0\\x+y+z+t=0\end{cases}$.</p>
+    <div class="solution">
+      <p>$L_2\leftarrow L_2-L_1$ : $\begin{cases}x-y=0\\2y+z+t=0\end{cases}$. On échelonne d'abord, puis on choisit les variables libres en partant de la <b>dernière</b> ligne : ici les pivots (variables « de tête ») sont $x$ (ligne 1) et $y$ (ligne 2), donc les variables libres sont celles qui restent, $z$ et $t$ — <b>pas</b> $x$ ou $y$, qui sont déterminées par les lignes.</p>
+      <p>On pose $z=\alpha,\ t=\beta$. De $2y+z+t=0$ : $y=-\dfrac{\alpha+\beta}2$. De $x-y=0$ : $x=y=-\dfrac{\alpha+\beta}2$.</p>
+      <p>$$S=\left\{\left(-\tfrac{\alpha+\beta}2,\,-\tfrac{\alpha+\beta}2,\,\alpha,\,\beta\right)\,;\ \alpha,\beta\in\mathbb{R}\right\}.$$</p>
+    </div>
+  </div>
+
+  <div class="exercise">
+    <div class="tag">Exercice 1 (cours)</div>
+    <p class="statement">Résoudre $\begin{cases}x+2y+z=1\\2x+y+z=1\\x+y+2z=1\end{cases}$.</p>
+    <div class="solution">
+      <p>$L_2\leftarrow L_2-2L_1,\ L_3\leftarrow L_3-L_1$ : $\begin{cases}x+2y+z=1\\-3y-z=-1\\-y+z=0\end{cases}$. $L_2\leftrightarrow L_3$ : $\begin{cases}x+2y+z=1\\-y+z=0\\-3y-z=-1\end{cases}$. $L_3\leftarrow L_3-3L_2$ : $\begin{cases}x+2y+z=1\\-y+z=0\\-4z=-1\end{cases}\iff\begin{cases}x=1/4\\y=1/4\\z=1/4\end{cases}$. $S=\left\{\left(\frac14,\frac14,\frac14\right)\right\}$.</p>
+    </div>
+  </div>
+  <div class="exercise">
+    <div class="tag">Exercice 2 (cours)</div>
+    <p class="statement">Résoudre $\begin{cases}x+y+z=3\\2y+z=4\\x-y=-1\end{cases}$.</p>
+    <div class="solution">
+      <p>$L_3\leftarrow L_3-L_1$ : $\begin{cases}x+y+z=3\\2y+z=4\\-2y-z=-4\end{cases}$. $L_3\leftarrow L_3+L_2$ : $\begin{cases}x+y+z=3\\2y+z=4\\0=0\end{cases}$. Une variable libre : $y=\alpha$, d'où $z=4-2\alpha$ et $x=3-y-z=\alpha-1$. $$S=\{(\alpha-1,\,\alpha,\,4-2\alpha)\,;\ \alpha\in\mathbb{R}\}.$$</p>
+    </div>
+  </div>
+  <div class="exercise">
+    <div class="tag">Exercice 3 (cours)</div>
+    <p class="statement">Résoudre $\begin{cases}2x+3y-2z=5\\x-2y+3z=2\\4x-y+4z=1\end{cases}$.</p>
+    <div class="solution">
+      <p>$L_1\leftrightarrow L_2$ : $\begin{cases}x-2y+3z=2\\2x+3y-2z=5\\4x-y+4z=1\end{cases}$. $L_2\leftarrow L_2-2L_1,\ L_3\leftarrow L_3-4L_1$ : $\begin{cases}x-2y+3z=2\\7y-8z=1\\7y-8z=-7\end{cases}$.</p>
+      <p>Les deux dernières lignes donnent $1=-7$ : <b>absurde</b>. Le système est incompatible, $S=\varnothing$.</p>
+    </div>
+  </div>
+
+  <h2 id="s4">IV. Systèmes à paramètres</h2>
+  <p>Parfois, dans les systèmes, il y aura un ou plusieurs <b>paramètres</b> (ce sont des réels). On ne sait pas quelle est leur valeur !</p>
+  <div class="warning-box"><div class="label">Attention</div><p>Risque de multiplier ou diviser par $0$. En particulier, quand on fait $L_i\leftarrow\alpha L_i+\beta L_j$, le coefficient $\alpha$ (celui qui multiplie la ligne <b>modifiée</b>) doit absolument être $\neq0$ — si $\alpha$ est un paramètre dont on ne connaît pas le signe, cette opération est dangereuse.</p></div>
+  <p><b>Astuces :</b> (1) substitution ; (2) disjonction de cas ; (3) échanger les lignes pour éviter de multiplier/diviser par le paramètre.</p>
+
+  <div class="exercise">
+    <div class="tag">Exemple 9</div>
+    <p class="statement">Résoudre le système suivant en fonction du paramètre $a\in\mathbb{R}$ : $\begin{cases}ax+2y=3\\x+y=1\end{cases}$.</p>
+    <div class="solution">
+      <p>On pourrait avoir envie de faire $L_2\leftarrow aL_2-L_1$, mais <b>$a$ pourrait être nul</b> — cette opération n'est alors pas valide (elle annulerait $L_2$). On échange plutôt les lignes : $L_1\leftrightarrow L_2$ : $\begin{cases}x+y=1\\ax+2y=3\end{cases}$. Ici on peut bien faire $L_2\leftarrow L_2-aL_1$ (le coefficient de $L_2$ elle-même reste $1$, ce n'est pas $L_2$ qu'on multiplie par $a$) : $$\begin{cases}x+y=1\\(2-a)y=3-a\end{cases}.$$</p>
+      <p>Le coefficient $2-a$ peut être nul : disjonction de cas.</p>
+      <p><b>Si $a=2$ :</b> $\begin{cases}x+y=1\\0=1\end{cases}$ : impossible, $S=\varnothing$.</p>
+      <p><b>Si $a\neq2$ :</b> $y=\dfrac{3-a}{2-a}$ et $x=1-y=\dfrac{(2-a)-(3-a)}{2-a}=\dfrac{-1}{2-a}=\dfrac1{a-2}$. $$S=\left\{\left(\frac1{a-2},\,\frac{3-a}{2-a}\right)\right\}.$$</p>
+    </div>
+  </div>
+
+  <h2 id="exercices">Exercices d'entraînement (annales)</h2>
+  <p style="color:var(--ink-muted);font-size:.9rem">Trois exercices réels, choisis pour recouvrir la résolution par pivot de Gauss (système fixe et système à paramètre), avec leur source précise. Pour chacun : l'énoncé, un indice si vous séchez, puis la correction complète.</p>
+
+  <div class="exercise">
+    <div class="tag">Exercice A — pivot de Gauss (3×3)</div>
+    <p class="statement">Résoudre par la méthode du pivot de Gauss : $\begin{cases}2x+y+z=3\\x-y+3z=8\\x+2y-z=-3\end{cases}$.</p>
+    <details class="disclosure"><summary>Indice</summary>
+      <div class="hint-box">Échangez d'abord $L_1$ et $L_2$ pour obtenir un pivot $1$ en $x$ sans fraction, comme à l'Exemple 3 du cours, puis éliminez $x$ dans les deux autres lignes.</div>
+    </details>
+    <details class="disclosure"><summary>Correction</summary>
+      <div class="solution">
+      <p>$L_1\leftrightarrow L_2$ : $\begin{cases}x-y+3z=8\\2x+y+z=3\\x+2y-z=-3\end{cases}$. $L_2\leftarrow L_2-2L_1,\ L_3\leftarrow L_3-L_1$ : $\begin{cases}x-y+3z=8\\3y-5z=-13\\3y-4z=-11\end{cases}$. $L_3\leftarrow L_3-L_2$ : $\begin{cases}x-y+3z=8\\3y-5z=-13\\z=2\end{cases}$.</p>
+      <p>De $3y-5z=-13$ : $3y=-13+10=-3$, donc $y=-1$. De $x-y+3z=8$ : $x=8+y-3z=8-1-6=1$.</p>
+      <p><b>Vérification :</b> $2(1)+(-1)+2=3$ ✓ ; $1-(-1)+3(2)=8$ ✓ ; $1+2(-1)-2=-3$ ✓.</p>
+      <p>$S=\{(1,-1,2)\}$.</p>
+      </div>
+    </details>
+    <div class="src">Source : Exo7 (exo7.emath.fr), cours « Systèmes linéaires » (ch_syslin.pdf), mini-exercice après la section 3 (méthode du pivot de Gauss).</div>
+  </div>
+
+  <div class="exercise">
+    <div class="tag">Exercice B — système à paramètre (sans disjonction)</div>
+    <p class="statement">Résoudre suivant la valeur du paramètre $t\in\mathbb{R}$ : $\begin{cases}4x-3y=t\\2x-y=t^2\end{cases}$.</p>
+    <details class="disclosure"><summary>Indice</summary>
+      <div class="hint-box">Éliminez $y$ en combinant $3\times(L_2)-L_1$ — le coefficient devant $L_2$ dans cette combinaison est une constante ($3$), pas le paramètre $t$, donc pas besoin de disjonction de cas ici.</div>
+    </details>
+    <details class="disclosure"><summary>Correction</summary>
+      <div class="solution">
+      <p>$3L_2-L_1$ : $3(2x-y)-(4x-3y)=3t^2-t\iff 6x-3y-4x+3y=3t^2-t\iff2x=3t^2-t$, donc $x=\dfrac{3t^2-t}2$.</p>
+      <p>De $2x-y=t^2$ : $y=2x-t^2=(3t^2-t)-t^2=2t^2-t$.</p>
+      <p><b>Vérification (t=1) :</b> $x=1,y=1$ : $4(1)-3(1)=1=t$ ✓ ; $2(1)-1=1=t^2$ ✓.</p>
+      <p>Le déterminant du système, $4\times(-1)-(-3)\times2=2$, ne dépend pas de $t$ et n'est jamais nul : il y a donc toujours une <b>unique</b> solution, quel que soit $t$ (pas de disjonction de cas nécessaire) : $$S=\left\{\left(\frac{3t^2-t}2,\ 2t^2-t\right)\right\}.$$</p>
+      </div>
+    </details>
+    <div class="src">Source : Exo7 (exo7.emath.fr), cours « Systèmes linéaires » (ch_syslin.pdf), mini-exercice après la section 1 (introduction).</div>
+  </div>
+
+  <div class="exercise">
+    <div class="tag">Exercice C — système à paramètre (avec disjonction)</div>
+    <p class="statement">Discuter et résoudre suivant la valeur du paramètre $t\in\mathbb{R}$ : $\begin{cases}tx-y=1\\x+(t-2)y=-1\end{cases}$.</p>
+    <details class="disclosure"><summary>Indice</summary>
+      <div class="hint-box">Isolez $y=tx-1$ dans la première ligne et substituez dans la seconde (astuce 1 du cours) ; vous obtiendrez un facteur en $(t-1)^2$ devant $x$ — c'est lui qu'il faut discuter être nul ou non (astuce 2).</div>
+    </details>
+    <details class="disclosure"><summary>Correction</summary>
+      <div class="solution">
+      <p>De $L_1$ : $y=tx-1$. En substituant dans $L_2$ : $x+(t-2)(tx-1)=-1\iff x\big[1+t(t-2)\big]-(t-2)=-1\iff x(t-1)^2=t-3$ (on reconnaît $1+t^2-2t=(t-1)^2$).</p>
+      <p><b>Si $t=1$ :</b> l'équation devient $0=1-3=-2$, impossible. On le vérifie directement sur le système d'origine : pour $t=1$, $\begin{cases}x-y=1\\x-y=-1\end{cases}$, clairement incompatible. $S=\varnothing$.</p>
+      <p><b>Si $t\neq1$ :</b> $x=\dfrac{t-3}{(t-1)^2}$, puis $y=tx-1=\dfrac{t(t-3)-(t-1)^2}{(t-1)^2}=\dfrac{t^2-3t-t^2+2t-1}{(t-1)^2}=\dfrac{-(t+1)}{(t-1)^2}$.</p>
+      <p><b>Vérification (t=0) :</b> $x=-3,\ y=-1$ : $t x-y=0-(-1)=1$ ✓ ; $x+(t-2)y=-3+(-2)(-1)=-3+2=-1$ ✓.</p>
+      <p>$$S=\left\{\left(\frac{t-3}{(t-1)^2},\ \frac{-(t+1)}{(t-1)^2}\right)\right\}\quad(t\neq1),\qquad S=\varnothing\quad(t=1).$$</p>
+      </div>
+    </details>
+    <div class="src">Source : Exo7 (exo7.emath.fr), cours « Systèmes linéaires » (ch_syslin.pdf), mini-exercice après la section 1 (introduction).</div>
+  </div>
+
+  <h2 id="sources">Sources</h2>
+  <div class="sources">
+    <p>Le contenu du cours (définitions, méthode, exemples) reprend le support de cours distribué en classe, complété par les démonstrations et remarques manuscrites de Léane. Chaque système a été entièrement recalculé pas à pas (élimination de Gauss, vérification par substitution dans les équations d'origine) avant mise en forme ; aucune erreur de fond n'a été trouvée dans ce chapitre — seules deux coquilles de recopie ont été corrigées silencieusement à partir du contexte : dans l'Exemple 4, le signe intermédiaire $-2y=1$ (au lieu de $-2y=-1$, incompatible avec la solution finale $y=-\frac12$ donnée par le cours et revérifiée directement) ; dans l'Exemple 8, l'expression de $y$ en fonction des variables libres (recalculée proprement comme $y=-\frac{\alpha+\beta}2$, cohérente avec $x=y$ imposé par $L_1$). Les résultats sont conformes aux méthodes standards du programme officiel de mathématiques MPSI :</p>
+    <ul>
+      <li>Méthode du pivot de Gauss, transformations élémentaires sur les lignes, systèmes échelonnés/triangulaires : méthode classique commune à tous les manuels de référence de CPGE scientifique (collections H-Prépa, Précis Bréal), et au cours Exo7 « Systèmes linéaires ».</li>
+      <li>Les trois cas de l'ensemble des solutions (unique, vide, infini) et le choix des variables libres parmi les colonnes non pivots (Exemple 8) : point classique souvent source d'erreur, ici entièrement revérifié par le calcul.</li>
+      <li>Systèmes à paramètres (§IV) : chaque disjonction de cas (coefficient potentiellement nul) a été vérifiée en substituant des valeurs numériques du paramètre dans le système d'origine.</li>
+    </ul>
+    <p>Les trois exercices d'entraînement de la section précédente proviennent du cours <a href="https://exo7.emath.fr/cours/ch_syslin.pdf" target="_blank" rel="noopener">« Systèmes linéaires »</a> d'Exo7 (exo7.emath.fr), une ressource universitaire libre d'accès largement utilisée en CPGE (les « mini-exercices » n'ont pas de corrigé officiel fourni par Exo7 : la correction complète ci-dessus est un calcul original, entièrement vérifié et revérifié par substitution numérique dans chaque système).</p>
+  </div>
+
+  <footer>Cahier Commun — MPSI · Mathématiques · Chapitre 04</footer>
+</main>
+
+</body>
+</html>
