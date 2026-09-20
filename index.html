@@ -60,19 +60,26 @@
   .app-header h1{font-size:2.1rem;font-weight:700;color:var(--accent-ink);margin-top:8px;}
   .app-header .subtitle{font-size:.98rem;color:var(--ink-muted);margin-top:8px;max-width:46ch;}
 
-  .stats{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap;}
-  .stat-tile{
-    background:var(--surface);border:1px solid var(--border);border-radius:12px;
-    padding:10px 16px;box-shadow:var(--shadow);min-width:96px;
+  .subject-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:24px;}
+  @media (max-width:560px){.subject-grid{grid-template-columns:repeat(2,1fr);}}
+  .subject-tile{
+    display:flex;flex-direction:column;gap:12px;background:var(--surface);border:1px solid var(--border);
+    border-radius:16px;padding:16px;box-shadow:var(--shadow);text-decoration:none;color:inherit;
+    transition:transform .15s ease, border-color .15s ease;
   }
-  .stat-tile .num{display:block;font-family:"Spectral",serif;font-weight:700;font-size:1.5rem;color:var(--accent-ink);line-height:1.1;}
-  .stat-tile .label{display:block;font-family:"JetBrains Mono",monospace;font-size:.64rem;letter-spacing:.06em;color:var(--ink-muted);text-transform:uppercase;margin-top:3px;}
-  .stat-tile.is-empty{background:transparent;box-shadow:none;border-style:dashed;}
-  .stat-tile.is-empty .num{color:var(--ink-muted);}
+  a.subject-tile:hover{border-color:var(--subject-color, var(--accent));transform:translateY(-2px);}
+  .subject-tile.is-empty{opacity:.55;}
+  .subject-icon{
+    width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;
+    font-size:1.4rem;background:var(--subject-color, var(--accent));box-shadow:0 4px 10px -4px var(--subject-color, var(--accent));
+  }
+  .subject-name{font-family:"Spectral",serif;font-weight:700;font-size:.98rem;line-height:1.25;}
+  .subject-meta{font-size:.76rem;color:var(--ink-muted);font-family:"JetBrains Mono",monospace;}
 
   .toc{margin-top:36px;display:flex;flex-direction:column;gap:32px;}
-  .toc-section-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;border-bottom:2px solid var(--border);padding-bottom:10px;margin-bottom:14px;}
-  .toc-section-head h2{font-size:1.15rem;color:var(--accent-ink);}
+  .toc-section-head{display:flex;align-items:center;gap:10px;border-bottom:2px solid var(--subject-color, var(--border));padding-bottom:10px;margin-bottom:14px;}
+  .toc-section-head .dot{width:10px;height:10px;border-radius:50%;background:var(--subject-color, var(--accent));flex-shrink:0;}
+  .toc-section-head h2{font-size:1.15rem;color:var(--ink);flex:1;}
   .toc-section-head .count{font-size:.76rem;color:var(--ink-muted);font-family:"JetBrains Mono",monospace;white-space:nowrap;}
   .chapter-list{display:flex;flex-direction:column;gap:10px;}
   .chapter-row{
@@ -80,9 +87,9 @@
     border-radius:12px;padding:13px 16px;text-decoration:none;color:inherit;box-shadow:var(--shadow);
     transition:border-color .15s ease, transform .15s ease;
   }
-  .chapter-row:hover{border-color:var(--accent);transform:translateX(3px);}
+  .chapter-row:hover{border-color:var(--subject-color, var(--accent));transform:translateX(3px);}
   .chapter-row .num{
-    flex-shrink:0;width:36px;height:36px;border-radius:9px;background:var(--accent-soft);color:var(--accent-ink);
+    flex-shrink:0;width:36px;height:36px;border-radius:9px;background:var(--subject-color, var(--accent-soft));color:#fff;
     font-family:"JetBrains Mono",monospace;font-size:.78rem;font-weight:700;display:flex;align-items:center;justify-content:center;
   }
   .chapter-row .body{flex:1;min-width:0;}
@@ -102,7 +109,7 @@
     <div class="eyebrow">Prépa &middot; MPSI</div>
     <h1>Le Cahier de Léane</h1>
     <p class="subtitle">Cours de maths, physique et sciences de l'ingénieur, repris au propre et vérifiés au fil de l'année.</p>
-    <div class="stats" id="stats"></div>
+    <div class="subject-grid" id="subjectGrid"></div>
   </header>
 
   <div class="toc" id="toc"></div>
@@ -133,36 +140,43 @@
   var CHEVRON_SVG = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>';
 
   function render(){
-    var stats = document.getElementById("stats");
+    var grid = document.getElementById("subjectGrid");
     var toc = document.getElementById("toc");
-    stats.innerHTML = "";
+    grid.innerHTML = "";
     toc.innerHTML = "";
 
     var groups = [];
-    var emptySubjects = [];
 
     SUBJECTS.forEach(function(subj){
       var chapters = CHAPTERS.filter(function(c){ return c.subject === subj.key; })
         .sort(function(a,b){ return (a.addedAt||"").localeCompare(b.addedAt||""); });
 
-      var tile = document.createElement("div");
-      tile.className = "stat-tile" + (chapters.length ? "" : " is-empty");
+      var hasContent = chapters.length > 0;
+      var tile = document.createElement(hasContent ? "a" : "div");
+      tile.className = "subject-tile" + (hasContent ? "" : " is-empty");
+      tile.style.setProperty("--subject-color", subj.color);
+      if (hasContent) tile.href = "#subj-" + subj.slug;
       tile.innerHTML =
-        '<span class="num">' + chapters.length + '</span>' +
-        '<span class="label">' + escapeHtml(subj.short) + '</span>';
-      stats.appendChild(tile);
+        '<span class="subject-icon">' + subj.icon + '</span>' +
+        '<span class="subject-name">' + escapeHtml(subj.key) + '</span>' +
+        '<span class="subject-meta">' + (hasContent
+          ? (chapters.length + ' chapitre' + (chapters.length === 1 ? "" : "s"))
+          : "Bientôt disponible") + '</span>';
+      grid.appendChild(tile);
 
-      if (chapters.length) groups.push({ subj: subj, chapters: chapters });
-      else emptySubjects.push(subj);
+      if (hasContent) groups.push({ subj: subj, chapters: chapters });
     });
 
     groups.forEach(function(group){
       var section = document.createElement("section");
       section.className = "toc-section";
+      section.id = "subj-" + group.subj.slug;
+      section.style.setProperty("--subject-color", group.subj.color);
 
       var head = document.createElement("div");
       head.className = "toc-section-head";
       head.innerHTML =
+        '<span class="dot"></span>' +
         '<h2>' + escapeHtml(group.subj.key) + '</h2>' +
         '<span class="count">' + group.chapters.length + ' chapitre' + (group.chapters.length === 1 ? "" : "s") + '</span>';
       section.appendChild(head);
@@ -185,13 +199,6 @@
       section.appendChild(list);
       toc.appendChild(section);
     });
-
-    if (emptySubjects.length){
-      var note = document.createElement("div");
-      note.className = "coming-soon";
-      note.textContent = "À venir : " + emptySubjects.map(function(s){ return s.key; }).join(" · ");
-      toc.appendChild(note);
-    }
   }
 
   render();
