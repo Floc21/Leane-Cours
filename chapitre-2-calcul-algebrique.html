@@ -1,0 +1,594 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calcul algébrique</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$','$'], ['\\(','\\)']], displayMath: [['$$','$$'], ['\\[','\\]']],
+    macros: { llbracket: "\\unicode{x27E6}", rrbracket: "\\unicode{x27E7}" }
+  },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js"></script>
+<style>
+  :root{
+    --paper:#F3F5EF; --surface:#FFFFFF; --surface-2:#EAEEE4;
+    --ink:#20261F; --ink-muted:#5B6459; --border:#D9DECD;
+    --accent:#1F4E8C; --accent-ink:#0E2D57; --accent-soft:#E4ECF7;
+    --red:#A6303C; --red-soft:#F6E4E4;
+    --green:#3D7A4D; --green-soft:#E3EFDF;
+    --gold:#8A6A1E; --gold-soft:#F3ECD8;
+    --shadow: 0 1px 2px rgba(32,38,31,.06), 0 6px 20px -8px rgba(32,38,31,.18);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#12160F; --surface:#191F17; --surface-2:#212820;
+      --ink:#E8ECE2; --ink-muted:#98A092; --border:#2B3327;
+      --accent:#7CA6E6; --accent-ink:#DCE8FB; --accent-soft:#1E2B41;
+      --red:#E28B92; --red-soft:#3A2224;
+      --green:#7FC090; --green-soft:#1E2F22;
+      --gold:#D8B45C; --gold-soft:#332B16;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 24px -8px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#12160F; --surface:#191F17; --surface-2:#212820;
+    --ink:#E8ECE2; --ink-muted:#98A092; --border:#2B3327;
+    --accent:#7CA6E6; --accent-ink:#DCE8FB; --accent-soft:#1E2B41;
+    --red:#E28B92; --red-soft:#3A2224;
+    --green:#7FC090; --green-soft:#1E2F22;
+    --gold:#D8B45C; --gold-soft:#332B16;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 24px -8px rgba(0,0,0,.5);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    background:var(--paper); color:var(--ink);
+    font-family:"Public Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+    padding-inline:20px; padding-block:28px; line-height:1.6;
+  }
+  main{max-width:780px;margin:0 auto;}
+  h1,h2,h3,h4{font-family:"Spectral",Georgia,serif;text-wrap:balance;margin:1.4em 0 .5em;}
+  h1{font-size:1.7rem;color:var(--accent-ink);margin-top:0;}
+  h2{font-size:1.3rem;color:var(--accent-ink);border-bottom:2px solid var(--border);padding-bottom:.3em;margin-top:2em;}
+  h3{font-size:1.08rem;}
+  h4{font-size:.98rem;font-style:italic;}
+  p{margin:.7em 0;}
+  a{color:var(--accent);}
+  .mono{font-family:"JetBrains Mono",monospace;}
+
+  header.top{margin-bottom:6px;}
+  header.top .eyebrow{font-family:"JetBrains Mono",monospace;font-size:.78rem;color:var(--ink-muted);letter-spacing:.03em;}
+  header.top nav{font-size:.82rem;margin-top:6px;}
+  header.top nav a{margin-right:14px;}
+
+  .toc{
+    background:var(--surface);border:1px solid var(--border);border-radius:10px;
+    padding:14px 18px;margin:20px 0 30px;box-shadow:var(--shadow);font-size:.9rem;
+  }
+  .toc h2{margin:0 0 8px;font-size:1rem;border:none;padding:0;}
+  .toc ol{margin:0;padding-left:1.3em;}
+  .toc li{margin-bottom:2px;}
+  .toc a{text-decoration:none;}
+  .toc a:hover{text-decoration:underline;}
+
+  .def-box, .prop-box{
+    background:var(--surface);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;
+    padding:12px 16px;margin:1em 0;box-shadow:var(--shadow);
+  }
+  .def-box .label, .prop-box .label{font-weight:700;color:var(--accent-ink);font-family:"Spectral",serif;}
+
+  .method-box{
+    background:var(--gold-soft);border:1px solid color-mix(in srgb, var(--gold) 45%, transparent);
+    border-radius:8px;padding:12px 16px;margin:1em 0;
+  }
+  .method-box .label{font-weight:700;color:var(--gold);}
+
+  .warning-box{
+    background:var(--red-soft);border:1px solid color-mix(in srgb, var(--red) 45%, transparent);
+    border-radius:8px;padding:12px 16px;margin:1em 0;
+  }
+  .warning-box .label{font-weight:700;color:var(--red);}
+
+  .remark{
+    border-left:3px solid var(--border);padding:6px 14px;margin:1em 0;color:var(--ink-muted);font-size:.93rem;
+  }
+
+  .exercise{
+    background:var(--surface);border:1px solid var(--border);border-radius:10px;
+    padding:14px 18px;margin:1.2em 0;box-shadow:var(--shadow);
+  }
+  .exercise .tag{font-family:"JetBrains Mono",monospace;font-size:.72rem;font-weight:700;letter-spacing:.05em;color:var(--accent);text-transform:uppercase;}
+  .exercise .statement{font-style:italic;margin:.4em 0 .8em;}
+  .exercise .solution{border-top:1px dashed var(--border);padding-top:.7em;margin-top:.4em;}
+  .exercise .solution .lbl{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-muted);margin-bottom:4px;}
+
+  figure{margin:1.4em 0;text-align:center;}
+  figure svg{max-width:100%;height:auto;color:var(--ink);}
+  figcaption{font-size:.82rem;color:var(--ink-muted);margin-top:6px;}
+
+  table.truth{border-collapse:collapse;margin:1em auto;font-family:"JetBrains Mono",monospace;font-size:.9rem;}
+  table.truth th,table.truth td{border:1px solid var(--border);padding:5px 16px;text-align:center;}
+  table.truth th{background:var(--surface-2);}
+
+  .wide{overflow-x:auto;}
+
+  .hint-box{background:var(--accent-soft);border:1px dashed var(--accent);border-radius:8px;padding:10px 14px;margin:0;font-size:.9rem;}
+  .exercise .src{font-size:.76rem;color:var(--ink-muted);margin-top:10px;font-family:"JetBrains Mono",monospace;}
+
+  .exercise details{margin:.5em 0 0;}
+  .exercise summary{
+    cursor:pointer;list-style:none;display:flex;align-items:center;gap:6px;
+    font-family:"JetBrains Mono",monospace;font-size:.72rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+    color:var(--accent-ink);padding:6px 0;user-select:none;
+  }
+  .exercise summary::-webkit-details-marker{display:none;}
+  .exercise summary::before{content:"▸";display:inline-block;color:var(--accent);font-size:.85rem;transition:transform .15s ease;}
+  .exercise details[open] summary::before{transform:rotate(90deg);}
+  .exercise details > .hint-box, .exercise details > .solution{margin-top:2px;}
+  .exercise details > .solution{border-top:none;padding-top:0;}
+
+  .sources{font-size:.86rem;color:var(--ink-muted);}
+  .sources ul{padding-left:1.2em;}
+
+  .duo{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;}
+  .duo figure{flex:1 1 260px;max-width:300px;margin:1em 0;}
+  .duo .cap-no{color:var(--red);font-weight:700;}
+  .duo .cap-yes{color:var(--green);font-weight:700;}
+
+  footer{margin-top:40px;color:var(--ink-muted);font-size:.78rem;text-align:center;}
+</style>
+</head>
+<body>
+<main>
+  <header class="top">
+    <div class="eyebrow">MPSI · MATHÉMATIQUES · CHAPITRE 02</div>
+    <h1>Calcul algébrique</h1>
+    <nav><a href="#s1">I. La notation Σ</a> · <a href="#s2">II. La notation Π</a> · <a href="#s3">III. Coefficients binomiaux</a> · <a href="#exercices">Exercices</a> · <a href="#sources">Sources</a></nav>
+  </header>
+
+  <div class="toc">
+    <h2>Sommaire</h2>
+    <ol>
+      <li><a href="#s1">La notation Σ, règles de calcul</a>
+        <ol>
+          <li><a href="#s1-1">Changement d'indice</a></li>
+          <li><a href="#s1-2">Exemples de sommes télescopiques</a></li>
+          <li><a href="#s1-3">Sommes géométriques</a></li>
+          <li><a href="#s1-4">Somme des termes pairs et impairs</a></li>
+        </ol>
+      </li>
+      <li><a href="#s2">La notation Π</a></li>
+      <li><a href="#s3">Coefficients binomiaux</a>
+        <ol>
+          <li><a href="#s3-1">Définition</a></li>
+          <li><a href="#s3-2">Propriétés</a></li>
+          <li><a href="#s3-3">Binôme de Newton</a></li>
+        </ol>
+      </li>
+      <li><a href="#exercices">Exercices d'entraînement (annales)</a></li>
+    </ol>
+  </div>
+
+  <h2 id="s1">I. La notation Σ, règles de calcul</h2>
+
+  <div class="def-box">
+    <div class="label">Définition 1</div>
+    <p>$$\sum_{k=0}^{n} u_k = u_0+u_1+\dots+u_n = \text{« somme des } u_k \text{ de } k=0 \text{ à } n \text{ »}.$$</p>
+  </div>
+  <div class="remark"><b>Remarque 1 :</b> $\displaystyle\sum_{k=0}^{n}u_k$ peut aussi se noter $\displaystyle\sum_{0\leq k\leq n} u_k$ ou $\displaystyle\sum_{k\in I} u_k$ avec $I=\llbracket 0,n\rrbracket$.</div>
+
+  <div class="exercise">
+    <div class="tag">Exemple 1</div>
+    <p>$\displaystyle\sum_{k=0}^{3} u_k = u_0+u_1+u_2+u_3$. &nbsp; $\displaystyle\sum_{k=i}^{i} u_k = u_i$.</p>
+  </div>
+  <div class="remark"><b>Remarque 2 :</b> « $k$ » est un indice muet : $\displaystyle\sum_{k=0}^{3}u_k=\sum_{j=0}^{3}u_j=u_0+u_1+u_2+u_3$.</div>
+
+  <div class="warning-box">
+    <div class="label">Attention</div>
+    <p>Il y a $n-p+1$ termes dans la somme $\displaystyle\sum_{k=p}^{n}u_k$. En particulier, il y a $n$ termes dans $\displaystyle\sum_{k=1}^{n}u_k$ et $n+1$ termes dans $\displaystyle\sum_{k=0}^{n}u_k$.</p>
+  </div>
+
+  <div class="exercise">
+    <div class="tag">Exemple 2</div>
+    <p>$\displaystyle\sum_{k=p}^{n} a = \underbrace{a+a+\dots+a}_{(n-p+1)\text{ termes}} = (n-p+1)\times a$ (somme d'une constante).</p>
+  </div>
+
+  <div class="prop-box">
+    <div class="label">Proposition 1</div>
+    <p>Pour tout $n\in\mathbb{N}^*$ : $$\sum_{k=1}^{n}k=\frac{n(n+1)}{2}.$$</p>
+    <p><b>Démonstration (récurrence simple) :</b> notons $P(n)$ la propriété. <b>Initialisation ($n=1$) :</b> $\sum_{k=1}^{1}k=1$ et $\dfrac{1(1+1)}{2}=1$ : $P(1)$ vraie. <b>Hérédité :</b> soit $n\in\mathbb{N}^*$ tel que $P(n)$ (HR). Alors $\displaystyle\sum_{k=1}^{n+1}k=\sum_{k=1}^{n}k+(n+1)=\frac{n(n+1)}{2}+(n+1)=\frac{n(n+1)+2(n+1)}{2}=\frac{(n+1)(n+2)}{2}$ : c'est $P(n+1)$. <b>Conclusion :</b> d'après le principe de récurrence, $\forall n\in\mathbb{N}^*,\ \sum_{k=1}^n k=\frac{n(n+1)}{2}$.</p>
+  </div>
+
+  <div class="prop-box">
+    <div class="label">Proposition 2 (Règle de Chasles)</div>
+    <p>Soient $p,q,n$ des entiers tels que $p<q<n$. On a $$\sum_{p\leq k\leq n} a_k = \sum_{p\leq k\leq q} a_k + \sum_{q+1\leq k\leq n} a_k.$$</p>
+  </div>
+  <div class="warning-box"><div class="label">Attention</div><p>À ne pas compter deux fois le terme $a_q$ ! Il appartient au premier morceau ($p\leq k\leq q$), le second morceau commence bien à $q+1$.</p></div>
+  <div class="remark"><b>Remarque 3 :</b> cette propriété est très utile pour ajouter ou enlever des termes dans une somme quand cela nous arrange.</div>
+
+  <div class="exercise">
+    <div class="tag">Exemple 3</div>
+    <p class="statement">Soit $n\geq2$ un entier. Calculer $A_n=\displaystyle\sum_{k=3}^{n+1}k$.</p>
+    <div class="solution">
+      <p>On remarque que $\displaystyle\sum_{k=1}^{n+1}k=\sum_{k=1}^{2}k+\sum_{k=3}^{n+1}k$ (Chasles), donc $A_n=\displaystyle\sum_{k=1}^{n+1}k-\sum_{k=1}^{2}k=\frac{(n+1)(n+2)}{2}-3$.</p>
+    </div>
+  </div>
+
+  <div class="prop-box">
+    <div class="label">Corollaire 3</div>
+    <p>$$\forall m\in\mathbb{N},\ \forall n\geq m,\quad \sum_{k=m}^{n}k=\frac{(m+n)(n-m+1)}{2} = \text{« demi-somme des termes extrêmes »}\times\text{« nombre de termes »}.$$</p>
+    <p><b>Démonstration :</b> par Chasles (pour $m\geq1$), $\displaystyle\sum_{k=1}^{n}k=\sum_{k=1}^{m-1}k+\sum_{k=m}^{n}k$, donc $\displaystyle\sum_{k=m}^{n}k=\sum_{k=1}^{n}k-\sum_{k=1}^{m-1}k=\frac{n(n+1)}{2}-\frac{(m-1)m}{2}=\frac{n^2+n-m^2+m}{2}$. On vérifie que cette expression coïncide avec $\dfrac{(m+n)(n-m+1)}{2}$ : en développant, $(m+n)(n-m+1)=mn-m^2+m+n^2-mn+n=n^2+n-m^2+m$. Les deux expressions sont égales, d'où le résultat (le cas $m=0$ se vérifie séparément et coïncide avec la Proposition 1 décalée).</p>
+  </div>
+
+  <div class="remark">$\displaystyle\sum_{k=0}^{n}k^2=\sum_{k=1}^{n}k^2$ et $\displaystyle\sum_{k=0}^{n}k^3=\sum_{k=1}^{n}k^3$ (le terme $k=0$ ne change rien à la somme).</div>
+
+  <div class="prop-box">
+    <div class="label">Proposition 4</div>
+    <p>Pour tout $n\in\mathbb{N}^*$ :</p>
+    <p>(1) $\displaystyle\sum_{k=1}^{n}k^2=\frac{n(n+1)(2n+1)}{6}$ &nbsp;&nbsp; (2) $\displaystyle\sum_{k=1}^{n}k^3=\left(\frac{n(n+1)}{2}\right)^{2}$</p>
+    <p><b>Démonstration de (1) (récurrence simple) :</b> <b>Initialisation ($n=1$) :</b> $\sum_{k=1}^1 k^2=1$ et $\frac{1\times2\times3}{6}=1$ : vraie. <b>Hérédité :</b> soit $n\in\mathbb{N}^*$ tel que $\sum_{k=1}^n k^2=\frac{n(n+1)(2n+1)}{6}$ (HR). Alors $\displaystyle\sum_{k=1}^{n+1}k^2=\frac{n(n+1)(2n+1)}{6}+(n+1)^2=\frac{n(n+1)(2n+1)+6(n+1)^2}{6}=\frac{(n+1)\big[n(2n+1)+6(n+1)\big]}{6}=\frac{(n+1)(2n^2+7n+6)}{6}=\frac{(n+1)(n+2)(2n+3)}{6}$, ce qui est bien $P(n+1)$ (on retrouve la formule avec $n+1$ à la place de $n$).</p>
+    <p><b>Démonstration de (2) (récurrence simple) :</b> <b>Initialisation ($n=1$) :</b> $\sum_{k=1}^1 k^3=1$ et $\left(\frac{1\times2}{2}\right)^2=1$ : vraie. <b>Hérédité :</b> soit $n\in\mathbb{N}^*$ tel que $\sum_{k=1}^n k^3=\left(\frac{n(n+1)}{2}\right)^2$ (HR). Alors $\displaystyle\sum_{k=1}^{n+1}k^3=\frac{n^2(n+1)^2}{4}+(n+1)^3=(n+1)^2\left(\frac{n^2}{4}+(n+1)\right)=(n+1)^2\cdot\frac{n^2+4n+4}{4}=\frac{(n+1)^2(n+2)^2}{4}=\left(\frac{(n+1)(n+2)}{2}\right)^2$, ce qui est bien $P(n+1)$.</p>
+  </div>
+
+  <div class="warning-box">
+    <div class="label">Attention</div>
+    <p>$\Sigma$ ne se comporte pas bien avec le produit : $$\left(\sum_{k=1}^{n}k\right)\times\left(\sum_{k=1}^{n}k\right)\ \neq\ \sum_{k=1}^{n}k^2$$ (le membre de gauche vaut $\left(\frac{n(n+1)}{2}\right)^2=\sum k^3$, pas $\sum k^2$ !).</p>
+  </div>
+
+  <h3 id="s1-1">1. Changement d'indice</h3>
+  <div class="exercise">
+    <div class="tag">Exemple 4</div>
+    <p class="statement">Transformer $\displaystyle\sum_{k=3}^{n}(k+1)$ en une somme indexée par un « $k$ » sans « $+1$ ».</p>
+    <div class="solution">
+      <p>On pose $k'=k+1$. Lorsque $k=3$, $k'=4$ ; lorsque $k=n$, $k'=n+1$. D'où $\displaystyle\sum_{k=3}^{n}(k+1)=\sum_{k'=4}^{n+1}k'=\sum_{k=4}^{n+1}k$ (on renomme l'indice muet $k'$ en $k$).</p>
+    </div>
+  </div>
+  <p><b>En général :</b> on peut faire tout changement d'indice du type $k'=\pm k+a$ ($a\in\mathbb{Z}$) — une translation (ou un retournement) qui fait correspondre des entiers consécutifs à des entiers consécutifs.</p>
+
+  <div class="exercise">
+    <div class="tag">Exemple 5</div>
+    <p class="statement">Changement d'indice $k'=k-1$ dans $\displaystyle\sum_{k=1}^{n}a_kb_{n-k}$.</p>
+    <div class="solution">
+      <p>$k=k'+1$ ; $k=1\Rightarrow k'=0$, $k=n\Rightarrow k'=n-1$. D'où $\displaystyle\sum_{k=1}^{n}a_kb_{n-k}=\sum_{k'=0}^{n-1}a_{k'+1}b_{n-(k'+1)}=\sum_{k=0}^{n-1}a_{k+1}b_{n-k-1}$.</p>
+    </div>
+  </div>
+
+  <div class="warning-box"><div class="label">Contre-exemple</div><p>$k'=2k+1$ n'est <b>pas</b> un changement d'indice valide : deux entiers $k$ consécutifs ne donnent pas des $k'$ consécutifs (on « saute » des valeurs), la somme obtenue ne porterait pas sur les mêmes termes.</p></div>
+
+  <div class="exercise">
+    <div class="tag">Exercice 1</div>
+    <p class="statement">Effectuer les changements d'indice suivants sur la somme $\displaystyle\sum_{k=1}^{n}k^4$ : (1) $k'=k+1$ ; (2) $k'=k-1$ ; (3) $k'=k+3$.</p>
+    <div class="solution">
+      <p>(1) $k=1\Rightarrow k'=2$, $k=n\Rightarrow k'=n+1$, et $k^4=(k'-1)^4$ : $\displaystyle\sum_{k=1}^{n}k^4=\sum_{k=2}^{n+1}(k-1)^4$.</p>
+      <p>(2) $k=1\Rightarrow k'=0$, $k=n\Rightarrow k'=n-1$, et $k^4=(k'+1)^4$ : $\displaystyle\sum_{k=1}^{n}k^4=\sum_{k=0}^{n-1}(k+1)^4$.</p>
+      <p>(3) $k=1\Rightarrow k'=4$, $k=n\Rightarrow k'=n+3$, et $k^4=(k'-3)^4$ : $\displaystyle\sum_{k=1}^{n}k^4=\sum_{k=4}^{n+3}(k-3)^4$.</p>
+    </div>
+  </div>
+
+  <h3 id="s1-2">2. Exemples de sommes télescopiques</h3>
+  <p>Calcul de $S_n=\displaystyle\sum_{k=1}^{n}u_k$ dans le cas où $u_k$ s'écrit sous la forme $u_k=a_k-a_{k-1}$.</p>
+  <div class="method-box">
+    <div class="label">Démonstration</div>
+    <p>$\displaystyle S_n=\sum_{k=1}^{n}(a_k-a_{k-1})=\sum_{k=1}^{n}a_k-\sum_{k=1}^{n}a_{k-1}$. Dans la seconde somme, changement d'indice $k'=k-1$ : $\displaystyle\sum_{k=1}^{n}a_{k-1}=\sum_{k'=0}^{n-1}a_{k'}=\sum_{k=0}^{n-1}a_k$. Donc $\displaystyle S_n=\sum_{k=1}^{n}a_k-\sum_{k=0}^{n-1}a_k=\left(\sum_{k=1}^{n-1}a_k+a_n\right)-\left(a_0+\sum_{k=1}^{n-1}a_k\right)=a_n-a_0$.</p>
+  </div>
+  <div class="prop-box"><p style="text-align:center;font-weight:600">$\displaystyle\sum_{k=1}^{n}(a_k-a_{k-1})=a_n-a_0$.</p></div>
+
+  <figure role="img" aria-label="Ligne de six positions numerotees 0 a 5 representant a0 a a5. Une rangee du haut porte les termes plus a1 a plus a5, une rangee du bas porte les termes moins a0 a moins a4. Des traits pointilles relient chaque plus ak de la rangee du haut au moins ak de meme indice sur la rangee du bas pour k de 1 a 4, indiquant qu'ils s'annulent. Seuls moins a0, en bas a gauche, et plus a5, en haut a droite, sont encadres car ils n'ont pas de partenaire et donc ne s'annulent pas.">
+    <svg viewBox="0 0 620 210">
+      <line x1="50" y1="105" x2="570" y2="105" stroke="var(--border)" stroke-width="1.5"/>
+      <g font-size="12" fill="var(--ink-muted)" text-anchor="middle" font-family="JetBrains Mono, monospace">
+        <text x="60" y="125">0</text><text x="164" y="125">1</text><text x="268" y="125">2</text>
+        <text x="372" y="125">3</text><text x="476" y="125">4</text><text x="560" y="125">5</text>
+      </g>
+      <!-- connectors k=1..4 -->
+      <line x1="164" y1="80" x2="164" y2="130" stroke="var(--ink-muted)" stroke-width="1.2" stroke-dasharray="4 3"/>
+      <line x1="268" y1="80" x2="268" y2="130" stroke="var(--ink-muted)" stroke-width="1.2" stroke-dasharray="4 3"/>
+      <line x1="372" y1="80" x2="372" y2="130" stroke="var(--ink-muted)" stroke-width="1.2" stroke-dasharray="4 3"/>
+      <line x1="476" y1="80" x2="476" y2="130" stroke="var(--ink-muted)" stroke-width="1.2" stroke-dasharray="4 3"/>
+      <!-- top row +a1..+a5 -->
+      <g font-size="14" text-anchor="middle" fill="currentColor">
+        <rect x="140" y="55" width="48" height="24" rx="5" fill="var(--surface-2)"/><text x="164" y="72">+a₁</text>
+        <rect x="244" y="55" width="48" height="24" rx="5" fill="var(--surface-2)"/><text x="268" y="72">+a₂</text>
+        <rect x="348" y="55" width="48" height="24" rx="5" fill="var(--surface-2)"/><text x="372" y="72">+a₃</text>
+        <rect x="452" y="55" width="48" height="24" rx="5" fill="var(--surface-2)"/><text x="476" y="72">+a₄</text>
+        <rect x="533" y="55" width="54" height="24" rx="5" fill="none" stroke="var(--accent)" stroke-width="2"/><text x="560" y="72" fill="var(--accent-ink)" font-weight="700">+a₅</text>
+      </g>
+      <!-- bottom row -a0..-a4 -->
+      <g font-size="14" text-anchor="middle" fill="currentColor">
+        <rect x="33" y="131" width="54" height="24" rx="5" fill="none" stroke="var(--accent)" stroke-width="2"/><text x="60" y="148" fill="var(--accent-ink)" font-weight="700">−a₀</text>
+        <rect x="140" y="131" width="48" height="24" rx="5" fill="var(--surface-2)"/><text x="164" y="148">−a₁</text>
+        <rect x="244" y="131" width="48" height="24" rx="5" fill="var(--surface-2)"/><text x="268" y="148">−a₂</text>
+        <rect x="348" y="131" width="48" height="24" rx="5" fill="var(--surface-2)"/><text x="372" y="148">−a₃</text>
+        <rect x="452" y="131" width="48" height="24" rx="5" fill="var(--surface-2)"/><text x="476" y="148">−a₄</text>
+      </g>
+      <text x="310" y="190" text-anchor="middle" font-size="13" fill="var(--ink-muted)">chaque terme intérieur apparaît une fois en + et une fois en − : il s'annule</text>
+    </svg>
+    <figcaption>Cas $n=5$ (se généralise à tout $n$) : seuls $-a_0$ et $+a_5$, encadrés, n'ont pas de partenaire — il reste $S_5=a_5-a_0$.</figcaption>
+  </figure>
+
+  <div class="remark"><b>Généralisation :</b> $\displaystyle\sum_{k=1}^{n}(u_k-u_{k+1})=u_1-u_2+u_2-u_3+u_3-u_4+\dots+u_{n-1}-u_n+u_n-u_{n+1}=u_1-u_{n+1}$.</div>
+
+  <div class="exercise">
+    <div class="tag">Exercice 2</div>
+    <p class="statement">(1) Déterminer $(a,b)\in\mathbb{R}^2$ tel que pour tout entier $k\geq2$, $\dfrac{1}{k^2-k}=\dfrac{a}{k-1}+\dfrac{b}{k}$. (2) Soit $n\geq2$, calculer $\displaystyle\sum_{k=2}^{n}\frac{1}{k^2-k}$.</p>
+    <div class="solution">
+      <p><b>(1)</b> $\dfrac{a}{k-1}+\dfrac{b}{k}=\dfrac{ak+b(k-1)}{k(k-1)}=\dfrac{(a+b)k-b}{k(k-1)}$. Par identification avec $\dfrac{1}{k(k-1)}=\dfrac{0\cdot k+1}{k(k-1)}$ : $a+b=0$ et $-b=1$, d'où $b=-1$, $a=1$. Donc $\dfrac{1}{k^2-k}=\dfrac{1}{k-1}-\dfrac{1}{k}$.</p>
+      <p><b>(2)</b> $\displaystyle\sum_{k=2}^{n}\frac{1}{k^2-k}=\sum_{k=2}^{n}\left(\frac{1}{k-1}-\frac{1}{k}\right)=\sum_{k=2}^{n}\frac{1}{k-1}-\sum_{k=2}^{n}\frac{1}{k}$. Changement d'indice $k'=k-1$ sur la première somme ($k=2\Rightarrow k'=1$, $k=n\Rightarrow k'=n-1$) : $\displaystyle\sum_{k=2}^{n}\frac1{k-1}=\sum_{k=1}^{n-1}\frac1k$. D'où $\displaystyle\sum_{k=2}^{n}\frac{1}{k^2-k}=\sum_{k=1}^{n-1}\frac1k-\sum_{k=2}^{n}\frac1k=1+\sum_{k=2}^{n-1}\frac1k-\left(\sum_{k=2}^{n-1}\frac1k+\frac1n\right)=1-\frac1n=\frac{n-1}{n}$.</p>
+    </div>
+  </div>
+
+  <div class="prop-box">
+    <div class="label">Proposition 5</div>
+    <p>Pour tout $a,b\in\mathbb{C}$, $n\in\mathbb{N}^*$, on peut factoriser $a^n-b^n$ :</p>
+    <p>$$a^n-b^n=(a-b)\big(a^{n-1}+a^{n-2}b+a^{n-3}b^2+\dots+ab^{n-2}+b^{n-1}\big)=(a-b)\sum_{k=0}^{n-1}a^{n-1-k}b^k=(a-b)\sum_{k=0}^{n-1}a^kb^{n-1-k}.$$</p>
+    <p><b>Démonstration :</b> $\displaystyle(a-b)\sum_{k=0}^{n-1}a^{n-1-k}b^k=\sum_{k=0}^{n-1}(a-b)a^{n-1-k}b^k=\sum_{k=0}^{n-1}a^{n-k}b^k-\sum_{k=0}^{n-1}a^{n-1-k}b^{k+1}$. Dans la seconde somme, changement d'indice $k'=k+1$ ($k=0\Rightarrow k'=1$, $k=n-1\Rightarrow k'=n$) : $\displaystyle\sum_{k=0}^{n-1}a^{n-1-k}b^{k+1}=\sum_{k'=1}^{n}a^{n-k'}b^{k'}$. Donc $\displaystyle(a-b)\sum_{k=0}^{n-1}a^{n-1-k}b^k=\sum_{k=0}^{n-1}a^{n-k}b^k-\sum_{k=1}^{n}a^{n-k}b^k=\left(a^n+\sum_{k=1}^{n-1}a^{n-k}b^k\right)-\left(\sum_{k=1}^{n-1}a^{n-k}b^k+b^n\right)=a^n-b^n$.</p>
+  </div>
+
+  <div class="prop-box">
+    <div class="label">Corollaire 6</div>
+    <p>$$\forall j\in\mathbb{N},\ \forall a,b\in\mathbb{R},\quad a^{2j+1}+b^{2j+1}=(a+b)\big(a^{2j}-a^{2j-1}b+a^{2j-2}b^2-\dots-ab^{2j-1}+b^{2j}\big).$$</p>
+    <p>Obtenu en remplaçant $b$ par $-b$ dans la Proposition 5 (avec $n=2j+1$ impair, donc $(-b)^n=-b^n$) : $a^{2j+1}-(-b)^{2j+1}=a^{2j+1}+b^{2j+1}=\big(a-(-b)\big)\sum_{k=0}^{2j}a^{2j-k}(-b)^k=(a+b)\sum_{k=0}^{2j}(-1)^k a^{2j-k}b^k$.</p>
+  </div>
+  <p>En particulier on rappelle les formules suivantes :</p>
+  <div class="wide"><table class="truth" style="font-family:inherit">
+    <tr><td style="text-align:left">$a^2-b^2=(a-b)(a+b)$</td></tr>
+    <tr><td style="text-align:left">$a^3-b^3=(a-b)(a^2+ab+b^2)$</td></tr>
+    <tr><td style="text-align:left">$a^3+b^3=(a+b)(a^2-ab+b^2)$</td></tr>
+    <tr><td style="text-align:left">$a^4-b^4=(a-b)(a^3+a^2b+ab^2+b^3)$</td></tr>
+    <tr><td style="text-align:left">$a^5-b^5=(a-b)(a^4+a^3b+a^2b^2+ab^3+b^4)$</td></tr>
+    <tr><td style="text-align:left">$a^5+b^5=(a+b)(a^4-a^3b+a^2b^2-ab^3+b^4)$</td></tr>
+  </table></div>
+
+  <h3 id="s1-3">3. Sommes géométriques</h3>
+  <div class="prop-box">
+    <div class="label">Proposition 7</div>
+    <p>Pour tout $n\in\mathbb{N}^*$ :</p>
+    <ul>
+      <li>pour $x=1$ : $\displaystyle 1+x+\dots+x^n=n+1$ ;</li>
+      <li>pour $x\neq1$ : $\displaystyle 1+x+x^2+\dots+x^n=\sum_{k=0}^{n}x^k=\frac{1-x^{n+1}}{1-x}$.</li>
+    </ul>
+    <p><b>Démonstration (1ère méthode, via la Proposition 5) :</b> en prenant $a=1,\ b=x$ dans $a^{n+1}-b^{n+1}=(a-b)\sum_{k=0}^{n}a^{n-k}b^k$ : $1-x^{n+1}=(1-x)\displaystyle\sum_{k=0}^{n}x^k$, d'où (pour $x\neq1$) le résultat en divisant par $1-x$.</p>
+    <p><b>Démonstration (2ème méthode, directe) :</b> $\displaystyle(1-x)\sum_{k=0}^{n}x^k=\sum_{k=0}^{n}x^k-\sum_{k=0}^{n}x^{k+1}=\sum_{k=0}^{n}x^k-\sum_{k'=1}^{n+1}x^{k'}=x^0-x^{n+1}=1-x^{n+1}$ (les termes $x^1,\dots,x^n$ s'annulent, c'est encore une somme télescopique).</p>
+  </div>
+
+  <div class="prop-box">
+    <div class="label">Corollaire 8</div>
+    <p>Pour tout $m,p\in\mathbb{N}^*$ :</p>
+    <ul>
+      <li>pour $x=1$ : $\displaystyle x^m+x^{m+1}+\dots+x^{m+p}=p+1$ ;</li>
+      <li>pour $x\neq1$ : $\displaystyle x^m+x^{m+1}+\dots+x^{m+p}=\sum_{k=m}^{m+p}x^k=x^m\,\frac{1-x^{p+1}}{1-x}=\frac{x^m-x^{p+m+1}}{1-x}$.</li>
+    </ul>
+    <p><b>Démonstration :</b> $\displaystyle\sum_{k=m}^{m+p}x^k=x^m+x^{m+1}+\dots+x^{m+p}=x^m\big(1+x+\dots+x^p\big)=x^m\sum_{k=0}^{p}x^k$, puis on applique la Proposition 7 à cette dernière somme.</p>
+  </div>
+
+  <div class="prop-box">
+    <div class="label">Proposition 9 (Produit de deux sommes finies)</div>
+    <p>Soient $n,m$ des entiers positifs. On a $$\left(\sum_{i=0}^{n}a_i\right)\left(\sum_{j=0}^{m}b_j\right)=\sum_{i=0}^{n}\left(\sum_{j=0}^{m}a_ib_j\right)=\sum_{j=0}^{m}\left(\sum_{i=0}^{n}a_ib_j\right).$$</p>
+    <p>(On distribue chaque terme $a_i$ de la première somme sur tous les termes $b_j$ de la seconde — les deux ordres de sommation donnent le même résultat, un total de $(n+1)(m+1)$ termes $a_ib_j$.)</p>
+  </div>
+  <div class="warning-box"><div class="label">Attention</div><p>Cette formule marche <u>seulement</u> pour un produit de deux sommes <b>distinctes</b>, où l'on peut séparer les indices ! En général $$\sum_{k=1}^{n}a_kb_k\ \neq\ \left(\sum_{k=1}^{n}a_k\right)\left(\sum_{k=1}^{n}b_k\right).$$</p></div>
+  <div class="exercise">
+    <div class="tag">Exemple 6</div>
+    <p>Prendre $a_k=k$ et $b_k=k$, $\forall k\in\llbracket1,n\rrbracket$ : le membre de gauche est $\displaystyle\sum_{k=1}^n k^2=\frac{n(n+1)(2n+1)}{6}$, tandis que le membre de droite est $\left(\sum_{k=1}^n k\right)^2=\left(\frac{n(n+1)}{2}\right)^2=\sum_{k=1}^n k^3$ : les deux expressions ne coïncident pas (sauf pour $n=1$).</p>
+  </div>
+
+  <h3 id="s1-4">4. Somme des termes pairs et impairs</h3>
+  <div class="exercise">
+    <div class="tag">Exemple</div>
+    <p>$\displaystyle S=\sum_{k=0}^{10}a_k=a_0+a_1+a_2+a_3+\dots+a_{10}=(a_0+a_2+a_4+\dots+a_{10})+(a_1+a_3+\dots+a_9)=\sum_{j=0}^{5}a_{2j}+\sum_{i=0}^{4}a_{2i+1}$.</p>
+    <p style="font-size:.85rem;color:var(--ink-muted)">Les $11$ termes ($k=0,\dots,10$) se répartissent en $6$ indices pairs ($2j$, $j=0,\dots,5$) et $5$ indices impairs ($2i+1$, $i=0,\dots,4$) : $6+5=11$, cela couvre bien tous les termes une seule fois chacun.</p>
+  </div>
+
+  <h2 id="s2">II. La notation Π</h2>
+  <div class="def-box">
+    <div class="label">Définition 2</div>
+    <p>$$\prod_{k=1}^{n}u_k=u_1\times u_2\times\dots\times u_n=\text{« produit des } u_k \text{ de } k=1 \text{ à } n \text{ »}.$$</p>
+  </div>
+  <div class="remark"><b>Remarque 4 :</b> $\displaystyle\prod_{k=p}^{n}a=\underbrace{a\times a\times\dots\times a}_{(n-p+1)\text{ termes}}=a^{n-p+1}$ (produit d'une constante).</div>
+  <p><b>Changement d'indice « $j=i-1$ » :</b> $\displaystyle\prod_{i=1}^{n}u_i=\prod_{j=0}^{n-1}u_{j+1}$ (même principe que pour $\Sigma$).</p>
+  <p><b>Règles de calcul :</b> $\displaystyle\left(\prod_{k=m}^{p}a_k\right)\left(\prod_{j=m}^{p}b_j\right)=\prod_{k=m}^{p}(a_kb_k)$ &nbsp; et &nbsp; $\displaystyle\dfrac{\prod_{k=m}^{p}a_k}{\prod_{j=m}^{p}b_j}=\prod_{k=m}^{p}\dfrac{a_k}{b_k}$ (à la différence de $\Sigma$, le produit <b>se comporte bien</b> terme à terme).</p>
+  <p><b>Règle de Chasles</b> ($1<p<n$) : $\displaystyle\prod_{k=1}^{n}a_k=\prod_{k=1}^{p}a_k\times\prod_{k=p+1}^{n}a_k$.</p>
+  <p><b>Fonctions logarithme et exponentielle :</b> $\displaystyle\forall n\in\mathbb{N}^*,\ \forall a_1,\dots,a_n>0,\ \ln\!\left(\prod_{i=1}^{n}a_i\right)=\sum_{i=1}^{n}\ln(a_i)$, et $\displaystyle\forall b_1,\dots,b_n\in\mathbb{R},\ \exp\!\left(\sum_{i=1}^{n}b_i\right)=\prod_{i=1}^{n}\exp(b_i)$ (le logarithme transforme un produit en somme, l'exponentielle fait l'inverse).</p>
+
+  <div class="def-box">
+    <div class="label">Définition 3</div>
+    <p>$$\forall n\in\mathbb{N}^*,\quad n!=\prod_{k=1}^{n}k=1\times2\times3\times\dots\times n = \text{« factorielle } n\text{ »}, \qquad 0!=1 \text{ (par convention)}.$$</p>
+  </div>
+  <div class="exercise">
+    <div class="tag">Exemple 7</div>
+    <p>$3!=1\times2\times3=6$.</p>
+  </div>
+  <div class="exercise">
+    <div class="tag">Exemple 8</div>
+    <p class="statement">Pour tout $n\in\mathbb{N}^*$, calculer $\displaystyle\prod_{k=1}^{n}(2k)$ et $\displaystyle\prod_{k=0}^{n-1}(2k+1)$.</p>
+    <div class="solution">
+      <p>$\displaystyle\prod_{k=1}^{n}(2k)=\left(\prod_{k=1}^{n}2\right)\times\left(\prod_{k=1}^{n}k\right)=2^n\times n!$.</p>
+      <p>$\displaystyle\prod_{k=0}^{n-1}(2k+1)=1\times3\times5\times\dots\times(2n-1)=\dfrac{1\times2\times3\times4\times\dots\times(2n-2)\times(2n-1)\times2n}{2\times4\times6\times\dots\times(2n-2)\times2n}=\dfrac{(2n)!}{2^n\times n!}$ (on a multiplié et divisé par le produit des nombres pairs $2\times4\times\dots\times2n=2^n\times n!$, ce qui fait apparaître $(2n)!$ au numérateur et ne change pas la valeur). On peut aussi écrire, en simplifiant $\dfrac{(2n)!}{2^nn!}=\dfrac{2n\times(2n-1)!}{2^n\times n\times(n-1)!}=\dfrac{(2n-1)!}{2^{n-1}(n-1)!}$ : les deux écritures sont équivalentes.</p>
+    </div>
+  </div>
+
+  <div class="prop-box">
+    <div class="label">Proposition 10</div>
+    <p>Soit $n\in\mathbb{N}^*$. On a $(n+1)\times n!=(n+1)!$ &nbsp; et &nbsp; $\dfrac{n!}{n}=(n-1)!$.</p>
+  </div>
+
+  <div class="exercise">
+    <div class="tag">Exercice 3</div>
+    <p class="statement">Calculer $\displaystyle\sum_{k=0}^{n}k\times k!$.</p>
+    <div class="solution">
+      <p>On écrit $k=(k+1)-1$, donc $k\times k!=\big((k+1)-1\big)\times k!=(k+1)!-k!$ (somme télescopique). D'où $\displaystyle\sum_{k=0}^{n}k\times k!=\sum_{k=0}^{n}\big((k+1)!-k!\big)=\sum_{k=0}^{n}(k+1)!-\sum_{k=0}^{n}k!$. Changement d'indice $k'=k+1$ sur la première somme : $\displaystyle\sum_{k=0}^{n}(k+1)!=\sum_{k=1}^{n+1}k!$. D'où $\displaystyle\sum_{k=0}^{n}k\times k!=\sum_{k=1}^{n+1}k!-\sum_{k=0}^{n}k!=\left(\sum_{k=1}^{n}k!+(n+1)!\right)-\left(0!+\sum_{k=1}^{n}k!\right)=(n+1)!-1$.</p>
+    </div>
+  </div>
+
+  <p><b>Produit télescopique :</b> $\displaystyle\prod_{k=1}^{n}\frac{a_k}{a_{k+1}}=\frac{a_1}{a_2}\times\frac{a_2}{a_3}\times\frac{a_3}{a_4}\times\dots\times\frac{a_n}{a_{n+1}}=\frac{a_1}{a_{n+1}}$ (les termes intermédiaires se simplifient deux à deux).</p>
+  <div class="exercise">
+    <div class="tag">Exemple 9</div>
+    <p>$\displaystyle\prod_{k=1}^{n}\frac{k}{k+1}=\frac{\prod_{k=1}^n k}{\prod_{k=1}^n (k+1)}=\frac{\prod_{k=1}^n k}{\prod_{k=2}^{n+1} k}=\frac{1}{n+1}$ (au numérateur $1\times2\times\dots\times n$, au dénominateur $2\times3\times\dots\times(n+1)$ : tout se simplifie sauf le $1$ du numérateur et le $n+1$ du dénominateur).</p>
+  </div>
+
+  <h2 id="s3">III. Coefficients binomiaux</h2>
+
+  <h3 id="s3-1">1. Définition</h3>
+  <div class="def-box">
+    <div class="label">Définition 4</div>
+    <p>Soient $n\in\mathbb{N}$ et $p\in\mathbb{Z}$. On appelle « $p$ parmi $n$ », noté $\dbinom{n}{p}$ (ou $C_n^p$), le nombre ($\in\mathbb{N}$) défini par :</p>
+    <ul>
+      <li>si $0\leq p\leq n$ : $\dbinom{n}{p}=\dfrac{n!}{p!(n-p)!}$ ;</li>
+      <li>si $p<0$ ou $p>n$ : $\dbinom{n}{p}=0$.</li>
+    </ul>
+  </div>
+  <div class="remark">Une autre écriture utile : $\dbinom{n}{p}=\dfrac{1\times2\times\dots\times(n-p)\times(n-p+1)\times\dots\times n}{p!\,(n-p)!}=\dfrac{(n-p+1)(n-p+2)\dots n}{p!}$ ($p$ facteurs consécutifs au numérateur).</div>
+  <div class="exercise">
+    <p>$\dbinom{12}{9}=\dfrac{12!}{9!\,3!}=\dfrac{12\times11\times10\times9!}{9!\times3!}=\dfrac{12\times11\times10}{6}=220$.</p>
+  </div>
+  <p>$\dbinom{n}{p}$ = nombre de sous-ensembles à $p$ éléments dans un ensemble à $n$ éléments &nbsp;→&nbsp; loi binomiale.</p>
+
+  <h3 id="s3-2">2. Propriétés</h3>
+  <div class="prop-box">
+    <div class="label">Proposition 11</div>
+    <p style="text-align:center">$\forall n\in\mathbb{N},\quad \dbinom{n}{0}=1,\qquad \dbinom{n}{1}=n,\qquad \dbinom{n}{n}=1,\qquad \dbinom{n}{2}=\dfrac{n(n-1)}{2}.$</p>
+  </div>
+
+  <div class="prop-box">
+    <div class="label">Proposition 12 (Formule de Pascal)</div>
+    <p style="text-align:center">$\forall n,p\in\mathbb{N},\ 1\leq p\leq n,\quad \dbinom{n}{p}+\dbinom{n}{p-1}=\dbinom{n+1}{p}.$</p>
+    <p><b>Démonstration :</b> $\dbinom{n}{p}+\dbinom{n}{p-1}=\dfrac{n!}{p!(n-p)!}+\dfrac{n!}{(p-1)!(n-p+1)!}=\dfrac{n!(n-p+1)}{p!(n-p+1)!}+\dfrac{n!\,p}{p!(n-p+1)!}=\dfrac{n!\big[(n-p+1)+p\big]}{p!(n-p+1)!}=\dfrac{n!(n+1)}{p!(n-p+1)!}=\dfrac{(n+1)!}{p!\big((n+1)-p\big)!}=\dbinom{n+1}{p}$.</p>
+  </div>
+
+  <div class="prop-box">
+    <div class="label">Proposition 13 (Symétrie du triangle de Pascal)</div>
+    <p style="text-align:center">$\forall n,p\in\mathbb{N},\ p\leq n,\quad \dbinom{n}{p}=\dbinom{n}{n-p}.$</p>
+    <p><b>Démonstration :</b> $\dbinom{n}{p}=\dfrac{n!}{p!(n-p)!}$ et $\dbinom{n}{n-p}=\dfrac{n!}{(n-p)!\big(n-(n-p)\big)!}=\dfrac{n!}{(n-p)!\,p!}$ : les deux expressions sont identiques.</p>
+  </div>
+
+  <div class="prop-box">
+    <div class="label">Proposition 14 (Formule de Pascal généralisée)</div>
+    <p>Soient $p,n\in\mathbb{N}$, $p\leq n$, alors $$\sum_{i=p}^{n}\dbinom{i}{p}=\dbinom{n+1}{p+1}.$$</p>
+    <p style="font-size:.85rem;color:var(--ink-muted)">(Admise ici — se démontre par récurrence sur $n$ à partir de la formule de Pascal, Proposition 12 ; c'est la formule dite « du bâton de hockey ».)</p>
+  </div>
+
+  <h3 id="s3-3">3. Binôme de Newton</h3>
+  <div class="prop-box">
+    <div class="label">Proposition 15</div>
+    <p style="text-align:center">$\forall n\in\mathbb{N}\ \forall a,b\in\mathbb{R}\quad (a+b)^n=\displaystyle\sum_{k=0}^{n}\dbinom{n}{k}a^kb^{n-k}=\sum_{k=0}^{n}\dbinom{n}{k}b^ka^{n-k}.$</p>
+  </div>
+  <div class="exercise">
+    <div class="tag">Exemple 10</div>
+    <p>$(a+b)^4=b^4+4ab^3+6a^2b^2+4a^3b+a^4$ (coefficients $1,4,6,4,1$ de la $5^{\text e}$ ligne du triangle de Pascal).</p>
+  </div>
+  <div class="exercise">
+    <div class="tag">Exemple 11</div>
+    <p>$\displaystyle\sum_{k=0}^{n}\dbinom{n}{k}=(1+1)^n=2^n$ (Proposition 15 avec $a=b=1$) : c'est le nombre de parties dans un ensemble à $n$ éléments.</p>
+  </div>
+  <div class="exercise">
+    <div class="tag">Exemple</div>
+    <p>$\displaystyle\dbinom{n}{0}+\dbinom{n}{1}\times3+\dbinom{n}{2}\times3^2+\dots+\dbinom{n}{n}3^n=\sum_{k=0}^{n}\dbinom{n}{k}3^k1^{n-k}=(3+1)^n=4^n$ (Proposition 15 avec $a=3,\ b=1$).</p>
+  </div>
+  <div class="exercise">
+    <div class="tag">Exemple 12</div>
+    <p>$$\dbinom{n}{0}-\dbinom{n}{1}+\dbinom{n}{2}-\dbinom{n}{3}+\dots=\sum_{k=0}^{n}(-1)^k\dbinom{n}{k}=\sum_{k=0}^{n}\dbinom{n}{k}(-1)^k1^{n-k}=\big(1+(-1)\big)^n=0^n=0 \quad(n\geq1).$$</p>
+  </div>
+
+  <h2 id="exercices">Exercices d'entraînement (annales)</h2>
+  <p style="color:var(--ink-muted);font-size:.9rem">Cinq exercices réels, choisis pour recouvrir les trois notations du chapitre ($\Sigma$, $\Pi$, coefficients binomiaux), avec leur source précise. Pour chacun : l'énoncé, un indice si vous séchez, puis la correction complète.</p>
+
+  <div class="exercise">
+    <div class="tag">Exercice A — somme télescopique</div>
+    <p class="statement">Calculer $\displaystyle\sum_{k=1}^{n}\frac{1}{k(k+1)}$.</p>
+    <details class="disclosure"><summary>Indice</summary>
+      <div class="hint-box">Cherchez $a,b$ tels que $\dfrac{1}{k(k+1)}=\dfrac{a}{k}+\dfrac{b}{k+1}$ (même méthode qu'à l'Exercice 2 du cours, avec un dénominateur $k(k+1)$ au lieu de $k(k-1)$), puis reconnaissez une somme télescopique.</div>
+    </details>
+    <details class="disclosure"><summary>Correction</summary>
+      <div class="solution">
+      <p>On cherche $a,b$ tels que $\dfrac{1}{k(k+1)}=\dfrac{a}{k}+\dfrac{b}{k+1}=\dfrac{a(k+1)+bk}{k(k+1)}=\dfrac{(a+b)k+a}{k(k+1)}$. Par identification : $a+b=0$ et $a=1$, donc $b=-1$. Ainsi $\dfrac{1}{k(k+1)}=\dfrac1k-\dfrac1{k+1}$.</p>
+      <p>D'où $\displaystyle\sum_{k=1}^{n}\frac{1}{k(k+1)}=\sum_{k=1}^{n}\left(\frac1k-\frac1{k+1}\right)$, somme télescopique de la forme $\sum(a_k-a_{k+1})$ avec $a_k=1/k$ : elle vaut $a_1-a_{n+1}=1-\dfrac{1}{n+1}=\dfrac{n}{n+1}$.</p>
+      </div>
+    </details>
+    <div class="src">Source : Exo7 (exo7.emath.fr), fiche « Le binôme. Les symboles ∑ et ∏ » (fic00086.pdf), Exercice 7, question 1 (premier cas).</div>
+  </div>
+
+  <div class="exercise">
+    <div class="tag">Exercice B — somme géométrique</div>
+    <p class="statement">Calculer $\displaystyle\sum_{k=1}^{n}\frac{1}{2^k}=\frac12+\frac14+\frac18+\dots+\frac{1}{2^n}$.</p>
+    <details class="disclosure"><summary>Indice</summary>
+      <div class="hint-box">C'est une somme géométrique de raison $x=1/2\neq1$ : appliquez la Proposition 7 à $\displaystyle\sum_{k=0}^n x^k$, puis retirez le terme $k=0$ (qui vaut $1$).</div>
+    </details>
+    <details class="disclosure"><summary>Correction</summary>
+      <div class="solution">
+      <p>D'après la Proposition 7 (avec $x=1/2\neq1$) : $\displaystyle\sum_{k=0}^{n}\left(\frac12\right)^k=\frac{1-(1/2)^{n+1}}{1-1/2}=2\left(1-\frac{1}{2^{n+1}}\right)=2-\frac{1}{2^n}$.</p>
+      <p>Or $\displaystyle\sum_{k=1}^{n}\left(\frac12\right)^k=\sum_{k=0}^{n}\left(\frac12\right)^k-\left(\frac12\right)^0=\left(2-\frac{1}{2^n}\right)-1=1-\frac{1}{2^n}$.</p>
+      </div>
+    </details>
+    <div class="src">Source : Exo7 (exo7.emath.fr), fiche « Le binôme. Les symboles ∑ et ∏ » (fic00086.pdf), Exercice 6, question sur la somme $\frac12+\frac14+\frac18+\dots$</div>
+  </div>
+
+  <div class="exercise">
+    <div class="tag">Exercice C — produit télescopique</div>
+    <p class="statement">Calculer $\displaystyle\prod_{k=1}^{n}\left(1+\frac1k\right)$.</p>
+    <details class="disclosure"><summary>Indice</summary>
+      <div class="hint-box">Écrivez $1+\dfrac1k$ comme une seule fraction $\dfrac{k+1}{k}$, puis reconnaissez le produit télescopique du cours (§II, « Produit télescopique »).</div>
+    </details>
+    <details class="disclosure"><summary>Correction</summary>
+      <div class="solution">
+      <p>$\displaystyle\prod_{k=1}^{n}\left(1+\frac1k\right)=\prod_{k=1}^{n}\frac{k+1}{k}=\frac{2}{1}\times\frac{3}{2}\times\frac{4}{3}\times\dots\times\frac{n+1}{n}$.</p>
+      <p>C'est un produit télescopique : chaque numérateur $k+1$ se simplifie avec le dénominateur du facteur suivant. Il ne reste que le numérateur du dernier facteur et le dénominateur du premier : $\displaystyle\prod_{k=1}^{n}\left(1+\frac1k\right)=n+1$.</p>
+      <p style="font-size:.85rem;color:var(--ink-muted)">On retrouve exactement la structure de l'Exemple 9 du cours ($\prod \frac{k}{k+1}=\frac1{n+1}$), mais « à l'envers » : ce produit-ci en est l'inverse.</p>
+      </div>
+    </details>
+    <div class="src">Source : Exo7 (exo7.emath.fr), fiche « Le binôme. Les symboles ∑ et ∏ » (fic00086.pdf), Exercice 9, question 1.</div>
+  </div>
+
+  <div class="exercise">
+    <div class="tag">Exercice D — coefficients binomiaux</div>
+    <p class="statement">Résoudre dans $\mathbb{N}^*$ l'équation $\dbinom{n}{1}+\dbinom{n}{2}+\dbinom{n}{3}=5n$.</p>
+    <details class="disclosure"><summary>Indice</summary>
+      <div class="hint-box">Remplacez chaque coefficient par sa formule (Définition 4 / Proposition 11), divisez toute l'équation par $n$ (non nul), puis ramenez-vous à une équation du second degré.</div>
+    </details>
+    <details class="disclosure"><summary>Correction</summary>
+      <div class="solution">
+      <p>Soit $n\in\mathbb{N}^*$. On a $\dbinom{n}{1}=n$, $\dbinom{n}{2}=\dfrac{n(n-1)}{2}$, $\dbinom{n}{3}=\dfrac{n(n-1)(n-2)}{6}$ (cette dernière formule reste valable, et donne bien $0$, pour $n=1,2$). L'équation devient $$n+\frac{n(n-1)}2+\frac{n(n-1)(n-2)}6=5n.$$ On divise par $n\neq0$ : $1+\dfrac{n-1}2+\dfrac{(n-1)(n-2)}6=5$. On multiplie par $6$ : $6+3(n-1)+(n-1)(n-2)=30$, soit $6+3n-3+n^2-3n+2=30$, c'est-à-dire $n^2+5=30$, donc $n^2=25$.</p>
+      <p>Comme $n\in\mathbb{N}^*$, on garde la racine positive : $n=5$. <b>Vérification :</b> $\dbinom51+\dbinom52+\dbinom53=5+10+10=25=5\times5$. ✓</p>
+      <p>L'équation admet une unique solution : $n=5$.</p>
+      </div>
+    </details>
+    <div class="src">Source : Exo7 (exo7.emath.fr), fiche « Le binôme. Les symboles ∑ et ∏ » (fic00086.pdf), Exercice 5.</div>
+  </div>
+
+  <div class="exercise">
+    <div class="tag">Exercice E — binôme et somme des termes pairs/impairs</div>
+    <p class="statement">Montrer que $\displaystyle\sum_{k \text{ pair}}\dbinom{n}{k}=\sum_{k \text{ impair}}\dbinom{n}{k}=2^{n-1}$ pour $n\geq1$.</p>
+    <details class="disclosure"><summary>Indice</summary>
+      <div class="hint-box">Combinez l'Exemple 11 ($\sum_k\binom nk=2^n$) et l'Exemple 12 ($\sum_k(-1)^k\binom nk=0$) du cours : additionnez-les puis soustrayez-les pour isoler séparément les termes pairs et impairs (comme au §I.4, « Somme des termes pairs et impairs »).</div>
+    </details>
+    <details class="disclosure"><summary>Correction</summary>
+      <div class="solution">
+      <p>Notons $P=\displaystyle\sum_{k\text{ pair}}\dbinom nk$ et $I=\displaystyle\sum_{k\text{ impair}}\dbinom nk$, de sorte que $P+I=\displaystyle\sum_{k=0}^n\dbinom nk$ (§I.4). D'après l'Exemple 11 (Proposition 15 avec $a=b=1$) : $$P+I=(1+1)^n=2^n.$$ D'après l'Exemple 12 (Proposition 15 avec $a=-1,b=1$, ou $a=1,b=-1$) : $$P-I=\sum_{k=0}^n(-1)^k\dbinom nk=\big(1+(-1)\big)^n=0^n=0 \quad(n\geq1).$$ En additionnant les deux égalités : $2P=2^n$, donc $P=2^{n-1}$. En les soustrayant : $2I=2^n$, donc $I=2^{n-1}$.</p>
+      </div>
+    </details>
+    <div class="src">Source : Exo7 (exo7.emath.fr), fiche « Le binôme. Les symboles ∑ et ∏ » (fic00086.pdf), Exercice 1 (IT), question 2.</div>
+  </div>
+
+  <h2 id="sources">Sources</h2>
+  <div class="sources">
+    <p>Le contenu du cours (définitions, propositions, exemples) reprend le support de cours distribué en classe, complété par les démonstrations manuscrites de Léane. Chaque formule et démonstration a été recalculée pas à pas avant mise en forme (récurrences, changements d'indice, simplifications de fractions et de factorielles) ; aucune erreur de fond n'a été trouvée dans ce chapitre — seules de petites coquilles de recopie ont été corrigées silencieusement. Les résultats sont conformes aux définitions et théorèmes standards du programme officiel de mathématiques MPSI :</p>
+    <ul>
+      <li>Sommes $\Sigma$ et produits $\Pi$ (Chasles, changement d'indice, sommes télescopiques, sommes géométriques, formules de $\sum k$, $\sum k^2$, $\sum k^3$) : notions de base communes à tous les manuels de référence de CPGE scientifique (collections H-Prépa, Précis Bréal) ; les formules de sommes de puissances et la factorisation de $a^n-b^n$ ont été revérifiées par récurrence et par calcul direct.</li>
+      <li>Coefficients binomiaux, formule et triangle de Pascal, binôme de Newton : la Proposition 12 (formule de Pascal) et la Proposition 13 (symétrie) ont été redémontrées par le calcul à partir de la Définition 4 ; la Proposition 14 (bâton de hockey) est admise dans le cours, conformément au support d'origine qui renvoie à un TD ultérieur.</li>
+      <li>Le résultat $\prod_{k=0}^{n-1}(2k+1)=(2n)!/(2^n n!)$ (Exemple 8) a été revérifié algébriquement : les deux écritures présentes sur le cours manuscrit, $(2n)!/(2^nn!)$ et $(2n-1)!/(2^{n-1}(n-1)!)$, sont bien égales.</li>
+    </ul>
+    <p>Les cinq exercices d'entraînement de la section précédente proviennent de la fiche <a href="http://exo7.emath.fr/ficpdf/fic00086.pdf" target="_blank" rel="noopener">« Le binôme. Les symboles ∑ et ∏ »</a> d'Exo7 (exo7.emath.fr), une banque d'exercices universitaires corrigés en libre accès, largement utilisée en CPGE. Chaque énoncé a été repris fidèlement puis entièrement recalculé pour cette correction (aucune correction de la fiche source n'a été recopiée telle quelle) ; les numéros d'exercice sont indiqués sous chaque énoncé pour retrouver l'original.</p>
+  </div>
+
+  <footer>Cahier Commun — MPSI · Mathématiques · Chapitre 02</footer>
+</main>
+
+</body>
+</html>
