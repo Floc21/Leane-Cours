@@ -1,0 +1,598 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Applications</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$','$'], ['\\(','\\)']], displayMath: [['$$','$$'], ['\\[','\\]']],
+    macros: { llbracket: "\\unicode{x27E6}", rrbracket: "\\unicode{x27E7}" }
+  },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js"></script>
+<style>
+  :root{
+    --paper:#F3F5EF; --surface:#FFFFFF; --surface-2:#EAEEE4;
+    --ink:#20261F; --ink-muted:#5B6459; --border:#D9DECD;
+    --accent:#1F4E8C; --accent-ink:#0E2D57; --accent-soft:#E4ECF7;
+    --red:#A6303C; --red-soft:#F6E4E4;
+    --green:#3D7A4D; --green-soft:#E3EFDF;
+    --gold:#8A6A1E; --gold-soft:#F3ECD8;
+    --shadow: 0 1px 2px rgba(32,38,31,.06), 0 6px 20px -8px rgba(32,38,31,.18);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#12160F; --surface:#191F17; --surface-2:#212820;
+      --ink:#E8ECE2; --ink-muted:#98A092; --border:#2B3327;
+      --accent:#7CA6E6; --accent-ink:#DCE8FB; --accent-soft:#1E2B41;
+      --red:#E28B92; --red-soft:#3A2224;
+      --green:#7FC090; --green-soft:#1E2F22;
+      --gold:#D8B45C; --gold-soft:#332B16;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 24px -8px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#12160F; --surface:#191F17; --surface-2:#212820;
+    --ink:#E8ECE2; --ink-muted:#98A092; --border:#2B3327;
+    --accent:#7CA6E6; --accent-ink:#DCE8FB; --accent-soft:#1E2B41;
+    --red:#E28B92; --red-soft:#3A2224;
+    --green:#7FC090; --green-soft:#1E2F22;
+    --gold:#D8B45C; --gold-soft:#332B16;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 24px -8px rgba(0,0,0,.5);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    background:var(--paper); color:var(--ink);
+    font-family:"Public Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+    padding-inline:20px; padding-block:28px; line-height:1.6;
+  }
+  main{max-width:780px;margin:0 auto;}
+  h1,h2,h3,h4{font-family:"Spectral",Georgia,serif;text-wrap:balance;margin:1.4em 0 .5em;}
+  h1{font-size:1.7rem;color:var(--accent-ink);margin-top:0;}
+  h2{font-size:1.3rem;color:var(--accent-ink);border-bottom:2px solid var(--border);padding-bottom:.3em;margin-top:2em;}
+  h3{font-size:1.08rem;}
+  h4{font-size:.98rem;font-style:italic;}
+  p{margin:.7em 0;}
+  a{color:var(--accent);}
+  .mono{font-family:"JetBrains Mono",monospace;}
+
+  header.top{margin-bottom:6px;}
+  header.top .eyebrow{font-family:"JetBrains Mono",monospace;font-size:.78rem;color:var(--ink-muted);letter-spacing:.03em;}
+  header.top nav{font-size:.82rem;margin-top:6px;}
+  header.top nav a{margin-right:14px;}
+
+  .toc{
+    background:var(--surface);border:1px solid var(--border);border-radius:10px;
+    padding:14px 18px;margin:20px 0 30px;box-shadow:var(--shadow);font-size:.9rem;
+  }
+  .toc h2{margin:0 0 8px;font-size:1rem;border:none;padding:0;}
+  .toc ol{margin:0;padding-left:1.3em;}
+  .toc li{margin-bottom:2px;}
+  .toc a{text-decoration:none;}
+  .toc a:hover{text-decoration:underline;}
+
+  .def-box, .prop-box{
+    background:var(--surface);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;
+    padding:12px 16px;margin:1em 0;box-shadow:var(--shadow);
+  }
+  .def-box .label, .prop-box .label{font-weight:700;color:var(--accent-ink);font-family:"Spectral",serif;}
+
+  .method-box{
+    background:var(--gold-soft);border:1px solid color-mix(in srgb, var(--gold) 45%, transparent);
+    border-radius:8px;padding:12px 16px;margin:1em 0;
+  }
+  .method-box .label{font-weight:700;color:var(--gold);}
+
+  .warning-box{
+    background:var(--red-soft);border:1px solid color-mix(in srgb, var(--red) 45%, transparent);
+    border-radius:8px;padding:12px 16px;margin:1em 0;
+  }
+  .warning-box .label{font-weight:700;color:var(--red);}
+
+  .remark{
+    border-left:3px solid var(--border);padding:6px 14px;margin:1em 0;color:var(--ink-muted);font-size:.93rem;
+  }
+
+  .exercise{
+    background:var(--surface);border:1px solid var(--border);border-radius:10px;
+    padding:14px 18px;margin:1.2em 0;box-shadow:var(--shadow);
+  }
+  .exercise .tag{font-family:"JetBrains Mono",monospace;font-size:.72rem;font-weight:700;letter-spacing:.05em;color:var(--accent);text-transform:uppercase;}
+  .exercise .statement{font-style:italic;margin:.4em 0 .8em;}
+  .exercise .solution{border-top:1px dashed var(--border);padding-top:.7em;margin-top:.4em;}
+  .exercise .solution .lbl{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-muted);margin-bottom:4px;}
+
+  figure{margin:1.4em 0;text-align:center;}
+  figure svg{max-width:100%;height:auto;color:var(--ink);}
+  figcaption{font-size:.82rem;color:var(--ink-muted);margin-top:6px;}
+
+  table.truth{border-collapse:collapse;margin:1em auto;font-family:"JetBrains Mono",monospace;font-size:.9rem;}
+  table.truth th,table.truth td{border:1px solid var(--border);padding:5px 16px;text-align:center;}
+  table.truth th{background:var(--surface-2);}
+
+  .wide{overflow-x:auto;}
+
+  .hint-box{background:var(--accent-soft);border:1px dashed var(--accent);border-radius:8px;padding:10px 14px;margin:0;font-size:.9rem;}
+  .exercise .src{font-size:.76rem;color:var(--ink-muted);margin-top:10px;font-family:"JetBrains Mono",monospace;}
+
+  .exercise details{margin:.5em 0 0;}
+  .exercise summary{
+    cursor:pointer;list-style:none;display:flex;align-items:center;gap:6px;
+    font-family:"JetBrains Mono",monospace;font-size:.72rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+    color:var(--accent-ink);padding:6px 0;user-select:none;
+  }
+  .exercise summary::-webkit-details-marker{display:none;}
+  .exercise summary::before{content:"▸";display:inline-block;color:var(--accent);font-size:.85rem;transition:transform .15s ease;}
+  .exercise details[open] summary::before{transform:rotate(90deg);}
+  .exercise details > .hint-box, .exercise details > .solution{margin-top:2px;}
+  .exercise details > .solution{border-top:none;padding-top:0;}
+
+  .sources{font-size:.86rem;color:var(--ink-muted);}
+  .sources ul{padding-left:1.2em;}
+
+  .duo{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;}
+  .duo figure{flex:1 1 260px;max-width:300px;margin:1em 0;}
+  .duo .cap-no{color:var(--red);font-weight:700;}
+  .duo .cap-yes{color:var(--green);font-weight:700;}
+
+  footer{margin-top:40px;color:var(--ink-muted);font-size:.78rem;text-align:center;}
+</style>
+</head>
+<body>
+<main>
+  <header class="top">
+    <div class="eyebrow">MPSI · MATHÉMATIQUES · CHAPITRE 03</div>
+    <h1>Applications</h1>
+    <nav><a href="#s1">I. Relations</a> · <a href="#s2">II. Applications</a> · <a href="#exercices">Exercices</a> · <a href="#sources">Sources</a></nav>
+  </header>
+
+  <div class="toc">
+    <h2>Sommaire</h2>
+    <ol>
+      <li><a href="#s1">Relations</a></li>
+      <li><a href="#s2">Applications</a>
+        <ol>
+          <li><a href="#s2-1">Notion de fonction (application)</a></li>
+          <li><a href="#s2-2">Applications injectives, surjectives, bijectives</a>
+            <ol>
+              <li><a href="#s2-2a">Applications injectives</a></li>
+              <li><a href="#s2-2b">Applications surjectives</a></li>
+              <li><a href="#s2-2c">Applications bijectives</a></li>
+              <li><a href="#s2-2d">Applications entre ensembles finis</a></li>
+            </ol>
+          </li>
+        </ol>
+      </li>
+      <li><a href="#exercices">Exercices d'entraînement (annales)</a></li>
+    </ol>
+  </div>
+
+  <h2 id="s1">I. Relations</h2>
+  <h3>1. Définition</h3>
+  <div class="def-box">
+    <div class="label">Définition 1</div>
+    <p>On appelle <b>relation</b> (binaire) de l'ensemble $E$ dans l'ensemble $F$ tout triplet $(E,F,G)$, où $G$ est une partie de $E\times F=\{(x,y)\mid x\in E,\ y\in F\}$. $G$ est appelé le <b>graphe</b> de la relation. On dira que $x\in E$ est en relation avec $y\in F$ lorsque $(x,y)\in G$.</p>
+  </div>
+  <div class="exercise">
+    <p>Avec $E=\{1,2,3,4\}$, $F=\{1,2,3,4,5,6\}$ et $G=\{(1,2),(1,3),(3,3),(3,5),(3,6)\}$ : $1$ est en relation avec $2$ et avec $3$ ; $3$ est en relation avec $3$, $5$ et $6$ ; $2$ et $4$ ne sont en relation avec aucun élément de $F$.</p>
+  </div>
+
+  <h2 id="s2">II. Applications</h2>
+  <h3 id="s2-1">1. Notion de fonction (ou application)</h3>
+  <div class="def-box">
+    <div class="label">Définition 2</div>
+    <p>On appelle <b>fonction</b> (ou <b>application</b>) de $E$ dans $F$ une relation de $E$ dans $F$ telle que tout élément de $E$ soit en relation avec un <b>unique</b> élément de $F$. Une application est notée : $$f:E\to F, \qquad x\mapsto f(x).$$</p>
+  </div>
+  <div class="remark"><b>Remarque 1 :</b> avec d'autres mots, une application de $E$ dans $F$ associe à tout élément de $E$ un unique élément de $F$. $y$ est <b>l'image</b> de $x$ par $f$ : $y=f(x)$ ; $x$ est <b>un antécédent</b> de $y$ par $f$ (un élément de $F$ peut avoir plusieurs antécédents, ou aucun — à la différence de l'image, toujours unique).</div>
+
+  <div class="exercise">
+    <div class="tag">Exemple 1</div>
+    <p>$f:\{1,2,3\}\to\{0,1\}$ définie par $1\mapsto1$, $2\mapsto0$, $3\mapsto0$ : c'est bien une application (chaque élément de départ a une unique image).</p>
+  </div>
+
+  <div class="remark"><b>Remarque :</b> si dans l'énoncé on ne donne pas l'ensemble de départ, c'est à vous de prendre le plus grand ensemble de départ possible (« domaine de définition »).</div>
+  <div class="exercise">
+    <p>$f(x)=\dfrac{x^2}{x+1}$ : le dénominateur s'annule en $x=-1$, donc $D_f=\mathbb{R}\setminus\{-1\}$.</p>
+  </div>
+
+  <p><b>Définition 3 :</b> soient $E,F$ deux ensembles. On note $\mathcal{F}(E,F)$ (ou $F^E$) l'ensemble de toutes les applications de $E$ dans $F$.</p>
+  <p><b>Définition 4 :</b> soit $E$ un ensemble. On note $\mathrm{Id}_E$ la <b>fonction identité</b> : $\mathrm{Id}_E:E\to E,\ x\mapsto x$.</p>
+
+  <div class="def-box">
+    <div class="label">Définition 5</div>
+    <p>Soit $E$ un ensemble, $A$ une partie de $E$. La <b>fonction caractéristique</b> (ou fonction indicatrice) $\mathbb{1}_A:E\to\{0,1\}$ est la fonction qui vaut $1$ sur $A$ et $0$ sur $\overline{A}$ : $$\mathbb{1}_A(x)=\begin{cases}1 & \text{si } x\in A\\ 0 & \text{si } x\in E\setminus A\end{cases}.$$</p>
+  </div>
+  <div class="exercise">
+    <div class="tag">Exemple 2</div>
+    <p>$\mathbb{1}_{[0,1]}:\mathbb{R}\to\mathbb{R}$ vaut $1$ sur tout l'intervalle $[0,1]$ (bornes incluses) et $0$ partout ailleurs — son graphe est un segment horizontal de hauteur $1$ au-dessus de $[0,1]$, et la valeur $0$ ailleurs sur l'axe des abscisses.</p>
+  </div>
+
+  <div class="def-box">
+    <div class="label">Définition 6</div>
+    <p>Soient $A,E,F$ des ensembles, $A\subset E$ (une partie de l'ensemble de départ). Soit $f$ une application de $E$ dans $F$. La <b>restriction</b> de $f$ à $A$, notée $f|_A$, est la fonction $$f|_A:A\to F,\qquad x\mapsto f(x).$$</p>
+  </div>
+  <div class="exercise">
+    <p>$f:\mathbb{R}\to\mathbb{R},\ x\mapsto x^2$ : sa restriction $f|_{\mathbb{R}^+}:\mathbb{R}^+\to\mathbb{R},\ x\mapsto x^2$ ne diffère de $f$ que par son ensemble de départ, plus petit.</p>
+  </div>
+
+  <div class="def-box">
+    <div class="label">Définition 7</div>
+    <p>Soient $A,E,F$ des ensembles, $A\subset E$. Soit $f$ une application de $E$ dans $F$. <b>L'image directe</b> de $A$ par $f$, notée $f(A)$, est le sous-ensemble de $F$ formé par toutes les images par $f$ des éléments de $A$ : $$f(A)=\{f(a)\mid a\in A\}=\{y\in F\mid \exists a\in A,\ y=f(a)\}.$$</p>
+  </div>
+  <div class="exercise">
+    <div class="tag">Exercice 1</div>
+    <p class="statement">Soit $f:\mathbb{R}\to\mathbb{R}$, $x\mapsto x^2+1$. Déterminer $f(\mathbb{R})$, $f([0,2])$, $f([-1,3])$.</p>
+    <div class="solution">
+      <p>$f(\mathbb{R})=[1,+\infty[$ (car $x^2\geq0$ pour tout $x$, avec égalité en $x=0$, et $x^2$ prend toutes les valeurs de $[0,+\infty[$).</p>
+      <p>$f([0,2])$ : pour $x\in[0,2]$, $x^2\in[0,4]$, donc $x^2+1\in[1,5]$ : $f([0,2])=[1,5]$.</p>
+      <p>$f([-1,3])$ : on découpe en $[-1,0]$ (où $x^2\in[0,1]$, donc $f\in[1,2]$) et $[0,3]$ (où $x^2\in[0,9]$, donc $f\in[1,10]$). Par réunion, $f([-1,3])=[1,2]\cup[1,10]=[1,10]$.</p>
+    </div>
+  </div>
+
+  <div class="def-box">
+    <div class="label">Définition 8</div>
+    <p>Soient $B,E,F$ des ensembles, $B\subset F$. Soit $f$ une application de $E$ dans $F$. <b>L'image réciproque</b> de $B$ par $f$, notée $f^{-1}(B)$, est l'ensemble des éléments de $E$ dont l'image appartient à $B$ (c.-à-d. l'ensemble des antécédents des éléments de $B$) : $$f^{-1}(B)=\{x\in E\mid f(x)\in B\}.$$</p>
+  </div>
+  <div class="exercise">
+    <div class="tag">Exercice 2</div>
+    <p class="statement">Soit $f:\mathbb{R}\to\mathbb{R}$, $x\mapsto x^2$. Déterminer $f^{-1}(\{1\})$, $f^{-1}([0,1])$, $f^{-1}\!\left(\left[-1,-\tfrac12\right]\right)$.</p>
+    <div class="solution">
+      <p>$f^{-1}(\{1\})=\{-1,1\}$ (car $x^2=1\iff x=\pm1$).</p>
+      <p>$f^{-1}([0,1])=[-1,1]$ (car $x^2\in[0,1]\iff x\in[-1,1]$).</p>
+      <p>$f^{-1}\!\left(\left[-1,-\tfrac12\right]\right)=\varnothing$ (un carré est toujours $\geq0$, il ne peut jamais tomber dans un intervalle de nombres strictement négatifs).</p>
+    </div>
+  </div>
+
+  <div class="def-box">
+    <div class="label">Définition 9</div>
+    <p>Soient $E,F,G$ des ensembles, $f:E\to F$, $g:F\to G$. On définit la fonction composée $g\circ f:E\to G$ par $$\forall x\in E,\quad g\circ f(x)=g(f(x)).$$ Si $f:E\to E$, on peut noter $f^2=f\circ f$, $f^3=f\circ f\circ f$, …, $f^k=\underbrace{f\circ f\circ\cdots\circ f}_{k\text{ fois}}$.</p>
+  </div>
+  <div class="exercise">
+    <div class="tag">Exercice 3</div>
+    <p class="statement">Soient $f:\mathbb{R}\to\mathbb{R}$ et $g:\mathbb{R}\to\mathbb{R}$ définies par $\forall x\in\mathbb{R},\ f(x)=x-3$ et $g(x)=x^2+1$. Déterminer $f\circ g$ et $g\circ f$.</p>
+    <div class="solution">
+      <p>$f\circ g:\mathbb{R}\to\mathbb{R}$, $\forall x\in\mathbb{R},\ (f\circ g)(x)=f(g(x))=f(x^2+1)=(x^2+1)-3=x^2-2$.</p>
+      <p>$g\circ f:\mathbb{R}\to\mathbb{R}$, $\forall x\in\mathbb{R},\ (g\circ f)(x)=g(f(x))=g(x-3)=(x-3)^2+1=x^2-6x+9+1=x^2-6x+10$.</p>
+      <p style="font-size:.85rem;color:var(--ink-muted)">On constate que $f\circ g\neq g\circ f$ : la composition n'est <b>pas commutative</b> en général.</p>
+    </div>
+  </div>
+
+  <p><b>Définition 10 :</b> soient $E,F$ des ensembles (munis d'opérations de somme et produit) et $f,g:E\to F$ deux applications. On définit la somme $f+g$ et le produit $fg$ par : $\forall x\in E,\ (f+g)(x)=f(x)+g(x)$ et $(fg)(x)=f(x)g(x)$.</p>
+
+  <h3 id="s2-2">2. Applications injectives, surjectives, bijectives</h3>
+
+  <h4 id="s2-2a">a) Applications injectives</h4>
+  <div class="def-box">
+    <div class="label">Définition 11</div>
+    <p>$f:E\to F$ est <b>injective</b> lorsque $$\forall x_1,x_2\in E,\quad f(x_1)=f(x_2)\Rightarrow x_1=x_2,$$ c'est-à-dire qu'un élément de $F$ ne peut avoir plus d'un antécédent.</p>
+  </div>
+
+  <div class="duo">
+    <figure role="img" aria-label="A gauche, trois points x1 x2 x3 dans E, trois points y1 y2 y3 dans F ; x1 et x3 pointent tous les deux vers y1, donc y1 a deux antecedents : l'application n'est pas injective.">
+      <svg viewBox="0 0 260 190">
+        <defs><marker id="arH" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="currentColor"/></marker></defs>
+        <ellipse cx="70" cy="95" rx="55" ry="80" fill="none" stroke="currentColor" stroke-width="1.6"/>
+        <ellipse cx="195" cy="95" rx="50" ry="80" fill="none" stroke="currentColor" stroke-width="1.6"/>
+        <text x="55" y="25" font-size="13">E</text><text x="215" y="25" font-size="13">F</text>
+        <circle cx="70" cy="55" r="3" fill="currentColor"/><text x="45" y="52" font-size="12">x₁</text>
+        <circle cx="70" cy="95" r="3" fill="currentColor"/><text x="45" y="92" font-size="12">x₂</text>
+        <circle cx="70" cy="135" r="3" fill="currentColor"/><text x="45" y="132" font-size="12">x₃</text>
+        <circle cx="195" cy="60" r="3" fill="currentColor"/><text x="205" y="57" font-size="12">y₁</text>
+        <circle cx="195" cy="95" r="3" fill="currentColor"/><text x="205" y="92" font-size="12">y₂</text>
+        <circle cx="195" cy="130" r="3" fill="currentColor"/><text x="205" y="127" font-size="12">y₃</text>
+        <path d="M73,56 C120,58 160,58 192,60" fill="none" stroke="var(--red)" stroke-width="1.6" marker-end="url(#arH)"/>
+        <path d="M73,96 C120,96 160,96 192,95" fill="none" stroke="currentColor" stroke-width="1.6" marker-end="url(#arH)"/>
+        <path d="M73,134 C120,110 160,80 192,62" fill="none" stroke="var(--red)" stroke-width="1.6" marker-end="url(#arH)"/>
+      </svg>
+      <figcaption><span class="cap-no">Pas injective</span> : $x_1\neq x_3$ mais $f(x_1)=f(x_3)=y_1$.</figcaption>
+    </figure>
+    <figure role="img" aria-label="A gauche, trois points x1 x2 x3 dans E, quatre points y1 y2 y3 y4 dans F ; chaque xi pointe vers un yi different, aucun point de F n'a deux antecedents : l'application est injective.">
+      <svg viewBox="0 0 260 190">
+        <ellipse cx="70" cy="95" rx="55" ry="80" fill="none" stroke="currentColor" stroke-width="1.6"/>
+        <ellipse cx="195" cy="95" rx="50" ry="85" fill="none" stroke="currentColor" stroke-width="1.6"/>
+        <text x="55" y="25" font-size="13">E</text><text x="215" y="25" font-size="13">F</text>
+        <circle cx="70" cy="55" r="3" fill="currentColor"/><text x="45" y="52" font-size="12">x₁</text>
+        <circle cx="70" cy="95" r="3" fill="currentColor"/><text x="45" y="92" font-size="12">x₂</text>
+        <circle cx="70" cy="135" r="3" fill="currentColor"/><text x="45" y="132" font-size="12">x₃</text>
+        <circle cx="195" cy="45" r="3" fill="currentColor"/><text x="205" y="42" font-size="12">y₁</text>
+        <circle cx="195" cy="80" r="3" fill="currentColor"/><text x="205" y="77" font-size="12">y₂</text>
+        <circle cx="195" cy="115" r="3" fill="currentColor"/><text x="205" y="112" font-size="12">y₃</text>
+        <circle cx="195" cy="150" r="3" fill="currentColor"/><text x="205" y="147" font-size="12">y₄</text>
+        <path d="M73,56 C120,50 160,48 192,46" fill="none" stroke="var(--green)" stroke-width="1.6" marker-end="url(#arH)"/>
+        <path d="M73,96 C120,90 160,84 192,81" fill="none" stroke="var(--green)" stroke-width="1.6" marker-end="url(#arH)"/>
+        <path d="M73,134 C120,125 160,120 192,116" fill="none" stroke="var(--green)" stroke-width="1.6" marker-end="url(#arH)"/>
+      </svg>
+      <figcaption><span class="cap-yes">Injective</span> : chaque $y_i$ atteint a au plus un antécédent ($y_4$ n'est pas atteint, c'est permis).</figcaption>
+    </figure>
+  </div>
+
+  <div class="method-box">
+    <div class="label">Point méthode</div>
+    <p>Pour montrer que $f:E\to F$ est injective : « Soient $x_1,x_2\in E$ tels que $f(x_1)=f(x_2)$. On veut montrer que $x_1=x_2$ » …</p>
+  </div>
+
+  <div class="exercise">
+    <div class="tag">Exercice 4 (cours)</div>
+    <p class="statement">On considère $f:\mathbb{R}\to\mathbb{R}$ définie par $f(x)=\cos\!\left(\pi x+\frac{\pi}{12}\right)$. Est-ce que $f$ est injective ?</p>
+    <div class="solution">
+      <p>$f(0)=\cos\!\left(\frac{\pi}{12}\right)$ et $f(2)=\cos\!\left(2\pi+\frac{\pi}{12}\right)=\cos\!\left(\frac{\pi}{12}\right)$ (le cosinus est $2\pi$-périodique). Donc $f(0)=f(2)$ alors que $0\neq2$ : $f$ n'est <b>pas</b> injective.</p>
+    </div>
+  </div>
+
+  <div class="exercise">
+    <div class="tag">Exercice 5</div>
+    <p class="statement">1. Calculer $\left(a+\dfrac b2\right)^2+\dfrac{3b^2}{4}$. 2. En déduire que $f:\mathbb{R}\to\mathbb{R},\ x\mapsto x^3+2x+1$ est injective.</p>
+    <div class="solution">
+      <p><b>1.</b> $\left(a+\frac b2\right)^2+\frac{3b^2}4=a^2+ab+\frac{b^2}4+\frac{3b^2}4=a^2+ab+b^2$.</p>
+      <p><b>2.</b> Soient $x_1,x_2\in\mathbb{R}$ tels que $f(x_1)=f(x_2)$ : $x_1^3+2x_1+1=x_2^3+2x_2+1$, c'est-à-dire $x_1^3-x_2^3+2(x_1-x_2)=0$. On factorise $x_1^3-x_2^3=(x_1-x_2)(x_1^2+x_1x_2+x_2^2)$ (Proposition 5 du Chapitre 2), donc $(x_1-x_2)\big(x_1^2+x_1x_2+x_2^2+2\big)=0$.</p>
+      <p>Soit $x_1-x_2=0$ (c'est ce qu'on veut). Soit $x_1^2+x_1x_2+x_2^2+2=0$ : d'après la question 1 (avec $a=x_1,b=x_2$), $x_1^2+x_1x_2+x_2^2=\left(x_1+\frac{x_2}2\right)^2+\frac34x_2^2\geq0$, donc $x_1^2+x_1x_2+x_2^2+2\geq2>0$ : ce cas est <b>impossible</b>.</p>
+      <p>Il reste donc $x_1=x_2$. Conclusion : $f$ est injective.</p>
+    </div>
+  </div>
+
+  <div class="prop-box">
+    <div class="label">Proposition 1</div>
+    <p>Soient $f:E\to F$ et $g:F\to G$ deux applications.</p>
+    <p>1. Si $f$ et $g$ sont injectives, alors $g\circ f$ est injective (la composée de deux injections est une injection).</p>
+    <p>2. Si $g\circ f$ est injective, alors $f$ est injective.</p>
+    <p><b>Démonstration de 1 :</b> soient $x_1,x_2\in E$ tels que $(g\circ f)(x_1)=(g\circ f)(x_2)$, c'est-à-dire $g(f(x_1))=g(f(x_2))$. Comme $g$ est injective, $f(x_1)=f(x_2)$. Comme $f$ est injective, $x_1=x_2$. Donc $g\circ f$ injective.</p>
+    <p><b>Démonstration de 2 :</b> soient $x_1,x_2\in E$ tels que $f(x_1)=f(x_2)$. En appliquant $g$ aux deux membres : $g(f(x_1))=g(f(x_2))$, c'est-à-dire $(g\circ f)(x_1)=(g\circ f)(x_2)$. Comme $g\circ f$ est injective, $x_1=x_2$. Donc $f$ injective.</p>
+    <p style="font-size:.85rem;color:var(--ink-muted)">Attention : dans le point 2, on ne peut rien dire sur l'injectivité de $g$ elle-même.</p>
+  </div>
+
+  <h4 id="s2-2b">b) Applications surjectives</h4>
+  <div class="def-box">
+    <div class="label">Définition 12</div>
+    <p>$f:E\to F$ est <b>surjective</b> lorsque $$\forall y\in F,\ \exists x\in E,\quad y=f(x),$$ c'est-à-dire lorsque tout élément de $F$ admet au moins un antécédent dans $E$.</p>
+  </div>
+
+  <div class="duo">
+    <figure role="img" aria-label="A gauche, trois points x1 x2 x3 dans E pointent vers seulement deux des trois points y1 y2 de F ; y3 n'a aucun antecedent, l'application n'est pas surjective.">
+      <svg viewBox="0 0 260 190">
+        <defs><marker id="arH2" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="currentColor"/></marker></defs>
+        <ellipse cx="70" cy="95" rx="55" ry="80" fill="none" stroke="currentColor" stroke-width="1.6"/>
+        <ellipse cx="195" cy="95" rx="50" ry="80" fill="none" stroke="currentColor" stroke-width="1.6"/>
+        <text x="55" y="25" font-size="13">E</text><text x="215" y="25" font-size="13">F</text>
+        <circle cx="70" cy="55" r="3" fill="currentColor"/><text x="45" y="52" font-size="12">x₁</text>
+        <circle cx="70" cy="95" r="3" fill="currentColor"/><text x="45" y="92" font-size="12">x₂</text>
+        <circle cx="70" cy="135" r="3" fill="currentColor"/><text x="45" y="132" font-size="12">x₃</text>
+        <circle cx="195" cy="60" r="3" fill="currentColor"/><text x="205" y="57" font-size="12">y₁</text>
+        <circle cx="195" cy="130" r="3" fill="var(--red)"/><text x="205" y="127" font-size="12" fill="var(--red)">y₂</text>
+        <path d="M73,56 C120,58 160,58 192,60" fill="none" stroke="currentColor" stroke-width="1.6" marker-end="url(#arH2)"/>
+        <path d="M73,96 C120,80 160,68 192,62" fill="none" stroke="currentColor" stroke-width="1.6" marker-end="url(#arH2)"/>
+        <path d="M73,134 C120,120 160,90 192,64" fill="none" stroke="currentColor" stroke-width="1.6" marker-end="url(#arH2)"/>
+      </svg>
+      <figcaption><span class="cap-no">Pas surjective</span> : $y_2$ n'a aucun antécédent par $f$.</figcaption>
+    </figure>
+    <figure role="img" aria-label="A gauche, trois points x1 x2 x3 dans E pointent tous vers l'unique point y1 de F ; chaque point de F possede au moins un antecedent, l'application est surjective.">
+      <svg viewBox="0 0 260 190">
+        <ellipse cx="70" cy="95" rx="55" ry="80" fill="none" stroke="currentColor" stroke-width="1.6"/>
+        <ellipse cx="195" cy="95" rx="50" ry="55" fill="none" stroke="currentColor" stroke-width="1.6"/>
+        <text x="55" y="25" font-size="13">E</text><text x="215" y="50" font-size="13">F</text>
+        <circle cx="70" cy="55" r="3" fill="currentColor"/><text x="45" y="52" font-size="12">x₁</text>
+        <circle cx="70" cy="95" r="3" fill="currentColor"/><text x="45" y="92" font-size="12">x₂</text>
+        <circle cx="70" cy="135" r="3" fill="currentColor"/><text x="45" y="132" font-size="12">x₃</text>
+        <circle cx="195" cy="70" r="3" fill="currentColor"/><text x="205" y="67" font-size="12">y₁</text>
+        <circle cx="195" cy="115" r="3" fill="currentColor"/><text x="205" y="112" font-size="12">y₂</text>
+        <path d="M73,56 C120,60 160,68 192,71" fill="none" stroke="var(--green)" stroke-width="1.6" marker-end="url(#arH2)"/>
+        <path d="M73,96 C120,102 160,110 192,114" fill="none" stroke="var(--green)" stroke-width="1.6" marker-end="url(#arH2)"/>
+        <path d="M73,134 C120,128 160,120 192,116" fill="none" stroke="var(--green)" stroke-width="1.6" marker-end="url(#arH2)"/>
+      </svg>
+      <figcaption><span class="cap-yes">Surjective</span> : $y_1$ et $y_2$ ont chacun au moins un antécédent (plusieurs arrivées sur un même point, c'est permis).</figcaption>
+    </figure>
+  </div>
+
+  <div class="method-box">
+    <div class="label">Point méthode</div>
+    <p>Pour montrer que $f:E\to F$ est surjective : « Soit $y\in F$. On veut montrer que $\exists x\in E$ tel que $f(x)=y$ » …</p>
+  </div>
+
+  <div class="exercise">
+    <div class="tag">Exercice 6</div>
+    <p class="statement">On considère $f:\mathbb{N}^2\to\mathbb{N},\ (n,m)\mapsto nm$ et $g:\mathbb{N}\to\mathbb{N}^2,\ n\mapsto(n,(n+1)^2)$. Ces fonctions sont-elles injectives ? surjectives ?</p>
+    <div class="solution">
+      <p><b>$f$ injective ?</b> Non : $f((2,6))=12=f((3,4))$ alors que $(2,6)\neq(3,4)$.</p>
+      <p><b>$f$ surjective ?</b> Oui : soit $y\in\mathbb{N}$, on prend $(1,y)\in\mathbb{N}^2$, et $f((1,y))=1\times y=y$. Tout $y$ a bien un antécédent.</p>
+      <p><b>$g$ injective ?</b> Soient $n_1,n_2\in\mathbb{N}$ tels que $g(n_1)=g(n_2)$, c'est-à-dire $\big(n_1,(n_1+1)^2\big)=\big(n_2,(n_2+1)^2\big)$. L'égalité des premières coordonnées donne directement $n_1=n_2$. Donc $g$ injective.</p>
+      <p><b>$g$ surjective ?</b> Non : $(0,3)\in\mathbb{N}^2$ n'a pas d'antécédent par $g$, car il faudrait $n=0$ et $(n+1)^2=3$, or $(0+1)^2=1\neq3$.</p>
+    </div>
+  </div>
+
+  <div class="prop-box">
+    <div class="label">Proposition 2</div>
+    <p>Soient $f:E\to F$ et $g:F\to G$ deux applications.</p>
+    <p>1. Si $f$ et $g$ sont surjectives, alors $g\circ f$ est surjective (la composée de deux surjections est une surjection).</p>
+    <p>2. Si $g\circ f$ est surjective, alors $g$ est surjective.</p>
+    <p><b>Démonstration de 1 :</b> soit $z\in G$ (quelconque). Comme $g$ est surjective, $\exists y\in F$ tel que $g(y)=z$. Comme $f$ est surjective, $\exists x\in E$ tel que $f(x)=y$. On calcule $(g\circ f)(x)=g(f(x))=g(y)=z$. Donc $g\circ f$ surjective.</p>
+    <p><b>Démonstration de 2 :</b> soit $z\in G$ (quelconque). Comme $g\circ f$ est surjective, $\exists x\in E$ tel que $(g\circ f)(x)=z$. On pose $y=f(x)\in F$ : on a bien $g(y)=g(f(x))=z$. Donc $g$ surjective.</p>
+    <p style="font-size:.85rem;color:var(--ink-muted)">Attention : dans le point 2, on ne peut rien dire sur la surjectivité de $f$ elle-même.</p>
+  </div>
+
+  <h4 id="s2-2c">c) Applications bijectives</h4>
+  <div class="def-box">
+    <div class="label">Définition 13</div>
+    <p>$f:E\to F$ est <b>bijective</b> lorsque $$\forall y\in F,\ \exists!x\in E,\quad y=f(x),$$ c'est-à-dire lorsque $f$ est injective <b>et</b> surjective, ou encore lorsque tout élément de $F$ admet un <b>unique</b> antécédent dans $E$.</p>
+  </div>
+
+  <figure role="img" aria-label="Trois points x1 x2 x3 dans E et trois points y1 y2 y3 dans F ; les fleches se croisent en appariant chaque xi a un yi distinct, formant un appariement parfait : c'est une bijection.">
+    <svg viewBox="0 0 260 190">
+      <defs><marker id="arH3" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="var(--accent)"/></marker></defs>
+      <ellipse cx="70" cy="95" rx="55" ry="80" fill="none" stroke="currentColor" stroke-width="1.6"/>
+      <ellipse cx="195" cy="95" rx="50" ry="80" fill="none" stroke="currentColor" stroke-width="1.6"/>
+      <text x="55" y="25" font-size="13">E</text><text x="215" y="25" font-size="13">F</text>
+      <circle cx="70" cy="55" r="3" fill="currentColor"/><text x="45" y="52" font-size="12">x₁</text>
+      <circle cx="70" cy="95" r="3" fill="currentColor"/><text x="45" y="92" font-size="12">x₂</text>
+      <circle cx="70" cy="135" r="3" fill="currentColor"/><text x="45" y="132" font-size="12">x₃</text>
+      <circle cx="195" cy="55" r="3" fill="currentColor"/><text x="205" y="52" font-size="12">y₁</text>
+      <circle cx="195" cy="95" r="3" fill="currentColor"/><text x="205" y="92" font-size="12">y₂</text>
+      <circle cx="195" cy="135" r="3" fill="currentColor"/><text x="205" y="132" font-size="12">y₃</text>
+      <path d="M73,56 C120,70 160,110 192,133" fill="none" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#arH3)"/>
+      <path d="M73,96 C120,90 160,60 192,57" fill="none" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#arH3)"/>
+      <path d="M73,134 C120,120 160,100 192,97" fill="none" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#arH3)"/>
+    </svg>
+    <figcaption>Bijection : chaque élément de $F$ est atteint, et par un seul élément de $E$ — un appariement parfait.</figcaption>
+  </figure>
+
+  <p>Lorsque $f$ est bijective, on peut définir la <b>fonction réciproque</b> $f^{-1}:F\to E,\ y\mapsto x$ tel que $f(x)=y$. On a $f^{-1}\circ f=\mathrm{Id}_E$ et $f\circ f^{-1}=\mathrm{Id}_F$.</p>
+  <div class="remark">Soit $x\in E$ : $f^{-1}(f(x))=f^{-1}(y)=x$ (en posant $y=f(x)$, puisque $x$ est justement l'unique antécédent de $y$). De même, soit $y\in F$ : $f(f^{-1}(y))=f(x)=y$.</div>
+
+  <div class="method-box">
+    <div class="label">Point méthode</div>
+    <p>Pour montrer que $f:E\to F$ est bijective, deux méthodes : 1. montrer que $f$ est injective <b>et</b> que $f$ est surjective ; 2. « Soit $y\in F$… » montrer que $\exists!x\in E$ tel que $y=f(x)$.</p>
+  </div>
+  <div class="method-box">
+    <div class="label">Point méthode</div>
+    <p>Pour obtenir l'expression de la bijection réciproque $f^{-1}$ d'une bijection de $I$ sur $J$ : soient $x\in I$ et $y\in J$, $y=f(x)\iff\cdots\iff x=\underbrace{\text{une expression en fonction de }y}_{f^{-1}(y)}$.</p>
+  </div>
+
+  <div class="exercise">
+    <div class="tag">Exemple 5</div>
+    <p class="statement">Soit $f:\mathbb{R}\to\mathbb{R},\ x\mapsto f(x)=2x+3$. Montrer que $f$ est bijective et trouver $f^{-1}$.</p>
+    <div class="solution">
+      <p>Soit $y\in\mathbb{R}$. On cherche $x\in\mathbb{R}$ tel que $f(x)=y$ : $f(x)=y\iff2x+3=y\iff x=\dfrac{y-3}{2}$. On vient de prouver que tout $y$ a un unique antécédent $x=\frac{y-3}2$ par $f$. Donc $f$ est bijective, et $f^{-1}(y)=\dfrac{y-3}{2}$.</p>
+    </div>
+  </div>
+
+  <div class="exercise">
+    <div class="tag">Exemple 6</div>
+    <p>$f:\mathbb{R}\to\mathbb{R},\ x\mapsto x^2$ n'est pas bijective (par exemple $f(-1)=f(1)=1$ : pas injective). Par contre, sa restriction $\tilde f:[0,+\infty[\to[0,+\infty[,\ x\mapsto x^2$ est bijective, et $\tilde f^{-1}:[0,+\infty[\to[0,+\infty[,\ y\mapsto\sqrt y$.</p>
+  </div>
+
+  <div class="exercise">
+    <div class="tag">Exercice 7 (cours)</div>
+    <p class="statement">Montrer que $f:[1,+\infty[\to\mathbb{R}^+,\ x\mapsto\sqrt{x^2-1}$ est une bijection et donner une expression de sa bijection réciproque $f^{-1}$.</p>
+    <div class="solution">
+      <p>Soit $y\in\mathbb{R}^+$. On cherche $x\in[1,+\infty[$ tel que $f(x)=y$ : $$f(x)=y\iff\sqrt{x^2-1}=y\iff x^2-1=y^2\ (\text{les deux membres étant}\geq0)\iff x^2=y^2+1\iff x=\sqrt{y^2+1}$$ (on garde la racine positive car $x\geq1>0$). Comme $y^2\geq0$, on a bien $y^2+1\geq1$ donc $x=\sqrt{y^2+1}\geq1$ : ce $x$ appartient bien à $[1,+\infty[$, et il est unique (l'autre racine $-\sqrt{y^2+1}$ est négative, donc exclue).</p>
+      <p>On a trouvé, pour tout $y\in\mathbb{R}^+$, un unique antécédent : $f$ est bijective, et $f^{-1}(y)=\sqrt{y^2+1}$.</p>
+    </div>
+  </div>
+
+  <div class="prop-box">
+    <div class="label">Remarque 2 (théorème de la bijection monotone)</div>
+    <p>Soit $I$ un intervalle, $f:I\to\mathbb{R}$ une fonction continue et strictement monotone. Alors $f$ induit une bijection de $I$ dans $f(I)$ (c'est-à-dire $f:I\to f(I),\ x\mapsto f(x)$ est bijective).</p>
+  </div>
+
+  <div class="prop-box">
+    <div class="label">Proposition 3</div>
+    <p>1. Soit $f:E\to F$ une bijection et $f^{-1}:F\to E$ son application réciproque, alors $f^{-1}$ est une bijection de $F$ dans $E$.</p>
+    <p>2. Soit $f:E\to F$ et $g:F\to G$ des bijections, alors $g\circ f$ est une bijection de $E$ dans $G$ et $$(g\circ f)^{-1}=f^{-1}\circ g^{-1}.$$</p>
+    <p><b>Démonstration de 1 :</b> montrons $f^{-1}$ injective. Soient $y_1,y_2\in F$ tels que $f^{-1}(y_1)=f^{-1}(y_2)$. En appliquant $f$ : $f(f^{-1}(y_1))=f(f^{-1}(y_2))$, c'est-à-dire $y_1=y_2$ (car $f\circ f^{-1}=\mathrm{Id}_F$). Donc $f^{-1}$ injective. Montrons $f^{-1}$ surjective : soit $x\in E$, on pose $y=f(x)\in F$, et on a bien $f^{-1}(y)=f^{-1}(f(x))=x$ (car $f^{-1}\circ f=\mathrm{Id}_E$) : on a trouvé un antécédent. Donc $f^{-1}$ surjective, d'où $f^{-1}$ bijective.</p>
+    <p style="font-size:.85rem;color:var(--ink-muted)"><b>Propriété utile :</b> $f:E\to F$ est une bijection $\iff$ $\exists g:F\to E$ tel que $f\circ g=\mathrm{Id}_F$ et $g\circ f=\mathrm{Id}_E$ (et dans ce cas $g=f^{-1}$).</p>
+    <p><b>Démonstration de 2 :</b> $(g\circ f)\circ(f^{-1}\circ g^{-1})=g\circ(f\circ f^{-1})\circ g^{-1}=g\circ\mathrm{Id}_F\circ g^{-1}=g\circ g^{-1}=\mathrm{Id}_G$, et de même $(f^{-1}\circ g^{-1})\circ(g\circ f)=f^{-1}\circ(g^{-1}\circ g)\circ f=f^{-1}\circ\mathrm{Id}_F\circ f=f^{-1}\circ f=\mathrm{Id}_E$. D'après la propriété ci-dessus (unicité de la réciproque à deux côtés), $g\circ f$ est bijective et $(g\circ f)^{-1}=f^{-1}\circ g^{-1}$.</p>
+  </div>
+
+  <h4 id="s2-2d">d) Applications d'un ensemble fini $E$ dans un ensemble fini $F$</h4>
+  <div class="prop-box">
+    <div class="label">Proposition 4</div>
+    <p>Soit $f:E\to F$ une application entre ensembles finis.</p>
+    <ul>
+      <li>Si $f$ est injective alors $\mathrm{Card}(F)\geq\mathrm{Card}(E)$ ;</li>
+      <li>si $f$ est surjective alors $\mathrm{Card}(F)\leq\mathrm{Card}(E)$ ;</li>
+      <li>si $f$ est bijective alors $\mathrm{Card}(F)=\mathrm{Card}(E)$.</li>
+    </ul>
+  </div>
+  <div class="prop-box"><div class="label">Proposition 5</div><p>Soit $E$ un ensemble <b>fini</b>. Si $f:E\to E$ est injective (respectivement surjective), alors elle est bijective.</p></div>
+  <div class="warning-box"><div class="label">Attention</div><p>La finitude de $E$ est essentielle ici : sur un ensemble infini, ce résultat est faux. Par exemple $f:\mathbb{N}\to\mathbb{N},\ n\mapsto2n$ est injective mais pas surjective (les impairs n'ont pas d'antécédent).</p></div>
+
+  <div class="prop-box">
+    <div class="label">Proposition 6</div>
+    <p>Si $\mathrm{Card}(E)=p$ et $\mathrm{Card}(F)=n$, alors il y a $n^p$ applications de $E$ dans $F$ (ou listes de $p$ éléments, non nécessairement distincts, pris parmi un ensemble de $n$ éléments).</p>
+    <p><b>Démonstration :</b> notons $E=\{x_1,\dots,x_p\}$. Pour construire une application $f:E\to F$, on choisit librement l'image de chaque élément : $n$ choix possibles pour $f(x_1)$, $n$ choix pour $f(x_2)$, …, $n$ choix pour $f(x_p)$, tous indépendants. Par le principe multiplicatif, il y a $\underbrace{n\times n\times\cdots\times n}_{p\text{ fois}}=n^p$ applications possibles.</p>
+  </div>
+  <div class="remark"><b>Remarque 3 :</b> on rappelle qu'on peut noter $F^E$ l'ensemble des applications de $E$ dans $F$. Pour $E$ et $F$ des ensembles finis on a donc $\mathrm{Card}(F^E)=(\mathrm{Card}\,F)^{\mathrm{Card}\,E}$.</div>
+
+  <h2 id="exercices">Exercices d'entraînement (annales)</h2>
+  <p style="color:var(--ink-muted);font-size:.9rem">Quatre exercices réels, choisis pour recouvrir les notions du chapitre (application, restriction, injectivité, surjectivité, bijectivité, composition), avec leur source précise. Pour chacun : l'énoncé, un indice si vous séchez, puis la correction complète.</p>
+
+  <div class="exercise">
+    <div class="tag">Exercice A — bijectivité et réciproque</div>
+    <p class="statement">Soit $f:[1,+\infty[\to[0,+\infty[$ telle que $f(x)=x^2-1$. $f$ est-elle bijective ?</p>
+    <details class="disclosure"><summary>Indice</summary>
+      <div class="hint-box">Même méthode qu'à l'Exercice 7 du cours ($f(x)=\sqrt{x^2-1}$) : fixez $y\in[0,+\infty[$ et résolvez $y=x^2-1$ d'inconnue $x\in[1,+\infty[$. Vous pouvez aussi invoquer directement le théorème de la bijection monotone (Remarque 2).</div>
+    </details>
+    <details class="disclosure"><summary>Correction</summary>
+      <div class="solution">
+      <p>Soit $y\in[0,+\infty[$. On cherche $x\in[1,+\infty[$ tel que $f(x)=y$ : $x^2-1=y\iff x^2=y+1\iff x=\sqrt{y+1}$ (racine positive, seule compatible avec $x\geq1$). Comme $y\geq0$, $y+1\geq1$ donc $x=\sqrt{y+1}\geq1$ : ce $x$ est bien dans $[1,+\infty[$, et unique. Donc $f$ est bijective, et $f^{-1}(y)=\sqrt{y+1}$.</p>
+      <p style="font-size:.85rem;color:var(--ink-muted)">Variante : $f$ est continue et strictement croissante sur $[1,+\infty[$ (car $x\mapsto x^2$ l'est sur $[1,+\infty[$), avec $f(1)=0$ et $f(x)\to+\infty$ : par le théorème de la bijection monotone, $f$ induit une bijection de $[1,+\infty[$ sur $f([1,+\infty[)=[0,+\infty[$.</p>
+      </div>
+    </details>
+    <div class="src">Source : Exo7 (exo7.emath.fr), fiche « Injection, surjection, bijection » (fic00003.pdf), Exercice 3.</div>
+  </div>
+
+  <div class="exercise">
+    <div class="tag">Exercice B — injectivité, surjectivité, bijectivité</div>
+    <p class="statement">Les applications suivantes sont-elles injectives ? surjectives ? bijectives ? (1) $f:\mathbb{N}\to\mathbb{N},\ n\mapsto n+1$ (2) $g:\mathbb{Z}\to\mathbb{Z},\ n\mapsto n+1$ (3) $h:\mathbb{R}^2\to\mathbb{R}^2,\ (x,y)\mapsto(x+y,x-y)$ (4) $k:\mathbb{R}\setminus\{1\}\to\mathbb{R},\ x\mapsto\dfrac{x+1}{x-1}$.</p>
+    <details class="disclosure"><summary>Indice</summary>
+      <div class="hint-box">Pour (1)-(2), demandez-vous si $0$ a un antécédent dans chaque ensemble de départ. Pour (3), résolvez le système $x+y=a,\ x-y=b$. Pour (4), résolvez $y=\frac{x+1}{x-1}$ d'inconnue $x$, et regardez pour quelle valeur de $y$ cela échoue.</div>
+    </details>
+    <details class="disclosure"><summary>Correction</summary>
+      <div class="solution">
+      <p><b>(1) $f:\mathbb{N}\to\mathbb{N},\ n\mapsto n+1$.</b> Injective : $n+1=m+1\Rightarrow n=m$. Pas surjective : $0$ n'a pas d'antécédent ($n+1=0$ impose $n=-1\notin\mathbb{N}$). Donc pas bijective.</p>
+      <p><b>(2) $g:\mathbb{Z}\to\mathbb{Z},\ n\mapsto n+1$.</b> Injective (même argument). Surjective : pour tout $m\in\mathbb{Z}$, $n=m-1\in\mathbb{Z}$ convient. Donc $g$ est bijective.</p>
+      <p><b>(3) $h:\mathbb{R}^2\to\mathbb{R}^2,\ (x,y)\mapsto(x+y,x-y)$.</b> Injective : si $(x_1+y_1,x_1-y_1)=(x_2+y_2,x_2-y_2)$, en additionnant les deux égalités $2x_1=2x_2$ donc $x_1=x_2$, en les soustrayant $2y_1=2y_2$ donc $y_1=y_2$. Surjective : pour $(a,b)\in\mathbb{R}^2$, le système $x+y=a,\,x-y=b$ a pour solution $x=\frac{a+b}2,\ y=\frac{a-b}2$, toujours définie. Donc $h$ est bijective.</p>
+      <p><b>(4) $k:\mathbb{R}\setminus\{1\}\to\mathbb{R},\ x\mapsto\frac{x+1}{x-1}$.</b> Injective : $\frac{x_1+1}{x_1-1}=\frac{x_2+1}{x_2-1}\Rightarrow(x_1+1)(x_2-1)=(x_2+1)(x_1-1)$, qui se développe en $-x_1+x_2=-x_2+x_1$, soit $x_1=x_2$. Surjective : soit $y\in\mathbb{R}$, on résout $y=\frac{x+1}{x-1}\iff y(x-1)=x+1\iff x(y-1)=y+1\iff x=\frac{y+1}{y-1}$ — impossible si $y=1$ (on obtiendrait $0=2$). Donc $y=1$ n'a pas d'antécédent : $k$ n'est <b>pas</b> surjective, donc pas bijective (mais elle serait bijective en restreignant l'arrivée à $\mathbb{R}\setminus\{1\}$).</p>
+      </div>
+    </details>
+    <div class="src">Source : Exo7 (exo7.emath.fr), fiche « Injection, surjection, bijection » (fic00003.pdf), Exercice 4.</div>
+  </div>
+
+  <div class="exercise">
+    <div class="tag">Exercice C — composition et bijectivité</div>
+    <p class="statement">On considère quatre ensembles $A,B,C,D$ et des applications $f:A\to B$, $g:B\to C$, $h:C\to D$. Montrer que $g\circ f$ injective $\Rightarrow$ $f$ injective, et $g\circ f$ surjective $\Rightarrow$ $g$ surjective. Montrer que : $g\circ f$ et $h\circ g$ sont bijectives $\iff$ $f,g,h$ sont bijectives.</p>
+    <details class="disclosure"><summary>Indice</summary>
+      <div class="hint-box">Les deux premiers points sont exactement la Proposition 1.2 et la Proposition 2.2 du cours. Pour le « $\Rightarrow$ » du second point : appliquez ces deux propositions à $g\circ f$ bijective puis à $h\circ g$ bijective pour d'abord isoler $g$ (injective d'un côté, surjective de l'autre), puis exprimez $f$ et $h$ à l'aide de $g^{-1}$.</div>
+    </details>
+    <details class="disclosure"><summary>Correction</summary>
+      <div class="solution">
+      <p>Les deux premiers points sont la Proposition 1 (point 2) et la Proposition 2 (point 2) du cours, appliquées respectivement à $f:A\to B,\ g:B\to C$.</p>
+      <p><b>($\Leftarrow$)</b> Si $f,g,h$ sont bijectives, alors $g\circ f$ et $h\circ g$ sont des composées de bijections, donc bijectives (Proposition 3.2).</p>
+      <p><b>($\Rightarrow$)</b> Supposons $g\circ f$ et $h\circ g$ bijectives. De $g\circ f$ bijective : $g\circ f$ injective $\Rightarrow$ $f$ injective, et $g\circ f$ surjective $\Rightarrow$ $g$ surjective. De $h\circ g$ bijective : $h\circ g$ injective $\Rightarrow$ $g$ injective, et $h\circ g$ surjective $\Rightarrow$ $h$ surjective.</p>
+      <p>On obtient $g$ injective (via $h\circ g$) <b>et</b> $g$ surjective (via $g\circ f$) : donc $g$ est bijective, et possède une réciproque $g^{-1}$.</p>
+      <p>Alors $f=g^{-1}\circ(g\circ f)$ : composée de $g^{-1}$ (bijective, Proposition 3.1) et de $g\circ f$ (bijective par hypothèse), donc $f$ est bijective (Proposition 3.2). De même $h=(h\circ g)\circ g^{-1}$ est une composée de deux bijections, donc $h$ est bijective.</p>
+      <p>Conclusion : $f,g,h$ sont toutes trois bijectives.</p>
+      </div>
+    </details>
+    <div class="src">Source : Exo7 (exo7.emath.fr), fiche « Injection, surjection, bijection » (fic00003.pdf), Exercice 7.</div>
+  </div>
+
+  <div class="exercise">
+    <div class="tag">Exercice D — étude complète et bijection monotone</div>
+    <p class="statement">Soit $f:\mathbb{R}\to\mathbb{R}$ définie par $f(x)=\dfrac{2x}{1+x^2}$. (1) $f$ est-elle injective ? surjective ? (2) Montrer que $f(\mathbb{R})=[-1,1]$. (3) Montrer que la restriction $g:[-1,1]\to[-1,1],\ g(x)=f(x)$ est une bijection.</p>
+    <details class="disclosure"><summary>Indice</summary>
+      <div class="hint-box">Pour l'injectivité, cherchez deux réels distincts $x_1\neq x_2$ avec $f(x_1)=f(x_2)$ (résolvez $\frac{2x}{1+x^2}=\frac12$ par exemple). Pour (2)-(3), étudiez le signe de $f'(x)=\dfrac{2(1-x^2)}{(1+x^2)^2}$ pour situer croissance/décroissance et les extrema, puis appliquez le théorème de la bijection monotone (Remarque 2 du cours) sur $[-1,1]$.</div>
+    </details>
+    <details class="disclosure"><summary>Correction</summary>
+      <div class="solution">
+      <p><b>(1) Injectivité :</b> résolvons $\frac{2x}{1+x^2}=\frac12$, soit $4x=1+x^2$, c'est-à-dire $x^2-4x+1=0$. Discriminant $\Delta=16-4=12$, racines $x=2\pm\sqrt3$. On a $f(2+\sqrt3)=f(2-\sqrt3)=\frac12$ avec $2+\sqrt3\neq2-\sqrt3$ : $f$ n'est <b>pas</b> injective.</p>
+      <p><b>Surjectivité :</b> $f$ n'est pas surjective sur $\mathbb{R}$ tout entier : on montre en (2) que $f(\mathbb{R})=[-1,1]\subsetneq\mathbb{R}$, donc par exemple $2$ n'a pas d'antécédent.</p>
+      <p><b>(2)</b> $f$ est dérivable sur $\mathbb{R}$, avec $f'(x)=\dfrac{2(1+x^2)-2x(2x)}{(1+x^2)^2}=\dfrac{2(1-x^2)}{(1+x^2)^2}$. On a $f'(x)>0$ pour $x\in(-1,1)$, $f'(x)<0$ pour $|x|>1$. Donc $f$ est strictement décroissante sur $]-\infty,-1]$, strictement croissante sur $[-1,1]$, strictement décroissante sur $[1,+\infty[$. Ses extrema sont $f(-1)=-1$ (minimum local) et $f(1)=1$ (maximum local), et $f(x)\to0$ quand $x\to\pm\infty$. Par continuité (théorème des valeurs intermédiaires sur chaque morceau monotone), l'image de chaque branche est incluse dans $[-1,1]$, et les valeurs $-1$ et $1$ sont atteintes (en $x=-1$ et $x=1$) : donc $f(\mathbb{R})=[-1,1]$.</p>
+      <p><b>(3)</b> Sur $[-1,1]$, $f$ est continue et strictement croissante (d'après l'étude de $f'$ en (2)), avec $f(-1)=-1$ et $f(1)=1$. D'après le théorème de la bijection monotone (Remarque 2 du cours), $g:[-1,1]\to f([-1,1])=[-1,1],\ g(x)=f(x)$ est une bijection.</p>
+      </div>
+    </details>
+    <div class="src">Source : Exo7 (exo7.emath.fr), fiche « Injection, surjection, bijection » (fic00003.pdf), Exercice 8, questions 1 à 3.</div>
+  </div>
+
+  <h2 id="sources">Sources</h2>
+  <div class="sources">
+    <p>Le contenu du cours (définitions, propositions, exemples) reprend le support de cours distribué en classe, complété par les démonstrations manuscrites de Léane. Chaque définition, démonstration et calcul a été relu et revérifié pas à pas avant mise en forme ; aucune erreur de fond n'a été trouvée dans ce chapitre. Une seule précision a été ajoutée par souci de rigueur : la <b>Proposition 5</b> (« injective ou surjective $\Rightarrow$ bijective » pour $f:E\to E$) nécessite que $E$ soit <b>fini</b> — c'est bien le cadre de la section (« Applications d'un ensemble fini $E$ dans un ensemble fini $F$ ») mais l'hypothèse a été rendue explicite dans l'énoncé, avec un contre-exemple sur $\mathbb{N}$ (infini) pour illustrer pourquoi elle est nécessaire. Les résultats sont conformes aux définitions et théorèmes standards du programme officiel de mathématiques MPSI :</p>
+    <ul>
+      <li>Relations, applications, restriction, image directe/réciproque, composition : notions de base communes à tous les manuels de référence de CPGE scientifique (collections H-Prépa, Précis Bréal).</li>
+      <li>Injectivité, surjectivité, bijectivité et leur comportement par composition (Propositions 1 à 3) : chaque démonstration du cours manuscrit a été reproduite et revérifiée ligne à ligne (les deux sens de la Proposition 1.2 et de la Proposition 2.2 en particulier, souvent source de confusion sur « ce qu'on ne peut pas conclure »).</li>
+      <li>Théorème de la bijection monotone (Remarque 2) et cardinalité des applications entre ensembles finis (Propositions 4 à 6) : résultats classiques, correctement énoncés dans le cours manuscrit.</li>
+    </ul>
+    <p>Les quatre exercices d'entraînement de la section précédente proviennent de la fiche <a href="https://exo7.emath.fr/ficpdf/fic00003.pdf" target="_blank" rel="noopener">« Injection, surjection, bijection »</a> d'Exo7 (exo7.emath.fr), une banque d'exercices universitaires corrigés en libre accès, largement utilisée en CPGE. Chaque énoncé a été repris fidèlement puis entièrement recalculé pour cette correction (aucune correction de la fiche source n'a été recopiée telle quelle) ; les numéros d'exercice sont indiqués sous chaque énoncé pour retrouver l'original.</p>
+  </div>
+
+  <footer>Cahier Commun — MPSI · Mathématiques · Chapitre 03</footer>
+</main>
+
+</body>
+</html>
