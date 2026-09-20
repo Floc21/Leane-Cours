@@ -9,8 +9,10 @@ window.SITE_CHAPTERS = [
   { subject: "Mathématiques", title: "Chapitre 5 — Relations d'ordre, relations d'équivalence", url: "chapitre-5-relations.html", addedAt: "2026-09-20" }
 ];
 
+// Chaque matière a sa propre couleur et son icône pour repérer d'un coup
+// d'œil de quel domaine il s'agit, sur l'accueil comme dans la navigation.
 window.SITE_SUBJECTS = [
-  { key: "Mathématiques", short: "MATH" },
-  { key: "Physique", short: "PHYS" },
-  { key: "Sciences de l'Ingénieur", short: "SI" }
+  { key: "Mathématiques", short: "MATH", slug: "maths", color: "#3B82F6", icon: "🔢" },
+  { key: "Physique", short: "PHYS", slug: "physique", color: "#8B5CF6", icon: "⚛️" },
+  { key: "Sciences de l'Ingénieur", short: "SI", slug: "si", color: "#D97706", icon: "⚙️" }
 ];
