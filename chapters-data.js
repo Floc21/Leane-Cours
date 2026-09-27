@@ -6,7 +6,8 @@ window.SITE_CHAPTERS = [
   { subject: "Mathématiques", title: "Chapitre 2 — Calcul algébrique", url: "chapitre-2-calcul-algebrique.html", addedAt: "2026-09-20" },
   { subject: "Mathématiques", title: "Chapitre 3 — Applications", url: "chapitre-3-applications.html", addedAt: "2026-09-20" },
   { subject: "Mathématiques", title: "Chapitre 4 — Systèmes linéaires", url: "chapitre-4-systemes-lineaires.html", addedAt: "2026-09-20" },
-  { subject: "Mathématiques", title: "Chapitre 5 — Relations d'ordre, relations d'équivalence", url: "chapitre-5-relations.html", addedAt: "2026-09-20" }
+  { subject: "Mathématiques", title: "Chapitre 5 — Relations d'ordre, relations d'équivalence", url: "chapitre-5-relations.html", addedAt: "2026-09-20" },
+  { subject: "Mathématiques", title: "Chapitre 6 — Propriétés de ℝ", url: "chapitre-6-proprietes-de-r.html", addedAt: "2026-09-27" }
 ];
 
 // Chaque matière a sa propre couleur et son icône pour repérer d'un coup

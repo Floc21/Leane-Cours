@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Propriétés de ℝ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$','$'], ['\\(','\\)']], displayMath: [['$$','$$'], ['\\[','\\]']],
+    macros: { llbracket: "\\unicode{x27E6}", rrbracket: "\\unicode{x27E7}" }
+  },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js"></script>
+<style>
+  :root{
+    --paper:#FAF8F3; --surface:#FFFFFF; --surface-2:#F1EEE4;
+    --ink:#23231F; --ink-muted:#6B6A5F; --border:#E3DFD1;
+    --accent:#1F3A5F; --accent-ink:#14263F; --accent-soft:#E7EDF5;
+    --red:#B23A46; --red-soft:#F7E7E7;
+    --green:#2F7A4F; --green-soft:#E3F1E8;
+    --gold:#A67C1E; --gold-soft:#F4ECD6;
+    --shadow: 0 1px 2px rgba(32,38,31,.06), 0 6px 20px -8px rgba(32,38,31,.18);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#14171C; --surface:#1B1F26; --surface-2:#242933;
+      --ink:#EDEFF2; --ink-muted:#9AA1AC; --border:#2E3440;
+      --accent:#7FA8E8; --accent-ink:#DCE7F9; --accent-soft:#22344B;
+      --red:#E28B92; --red-soft:#3A2224;
+      --green:#7FC090; --green-soft:#1E2F22;
+      --gold:#D8B45C; --gold-soft:#332B16;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 24px -8px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#14171C; --surface:#1B1F26; --surface-2:#242933;
+    --ink:#EDEFF2; --ink-muted:#9AA1AC; --border:#2E3440;
+    --accent:#7FA8E8; --accent-ink:#DCE7F9; --accent-soft:#22344B;
+    --red:#E28B92; --red-soft:#3A2224;
+    --green:#7FC090; --green-soft:#1E2F22;
+    --gold:#D8B45C; --gold-soft:#332B16;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 24px -8px rgba(0,0,0,.5);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    background:var(--paper); color:var(--ink);
+    font-family:"Public Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+    padding-inline:20px; padding-block:28px; line-height:1.6;
+  }
+  main{max-width:780px;margin:0 auto;}
+  h1,h2,h3,h4{font-family:"Spectral",Georgia,serif;text-wrap:balance;margin:1.4em 0 .5em;}
+  h1{font-size:1.7rem;color:var(--accent-ink);margin-top:0;}
+  h2{font-size:1.3rem;color:var(--accent-ink);border-bottom:2px solid var(--border);padding-bottom:.3em;margin-top:2em;}
+  h3{font-size:1.08rem;}
+  h4{font-size:.98rem;font-style:italic;}
+  p{margin:.7em 0;}
+  a{color:var(--accent);}
+  .mono{font-family:"JetBrains Mono",monospace;}
+
+  header.top{margin-bottom:6px;}
+  header.top .eyebrow{font-family:"JetBrains Mono",monospace;font-size:.78rem;color:var(--ink-muted);letter-spacing:.03em;}
+  header.top nav{font-size:.82rem;margin-top:6px;}
+  header.top nav a{margin-right:14px;}
+
+  .toc{
+    background:var(--surface);border:1px solid var(--border);border-radius:10px;
+    padding:14px 18px;margin:20px 0 30px;box-shadow:var(--shadow);font-size:.9rem;
+  }
+  .toc h2{margin:0 0 8px;font-size:1rem;border:none;padding:0;}
+  .toc ol{margin:0;padding-left:1.3em;}
+  .toc li{margin-bottom:2px;}
+  .toc a{text-decoration:none;}
+  .toc a:hover{text-decoration:underline;}
+
+  .def-box, .prop-box{
+    background:var(--surface);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;
+    padding:12px 16px;margin:1em 0;box-shadow:var(--shadow);
+  }
+  .def-box .label, .prop-box .label{font-weight:700;color:var(--accent-ink);font-family:"Spectral",serif;}
+
+  .method-box{
+    background:var(--gold-soft);border:1px solid color-mix(in srgb, var(--gold) 45%, transparent);
+    border-radius:8px;padding:12px 16px;margin:1em 0;
+  }
+  .method-box .label{font-weight:700;color:var(--gold);}
+
+  .warning-box{
+    background:var(--red-soft);border:1px solid color-mix(in srgb, var(--red) 45%, transparent);
+    border-radius:8px;padding:12px 16px;margin:1em 0;
+  }
+  .warning-box .label{font-weight:700;color:var(--red);}
+
+  .remark{
+    border-left:3px solid var(--border);padding:6px 14px;margin:1em 0;color:var(--ink-muted);font-size:.93rem;
+  }
+
+  .exercise{
+    background:var(--surface);border:1px solid var(--border);border-radius:10px;
+    padding:14px 18px;margin:1.2em 0;box-shadow:var(--shadow);
+  }
+  .exercise .tag{font-family:"JetBrains Mono",monospace;font-size:.72rem;font-weight:700;letter-spacing:.05em;color:var(--accent);text-transform:uppercase;}
+  .exercise .statement{font-style:italic;margin:.4em 0 .8em;}
+  .exercise .solution{border-top:1px dashed var(--border);padding-top:.7em;margin-top:.4em;}
+  .exercise .solution .lbl{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-muted);margin-bottom:4px;}
+
+  figure{margin:1.4em 0;text-align:center;}
+  figure svg{max-width:100%;height:auto;color:var(--ink);}
+  figcaption{font-size:.82rem;color:var(--ink-muted);margin-top:6px;}
+
+  table.truth{border-collapse:collapse;margin:1em auto;font-family:"JetBrains Mono",monospace;font-size:.9rem;}
+  table.truth th,table.truth td{border:1px solid var(--border);padding:5px 16px;text-align:center;}
+  table.truth th{background:var(--surface-2);}
+
+  .wide{overflow-x:auto;}
+
+  .hint-box{background:var(--accent-soft);border:1px dashed var(--accent);border-radius:8px;padding:10px 14px;margin:0;font-size:.9rem;}
+  .exercise .src{font-size:.76rem;color:var(--ink-muted);margin-top:10px;font-family:"JetBrains Mono",monospace;}
+
+  .exercise details{margin:.5em 0 0;}
+  .exercise summary{
+    cursor:pointer;list-style:none;display:flex;align-items:center;gap:6px;
+    font-family:"JetBrains Mono",monospace;font-size:.72rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+    color:var(--accent-ink);padding:6px 0;user-select:none;
+  }
+  .exercise summary::-webkit-details-marker{display:none;}
+  .exercise summary::before{content:"▸";display:inline-block;color:var(--accent);font-size:.85rem;transition:transform .15s ease;}
+  .exercise details[open] summary::before{transform:rotate(90deg);}
+  .exercise details > .hint-box, .exercise details > .solution{margin-top:2px;}
+  .exercise details > .solution{border-top:none;padding-top:0;}
+
+  .sources{font-size:.86rem;color:var(--ink-muted);}
+  .sources ul{padding-left:1.2em;}
+
+  footer{margin-top:40px;color:var(--ink-muted);font-size:.78rem;text-align:center;}
+  .quiz ol{padding-left:1.3em;}
+  .quiz li{margin-bottom:.9em;}
+  .quiz details summary{cursor:pointer;font-size:.85rem;color:var(--accent);font-weight:600;}
+  .quiz details p{margin:.3em 0 0;font-size:.93rem;}
+</style>
+</head>
+<body>
+<script src="chapters-data.js?v=3"></script>
+<script src="site-nav.js?v=2" data-current="chapitre-6-proprietes-de-r.html"></script>
+<main>
+  <header class="top">
+    <div class="eyebrow">MPSI · MATHÉMATIQUES · CHAPITRE 06</div>
+    <h1>Propriétés de $\mathbb{R}$</h1>
+    <nav><a href="#s1">I. Ordre et valeur absolue</a> · <a href="#s2">II. Borne supérieure</a> · <a href="#s3">III. Partie entière</a> · <a href="#s4">IV. Intervalles, densité</a> · <a href="#exercices">Exercices</a> · <a href="#quiz">Quiz</a> · <a href="#sources">Sources</a></nav>
+  </header>
+
+  <div class="toc">
+    <h2>Sommaire</h2>
+    <ol>
+      <li><a href="#s1">Ordre sur $\mathbb{R}$ et valeur absolue</a></li>
+      <li><a href="#s2">Majorants, borne supérieure, borne inférieure</a></li>
+      <li><a href="#s3">Propriété d'Archimède et partie entière</a></li>
+      <li><a href="#s4">Intervalles et densité de $\mathbb{Q}$</a></li>
+      <li><a href="#exercices">Exercices d'entraînement</a></li>
+      <li><a href="#quiz">Quiz express (5 questions)</a></li>
+    </ol>
+  </div>
+
+  <div class="remark">Chapitre rédigé <b>en avance</b>, à partir du programme officiel de MPSI, avant son traitement en classe. Les notations et les numéros de résultats peuvent différer de ceux du professeur : en cas de doute, c'est le cours du professeur qui fait foi.</div>
+
+  <!-- ============ I ============ -->
+  <h2 id="s1">I. Ordre sur $\mathbb{R}$ et valeur absolue</h2>
+  <h3>1. Ordre et opérations</h3>
+  <p>$\mathbb{R}$ est muni de la relation $\leq$, qui est une <b>relation d'ordre total</b> (voir chapitre 5). Cet ordre est compatible avec les opérations :</p>
+  <div class="prop-box">
+    <div class="label">Proposition 1 (règles de calcul sur les inégalités)</div>
+    <p>Pour tous réels $x,y,z,t$ :</p>
+    <ul>
+      <li>si $x\leq y$, alors $x+z\leq y+z$ ;</li>
+      <li>si $x\leq y$ et $z\leq t$, alors $x+z\leq y+t$ (on peut <b>ajouter</b> des inégalités de même sens) ;</li>
+      <li>si $x\leq y$ et $z\geq0$, alors $xz\leq yz$ ; si $z\leq0$, alors $xz\geq yz$ (le sens change) ;</li>
+      <li>si $0\leq x\leq y$ et $0\leq z\leq t$, alors $xz\leq yt$ (on peut <b>multiplier</b> des inégalités entre réels <b>positifs</b>) ;</li>
+      <li>si $0\lt x\leq y$, alors $\dfrac1y\leq\dfrac1x$ (le passage à l'inverse change le sens, pour des réels de même signe).</li>
+    </ul>
+  </div>
+  <div class="warning-box">
+    <div class="label">Erreur classique</div>
+    <p>On ne <b>soustrait</b> jamais deux inégalités membre à membre, et on ne les <b>divise</b> pas. Par exemple $0\leq1$ et $0\leq5$, mais $0-0\leq1-5$ est faux. Pour majorer $x-z$, on écrit $x-z=x+(-z)$ et on majore $-z$, c'est-à-dire qu'on <b>minore</b> $z$.</p>
+  </div>
+
+  <h3>2. Valeur absolue</h3>
+  <div class="def-box">
+    <div class="label">Définition 1</div>
+    <p>Pour $x\in\mathbb{R}$, la <b>valeur absolue</b> de $x$ est $|x|=\max(x,-x)$, c'est-à-dire $|x|=x$ si $x\geq0$ et $|x|=-x$ si $x\lt 0$. Pour $x,y\in\mathbb{R}$, le réel $|x-y|$ est la <b>distance</b> entre $x$ et $y$.</p>
+  </div>
+  <div class="prop-box">
+    <div class="label">Proposition 2</div>
+    <p>Pour tous $x,y\in\mathbb{R}$ et tout $a\geq0$ :</p>
+    <ul>
+      <li>$|x|\geq0$, et $|x|=0\iff x=0$ ; $\ |{-x}|=|x|$ ; $\ \sqrt{x^2}=|x|$ ;</li>
+      <li>$|xy|=|x|\,|y|$, et si $y\neq0$, $\left|\dfrac xy\right|=\dfrac{|x|}{|y|}$ ;</li>
+      <li>$|x|\leq a\iff -a\leq x\leq a$ ;</li>
+      <li>$|x-b|\leq r\iff b-r\leq x\leq b+r$ (pour $b\in\mathbb{R}$, $r\geq0$).</li>
+    </ul>
+  </div>
+  <figure role="img" aria-label="Droite graduee. Le point b est au centre d'un segment colore allant de b moins r a b plus r. Une accolade au-dessus indique que tous les points du segment sont a distance au plus r de b.">
+    <svg viewBox="0 0 320 90">
+      <line x1="10" y1="55" x2="310" y2="55" stroke="currentColor" stroke-width="1.5"/>
+      <polygon points="310,55 302,51 302,59" fill="currentColor"/>
+      <line x1="80" y1="55" x2="240" y2="55" stroke="var(--accent)" stroke-width="6" stroke-linecap="butt" opacity=".55"/>
+      <line x1="80" y1="47" x2="80" y2="63" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="240" y1="47" x2="240" y2="63" stroke="currentColor" stroke-width="1.5"/>
+      <circle cx="160" cy="55" r="3.5" fill="currentColor"/>
+      <text x="80" y="80" font-size="12" text-anchor="middle" fill="currentColor">b − r</text>
+      <text x="160" y="80" font-size="12" text-anchor="middle" fill="currentColor">b</text>
+      <text x="240" y="80" font-size="12" text-anchor="middle" fill="currentColor">b + r</text>
+      <path d="M160 40 L160 34 L236 34 L236 40" fill="none" stroke="currentColor" stroke-width="1"/>
+      <text x="198" y="28" font-size="12" text-anchor="middle" fill="currentColor">r</text>
+    </svg>
+    <figcaption>$|x-b|\leq r$ : $x$ est à distance au plus $r$ de $b$, c'est-à-dire $x\in[b-r,\,b+r]$.</figcaption>
+  </figure>
+
+  <div class="prop-box">
+    <div class="label">Théorème 1 (inégalité triangulaire)</div>
+    <p>Pour tous $x,y\in\mathbb{R}$ : $$\big|\,|x|-|y|\,\big|\ \leq\ |x+y|\ \leq\ |x|+|y|.$$ De plus, $|x+y|=|x|+|y|$ si et seulement si $x$ et $y$ sont de même signe.</p>
+    <p><b>Démonstration (inégalité de droite) :</b> on a $-|x|\leq x\leq|x|$ et $-|y|\leq y\leq|y|$. En ajoutant ces inégalités de même sens : $-(|x|+|y|)\leq x+y\leq|x|+|y|$, ce qui signifie exactement $|x+y|\leq|x|+|y|$ (Proposition 2 avec $a=|x|+|y|$).</p>
+    <p><b>Démonstration (inégalité de gauche) :</b> on écrit $x=(x+y)+(-y)$, donc d'après l'inégalité de droite, $|x|\leq|x+y|+|y|$, soit $|x|-|y|\leq|x+y|$. En échangeant les rôles de $x$ et $y$ : $|y|-|x|\leq|x+y|$. Les deux ensemble donnent $\big||x|-|y|\big|\leq|x+y|$.</p>
+  </div>
+  <div class="remark">En remplaçant $y$ par $-y$, on obtient aussi $\big||x|-|y|\big|\leq|x-y|\leq|x|+|y|$. C'est cette forme qu'on utilise le plus pour majorer une distance.</div>
+
+  <!-- ============ II ============ -->
+  <h2 id="s2">II. Majorants, borne supérieure, borne inférieure</h2>
+  <h3>1. Majorant, maximum</h3>
+  <div class="def-box">
+    <div class="label">Définition 2</div>
+    <p>Soit $A$ une partie de $\mathbb{R}$ et $M\in\mathbb{R}$.</p>
+    <ul>
+      <li>$M$ est un <b>majorant</b> de $A$ si $\forall a\in A,\ a\leq M$. On dit alors que $A$ est <b>majorée</b>.</li>
+      <li>$M$ est le <b>plus grand élément</b> (ou <b>maximum</b>) de $A$ si $M$ est un majorant de $A$ <b>et</b> $M\in A$. On le note $\max A$.</li>
+    </ul>
+    <p>On définit de même <b>minorant</b>, partie <b>minorée</b>, <b>plus petit élément</b> $\min A$. Une partie à la fois majorée et minorée est dite <b>bornée</b>.</p>
+  </div>
+  <p>Un maximum, s'il existe, est unique (par antisymétrie de $\leq$). Mais il n'existe pas toujours : $A=[0,1[$ est majorée (par $1$, par $2$, par $\pi$…) et n'a <b>pas</b> de maximum. Aucun élément $a\in[0,1[$ ne convient, puisque $\frac{a+1}2$ est encore dans $[0,1[$ et est strictement plus grand que $a$.</p>
+
+  <h3>2. Borne supérieure</h3>
+  <div class="def-box">
+    <div class="label">Définition 3</div>
+    <p>Soit $A\subset\mathbb{R}$. On appelle <b>borne supérieure</b> de $A$, notée $\sup A$, le <b>plus petit des majorants</b> de $A$ (s'il existe). De même, la <b>borne inférieure</b> $\inf A$ est le plus grand des minorants de $A$.</p>
+  </div>
+  <div class="prop-box">
+    <div class="label">Théorème 2 (propriété de la borne supérieure)</div>
+    <p>Toute partie de $\mathbb{R}$ <b>non vide et majorée</b> admet une borne supérieure. Toute partie de $\mathbb{R}$ non vide et minorée admet une borne inférieure.</p>
+    <p style="font-size:.88rem;color:var(--ink-muted)">Ce résultat est admis : c'est la propriété fondamentale qui distingue $\mathbb{R}$ de $\mathbb{Q}$.</p>
+  </div>
+  <div class="remark">Dans $\mathbb{Q}$, cette propriété est fausse. L'ensemble $\{x\in\mathbb{Q}\mid x^2\lt 2\}$ est non vide et majoré par $2$, mais son plus petit majorant serait $\sqrt2$, qui n'est pas rationnel : il n'a pas de borne supérieure <b>dans $\mathbb{Q}$</b>.</div>
+
+  <div class="prop-box">
+    <div class="label">Proposition 3 (lien avec le maximum)</div>
+    <p>Si $A$ admet un maximum, alors $\sup A$ existe et $\sup A=\max A$. Réciproquement, $\sup A$ est un maximum de $A$ si et seulement si $\sup A\in A$.</p>
+    <p><b>Démonstration :</b> si $M=\max A$, $M$ est un majorant. Si $M'$ est un autre majorant, alors $M\leq M'$ car $M\in A$. Donc $M$ est le plus petit majorant.</p>
+  </div>
+
+  <div class="method-box">
+    <div class="label">Méthode — caractérisation de la borne supérieure</div>
+    <p>Soit $A$ une partie non vide et majorée, et $M\in\mathbb{R}$. On a $M=\sup A$ si et seulement si :</p>
+    <ol>
+      <li>$M$ est un majorant de $A$ : $\forall a\in A,\ a\leq M$ ;</li>
+      <li>on peut approcher $M$ par des éléments de $A$ : $\forall\varepsilon>0,\ \exists a\in A,\ M-\varepsilon\lt a$.</li>
+    </ol>
+    <p>Le point 2 dit exactement que $M-\varepsilon$ n'est <b>plus</b> un majorant, quel que soit $\varepsilon>0$. En pratique, pour montrer que $M=\sup A$, on vérifie 1, puis on fixe $\varepsilon>0$ et on exhibe un élément de $A$ dans $]M-\varepsilon,M]$.</p>
+  </div>
+
+  <div class="exercise">
+    <div class="tag">Exemple</div>
+    <p class="statement">Déterminer la borne supérieure et la borne inférieure de $A=\left\{1-\dfrac1n\ \middle|\ n\in\mathbb{N}^*\right\}$.</p>
+    <div class="solution">
+      <p><b>Borne inférieure :</b> pour tout $n\geq1$, $\frac1n\leq1$ donc $1-\frac1n\geq0$ ; et $0=1-\frac11\in A$. Donc $0=\min A=\inf A$.</p>
+      <p><b>Borne supérieure :</b> pour tout $n\geq1$, $1-\frac1n\lt 1$, donc $1$ majore $A$. Soit $\varepsilon>0$. On choisit un entier $n>\frac1\varepsilon$ (il en existe d'après la propriété d'Archimède, partie III). Alors $\frac1n\lt \varepsilon$, donc $1-\varepsilon\lt 1-\frac1n\in A$. Par la caractérisation, $\sup A=1$. Comme $1\notin A$, $A$ n'a pas de maximum.</p>
+    </div>
+  </div>
+
+  <h3>3. Droite réelle achevée</h3>
+  <p>On note $\overline{\mathbb{R}}=\mathbb{R}\cup\{-\infty,+\infty\}$, avec $-\infty\lt x\lt +\infty$ pour tout réel $x$. Par convention, si $A$ est non vide et <b>non majorée</b>, on pose $\sup A=+\infty$. Si $A$ est non vide et non minorée, $\inf A=-\infty$. Ainsi, toute partie non vide de $\mathbb{R}$ a une borne supérieure dans $\overline{\mathbb{R}}$.</p>
+
+  <!-- ============ III ============ -->
+  <h2 id="s3">III. Propriété d'Archimède et partie entière</h2>
+  <div class="prop-box">
+    <div class="label">Proposition 4 (propriété d'Archimède)</div>
+    <p>Pour tout $a>0$ et tout $b\in\mathbb{R}$, il existe $n\in\mathbb{N}$ tel que $na>b$.</p>
+    <p><b>Démonstration :</b> par l'absurde, supposons $na\leq b$ pour tout $n\in\mathbb{N}$. Alors $A=\{na\mid n\in\mathbb{N}\}$ est non vide et majorée par $b$, donc admet une borne supérieure $M$ (Théorème 2). Comme $a>0$, $M-a\lt M$ n'est pas un majorant : il existe $n$ tel que $na>M-a$. Mais alors $(n+1)a>M$ avec $(n+1)a\in A$, ce qui contredit le fait que $M$ majore $A$.</p>
+  </div>
+
+  <div class="def-box">
+    <div class="label">Définition 4 (partie entière)</div>
+    <p>Pour tout $x\in\mathbb{R}$, il existe un <b>unique</b> entier relatif $n$ tel que $$n\leq x\lt n+1.$$ Cet entier est la <b>partie entière</b> de $x$, notée $\lfloor x\rfloor$. C'est le plus grand entier inférieur ou égal à $x$.</p>
+  </div>
+  <p><b>Unicité :</b> si $n\leq x\lt n+1$ et $m\leq x\lt m+1$ avec $n,m\in\mathbb{Z}$, alors $n\leq x\lt m+1$ donne $n\lt m+1$, donc $n\leq m$ (ce sont des entiers). Par symétrie $m\leq n$, donc $n=m$. L'existence découle de la propriété d'Archimède.</p>
+
+  <div class="warning-box">
+    <div class="label">Attention aux négatifs</div>
+    <p>$\lfloor2{,}7\rfloor=2$ mais $\lfloor-2{,}7\rfloor=-3$, et non $-2$ : la partie entière arrondit toujours <b>vers le bas</b>. On n'a pas $\lfloor-x\rfloor=-\lfloor x\rfloor$ en général.</p>
+  </div>
+
+  <div class="prop-box">
+    <div class="label">Proposition 5</div>
+    <ul>
+      <li>Pour tout $x\in\mathbb{R}$ : $\lfloor x\rfloor\leq x\lt \lfloor x\rfloor+1$ et $x-1\lt \lfloor x\rfloor\leq x$.</li>
+      <li>Pour tout $x\in\mathbb{R}$ et tout $k\in\mathbb{Z}$ : $\lfloor x+k\rfloor=\lfloor x\rfloor+k$.</li>
+      <li>La fonction $x\mapsto\lfloor x\rfloor$ est croissante sur $\mathbb{R}$.</li>
+    </ul>
+    <p><b>Démonstration du deuxième point :</b> de $\lfloor x\rfloor\leq x\lt \lfloor x\rfloor+1$ on tire $\lfloor x\rfloor+k\leq x+k\lt (\lfloor x\rfloor+k)+1$, avec $\lfloor x\rfloor+k\in\mathbb{Z}$. Par unicité de la partie entière, $\lfloor x+k\rfloor=\lfloor x\rfloor+k$.</p>
+  </div>
+
+  <figure role="img" aria-label="Graphe en escalier de la partie entiere entre moins 2 et 3. Chaque marche est un segment horizontal a hauteur n, ferme a gauche avec un point plein en x egal n, ouvert a droite avec un rond vide en x egal n plus 1. La droite y egal x, en pointilles, reste au-dessus ou sur les marches.">
+    <svg viewBox="0 0 260 240">
+      <line x1="10" y1="140" x2="250" y2="140" stroke="currentColor" stroke-width="1"/>
+      <line x1="100" y1="230" x2="100" y2="10" stroke="currentColor" stroke-width="1"/>
+      <polygon points="250,140 243,136 243,144" fill="currentColor"/>
+      <polygon points="100,10 96,17 104,17" fill="currentColor"/>
+      <text x="244" y="156" font-size="11" fill="currentColor">x</text>
+      <text x="106" y="18" font-size="11" fill="currentColor">y</text>
+      <g font-size="10" fill="currentColor" text-anchor="middle">
+        <text x="20" y="153">−2</text><text x="60" y="153">−1</text><text x="140" y="153">1</text><text x="180" y="153">2</text><text x="220" y="153">3</text>
+      </g>
+      <g font-size="10" fill="currentColor" text-anchor="end">
+        <text x="89" y="104">1</text><text x="89" y="64">2</text><text x="89" y="184">−1</text><text x="89" y="224">−2</text>
+      </g>
+      <line x1="20" y1="220" x2="220" y2="20" stroke="var(--ink-muted)" stroke-width="1" stroke-dasharray="4 4"/>
+      <text x="206" y="24" font-size="11" fill="var(--ink-muted)">y = x</text>
+      <g stroke="var(--accent)" stroke-width="2.5">
+        <line x1="20" y1="220" x2="57" y2="220"/>
+        <line x1="60" y1="180" x2="97" y2="180"/>
+        <line x1="100" y1="140" x2="137" y2="140"/>
+        <line x1="140" y1="100" x2="177" y2="100"/>
+        <line x1="180" y1="60" x2="217" y2="60"/>
+      </g>
+      <g fill="var(--accent)">
+        <circle cx="20" cy="220" r="3.5"/><circle cx="60" cy="180" r="3.5"/><circle cx="100" cy="140" r="3.5"/><circle cx="140" cy="100" r="3.5"/><circle cx="180" cy="60" r="3.5"/>
+      </g>
+      <g fill="var(--paper)" stroke="var(--accent)" stroke-width="1.5">
+        <circle cx="60" cy="220" r="3.5"/><circle cx="100" cy="180" r="3.5"/><circle cx="140" cy="140" r="3.5"/><circle cx="180" cy="100" r="3.5"/><circle cx="220" cy="60" r="3.5"/>
+      </g>
+    </svg>
+    <figcaption>Graphe de $x\mapsto\lfloor x\rfloor$ : chaque marche est fermée à gauche (point plein) et ouverte à droite (rond vide). Le graphe reste sous la droite $y=x$, conformément à $\lfloor x\rfloor\leq x$.</figcaption>
+  </figure>
+
+  <h3>Approximations décimales</h3>
+  <p>Pour $x\in\mathbb{R}$ et $n\in\mathbb{N}$, on pose $d_n=\dfrac{\lfloor10^nx\rfloor}{10^n}$. En divisant $\lfloor10^nx\rfloor\leq10^nx\lt \lfloor10^nx\rfloor+1$ par $10^n$, on obtient $$d_n\leq x\lt d_n+10^{-n}.$$ $d_n$ est l'<b>approximation décimale par défaut</b> de $x$ à $10^{-n}$ près, et $d_n+10^{-n}$ l'approximation par excès. Exemple : pour $x=\pi$ et $n=2$, $d_2=3{,}14$.</p>
+
+  <!-- ============ IV ============ -->
+  <h2 id="s4">IV. Intervalles et densité de $\mathbb{Q}$</h2>
+  <h3>1. Intervalles</h3>
+  <div class="def-box">
+    <div class="label">Définition 5</div>
+    <p>Une partie $I$ de $\mathbb{R}$ est un <b>intervalle</b> si, dès qu'elle contient deux réels, elle contient tous les réels situés entre eux : $$\forall(x,y)\in I^2,\ \forall z\in\mathbb{R},\ x\leq z\leq y\Rightarrow z\in I.$$ On dit aussi que $I$ est une partie <b>convexe</b> de $\mathbb{R}$.</p>
+  </div>
+  <p>Les intervalles de $\mathbb{R}$ sont exactement les ensembles de la forme $[a,b]$, $[a,b[$, $]a,b]$, $]a,b[$, $[a,+\infty[$, $]a,+\infty[$, $]-\infty,b]$, $]-\infty,b[$, ainsi que $\mathbb{R}$ et $\varnothing$ (ce résultat utilise la borne supérieure et est admis ici). Contre-exemple : $[0,1]\cup[2,3]$ n'est pas un intervalle, car il contient $1$ et $2$ mais pas $1{,}5$.</p>
+
+  <h3>2. Densité</h3>
+  <div class="prop-box">
+    <div class="label">Théorème 3 (densité de $\mathbb{Q}$ et de $\mathbb{R}\setminus\mathbb{Q}$)</div>
+    <p>Entre deux réels distincts, il existe toujours un <b>rationnel</b> et un <b>irrationnel</b> : pour tous $a\lt b$, $\ ]a,b[\,\cap\,\mathbb{Q}\neq\varnothing$ et $]a,b[\,\cap\,(\mathbb{R}\setminus\mathbb{Q})\neq\varnothing$.</p>
+    <p><b>Démonstration (rationnel) :</b> comme $b-a>0$, la propriété d'Archimède fournit un entier $q\geq1$ tel que $q(b-a)>1$, c'est-à-dire $qb>qa+1$. On pose $p=\lfloor qa\rfloor+1\in\mathbb{Z}$. Alors $qa\lt p\leq qa+1\lt qb$. En divisant par $q>0$ : $a\lt \frac pq\lt b$.</p>
+    <p><b>Démonstration (irrationnel) :</b> on applique ce qui précède à l'intervalle $]a-\sqrt2,\,b-\sqrt2[$ : il contient un rationnel $r$. Alors $r+\sqrt2\in\,]a,b[$, et $r+\sqrt2$ est irrationnel (sinon $\sqrt2=(r+\sqrt2)-r$ serait rationnel, comme différence de deux rationnels).</p>
+  </div>
+  <div class="remark">Conséquence utile : tout réel est limite d'une suite de rationnels (par exemple ses approximations décimales $d_n$), et aussi d'une suite d'irrationnels. On s'en resservira dans le chapitre sur les suites.</div>
+
+  <!-- ============ EXERCICES ============ -->
+  <h2 id="exercices">Exercices d'entraînement</h2>
+  <p style="color:var(--ink-muted);font-size:.9rem">Trois exercices classiques de début d'année, un par grande notion du chapitre. Pour chacun : l'énoncé, un indice si tu sèches, puis la correction complète.</p>
+
+  <div class="exercise">
+    <div class="tag">Exercice A — inégalité triangulaire</div>
+    <p class="statement">Montrer que pour tous $x,y\in\mathbb{R}$ : $\ |x|+|y|\leq|x+y|+|x-y|$.</p>
+    <details class="disclosure"><summary>Indice</summary>
+      <div class="hint-box">Écris $2x$ et $2y$ à l'aide de $x+y$ et $x-y$, puis applique l'inégalité triangulaire à chacun.</div>
+    </details>
+    <details class="disclosure"><summary>Correction</summary>
+      <div class="solution">
+      <p>On a $2x=(x+y)+(x-y)$, donc par l'inégalité triangulaire $2|x|\leq|x+y|+|x-y|$.</p>
+      <p>De même $2y=(x+y)-(x-y)$, donc $2|y|\leq|x+y|+|x-y|$ (car $|-(x-y)|=|x-y|$).</p>
+      <p>En ajoutant : $2(|x|+|y|)\leq2(|x+y|+|x-y|)$, et on divise par $2$.</p>
+      </div>
+    </details>
+  </div>
+
+  <div class="exercise">
+    <div class="tag">Exercice B — bornes supérieure et inférieure</div>
+    <p class="statement">Soit $A=\left\{\dfrac1n-\dfrac1m\ \middle|\ (n,m)\in(\mathbb{N}^*)^2\right\}$. Montrer que $A$ est bornée, déterminer $\sup A$ et $\inf A$. Sont-ils des maximum et minimum ?</p>
+    <details class="disclosure"><summary>Indice</summary>
+      <div class="hint-box">Encadre $\frac1n$ et $\frac1m$ entre $0$ et $1$. Pour approcher la borne supérieure, fixe $n=1$ et fais grandir $m$ ; puis utilise la caractérisation par $\varepsilon$.</div>
+    </details>
+    <details class="disclosure"><summary>Correction</summary>
+      <div class="solution">
+      <p><b>Majoration :</b> pour tous $n,m\geq1$, $\frac1n\leq1$ et $\frac1m>0$, donc $\frac1n-\frac1m\lt 1$. Donc $1$ majore $A$ et $1\notin A$.</p>
+      <p><b>$\sup A=1$ :</b> soit $\varepsilon>0$. Par Archimède, il existe $m\in\mathbb{N}^*$ tel que $m>\frac1\varepsilon$, donc $\frac1m\lt \varepsilon$. Alors $\frac11-\frac1m=1-\frac1m\in A$ et $1-\frac1m>1-\varepsilon$. La caractérisation donne $\sup A=1$, et ce n'est pas un maximum.</p>
+      <p><b>$\inf A=-1$ :</b> l'ensemble $A$ est symétrique : si $a=\frac1n-\frac1m\in A$, alors $-a=\frac1m-\frac1n\in A$. Donc $-1$ minore $A$, n'est pas atteint, et pour $\varepsilon>0$, $-1+\frac1m\lt -1+\varepsilon$ est dans $A$. Ainsi $\inf A=-1$, qui n'est pas un minimum. En particulier $A\subset\,]-1,1[$ est bornée.</p>
+      </div>
+    </details>
+  </div>
+
+  <div class="exercise">
+    <div class="tag">Exercice C — partie entière</div>
+    <p class="statement">Montrer que pour tout $x\in\mathbb{R}$ : $\ \lfloor x\rfloor+\left\lfloor x+\tfrac12\right\rfloor=\lfloor2x\rfloor$.</p>
+    <details class="disclosure"><summary>Indice</summary>
+      <div class="hint-box">Pose $n=\lfloor x\rfloor$ et $t=x-n\in[0,1[$. Sépare les cas $t\lt \frac12$ et $t\geq\frac12$, et utilise $\lfloor y+k\rfloor=\lfloor y\rfloor+k$ pour $k$ entier.</div>
+    </details>
+    <details class="disclosure"><summary>Correction</summary>
+      <div class="solution">
+      <p>Soit $n=\lfloor x\rfloor$ et $t=x-n$, de sorte que $0\leq t\lt 1$. Alors $x+\frac12=n+\left(t+\frac12\right)$ et $2x=2n+2t$.</p>
+      <p><b>Cas $0\leq t\lt \frac12$ :</b> $t+\frac12\in[\frac12,1[$, donc $\lfloor x+\frac12\rfloor=n$ ; et $2t\in[0,1[$, donc $\lfloor2x\rfloor=2n$. On a bien $n+n=2n$.</p>
+      <p><b>Cas $\frac12\leq t\lt 1$ :</b> $t+\frac12\in[1,\frac32[$, donc $\lfloor x+\frac12\rfloor=n+1$ ; et $2t\in[1,2[$, donc $\lfloor2x\rfloor=2n+1$. On a bien $n+(n+1)=2n+1$.</p>
+      <p>Dans les deux cas l'égalité est vérifiée.</p>
+      </div>
+    </details>
+  </div>
+
+  <!-- ============ QUIZ ============ -->
+  <h2 id="quiz">Quiz express</h2>
+  <div class="quiz">
+    <ol>
+      <li>L'intervalle $[0,1[$ a-t-il un maximum ? Une borne supérieure ?
+        <details><summary>Réponse</summary><p>Pas de maximum, mais une borne supérieure : $\sup[0,1[=1$, qui n'appartient pas à l'ensemble.</p></details></li>
+      <li>Que vaut $\lfloor-2{,}5\rfloor$ ?
+        <details><summary>Réponse</summary><p>$-3$ : c'est le plus grand entier inférieur ou égal à $-2{,}5$.</p></details></li>
+      <li>Si $x\leq y$ et $z\leq t$, a-t-on toujours $x-z\leq y-t$ ?
+        <details><summary>Réponse</summary><p>Non. Avec $x=0,\ y=1,\ z=0,\ t=5$ : $0\leq1-5=-4$ est faux. On ne soustrait pas des inégalités.</p></details></li>
+      <li>Résoudre $|x-3|\lt 2$.
+        <details><summary>Réponse</summary><p>$-2\lt x-3\lt 2$, soit $x\in\,]1,5[$ : les réels à distance strictement inférieure à $2$ de $3$.</p></details></li>
+      <li>L'ensemble $\{x\in\mathbb{Q}\mid x^2\lt 2\}$ a-t-il une borne supérieure dans $\mathbb{Q}$ ? Dans $\mathbb{R}$ ?
+        <details><summary>Réponse</summary><p>Pas dans $\mathbb{Q}$. Dans $\mathbb{R}$, oui : c'est $\sqrt2$ (par densité de $\mathbb{Q}$, on trouve des rationnels aussi proches de $\sqrt2$ qu'on veut en dessous).</p></details></li>
+    </ol>
+  </div>
+
+  <h2 id="sources">Sources</h2>
+  <div class="sources">
+    <p>Ce chapitre a été rédigé en avance, sans les notes de Léane, à partir du programme officiel de mathématiques de MPSI (partie « Nombres réels »), dans l'ordre de la table des matières du recueil d'exercices de la classe. Toutes les démonstrations ont été refaites et vérifiées pas à pas, les exercices ont été résolus intégralement et les figures contrôlées (points pleins et vides de la partie entière, graduations).</p>
+    <ul>
+      <li>Ordre, valeur absolue, inégalité triangulaire, borne supérieure, propriété d'Archimède, partie entière, densité de $\mathbb{Q}$ : résultats standard de début de MPSI, présents dans tous les manuels de référence.</li>
+      <li>La propriété de la borne supérieure (Théorème 2) et la description des intervalles sont admises, comme le prévoit le programme.</li>
+      <li>Exercices A, B et C : exercices classiques, corrigés rédigés pour cette page.</li>
+    </ul>
+    <p>Quand Léane aura traité le chapitre en classe, ses notes permettront d'aligner les notations et la numérotation sur celles du professeur.</p>
+  </div>
+
+  <footer>Le Cahier de Léane — MPSI · Mathématiques · Chapitre 06</footer>
+</main>
+
+</body>
+</html>
