@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trigonométrie</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$','$'], ['\\(','\\)']], displayMath: [['$$','$$'], ['\\[','\\]']],
+    macros: { llbracket: "\\unicode{x27E6}", rrbracket: "\\unicode{x27E7}" }
+  },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js"></script>
+<style>
+  :root{
+    --paper:#FAF8F3; --surface:#FFFFFF; --surface-2:#F1EEE4;
+    --ink:#23231F; --ink-muted:#6B6A5F; --border:#E3DFD1;
+    --accent:#1F3A5F; --accent-ink:#14263F; --accent-soft:#E7EDF5;
+    --red:#B23A46; --red-soft:#F7E7E7;
+    --green:#2F7A4F; --green-soft:#E3F1E8;
+    --gold:#A67C1E; --gold-soft:#F4ECD6;
+    --shadow: 0 1px 2px rgba(32,38,31,.06), 0 6px 20px -8px rgba(32,38,31,.18);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#14171C; --surface:#1B1F26; --surface-2:#242933;
+      --ink:#EDEFF2; --ink-muted:#9AA1AC; --border:#2E3440;
+      --accent:#7FA8E8; --accent-ink:#DCE7F9; --accent-soft:#22344B;
+      --red:#E28B92; --red-soft:#3A2224;
+      --green:#7FC090; --green-soft:#1E2F22;
+      --gold:#D8B45C; --gold-soft:#332B16;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 24px -8px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#14171C; --surface:#1B1F26; --surface-2:#242933;
+    --ink:#EDEFF2; --ink-muted:#9AA1AC; --border:#2E3440;
+    --accent:#7FA8E8; --accent-ink:#DCE7F9; --accent-soft:#22344B;
+    --red:#E28B92; --red-soft:#3A2224;
+    --green:#7FC090; --green-soft:#1E2F22;
+    --gold:#D8B45C; --gold-soft:#332B16;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 24px -8px rgba(0,0,0,.5);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    background:var(--paper); color:var(--ink);
+    font-family:"Public Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+    padding-inline:20px; padding-block:28px; line-height:1.6;
+  }
+  main{max-width:780px;margin:0 auto;}
+  h1,h2,h3,h4{font-family:"Spectral",Georgia,serif;text-wrap:balance;margin:1.4em 0 .5em;}
+  h1{font-size:1.7rem;color:var(--accent-ink);margin-top:0;}
+  h2{font-size:1.3rem;color:var(--accent-ink);border-bottom:2px solid var(--border);padding-bottom:.3em;margin-top:2em;}
+  h3{font-size:1.08rem;}
+  h4{font-size:.98rem;font-style:italic;}
+  p{margin:.7em 0;}
+  a{color:var(--accent);}
+  .mono{font-family:"JetBrains Mono",monospace;}
+
+  header.top{margin-bottom:6px;}
+  header.top .eyebrow{font-family:"JetBrains Mono",monospace;font-size:.78rem;color:var(--ink-muted);letter-spacing:.03em;}
+  header.top nav{font-size:.82rem;margin-top:6px;}
+  header.top nav a{margin-right:14px;}
+
+  .toc{
+    background:var(--surface);border:1px solid var(--border);border-radius:10px;
+    padding:14px 18px;margin:20px 0 30px;box-shadow:var(--shadow);font-size:.9rem;
+  }
+  .toc h2{margin:0 0 8px;font-size:1rem;border:none;padding:0;}
+  .toc ol{margin:0;padding-left:1.3em;}
+  .toc li{margin-bottom:2px;}
+  .toc a{text-decoration:none;}
+  .toc a:hover{text-decoration:underline;}
+
+  .def-box, .prop-box{
+    background:var(--surface);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;
+    padding:12px 16px;margin:1em 0;box-shadow:var(--shadow);
+  }
+  .def-box .label, .prop-box .label{font-weight:700;color:var(--accent-ink);font-family:"Spectral",serif;}
+
+  .method-box{
+    background:var(--gold-soft);border:1px solid color-mix(in srgb, var(--gold) 45%, transparent);
+    border-radius:8px;padding:12px 16px;margin:1em 0;
+  }
+  .method-box .label{font-weight:700;color:var(--gold);}
+
+  .warning-box{
+    background:var(--red-soft);border:1px solid color-mix(in srgb, var(--red) 45%, transparent);
+    border-radius:8px;padding:12px 16px;margin:1em 0;
+  }
+  .warning-box .label{font-weight:700;color:var(--red);}
+
+  .remark{
+    border-left:3px solid var(--border);padding:6px 14px;margin:1em 0;color:var(--ink-muted);font-size:.93rem;
+  }
+
+  .exercise{
+    background:var(--surface);border:1px solid var(--border);border-radius:10px;
+    padding:14px 18px;margin:1.2em 0;box-shadow:var(--shadow);
+  }
+  .exercise .tag{font-family:"JetBrains Mono",monospace;font-size:.72rem;font-weight:700;letter-spacing:.05em;color:var(--accent);text-transform:uppercase;}
+  .exercise .statement{font-style:italic;margin:.4em 0 .8em;}
+  .exercise .solution{border-top:1px dashed var(--border);padding-top:.7em;margin-top:.4em;}
+  .exercise .solution .lbl{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-muted);margin-bottom:4px;}
+
+  figure{margin:1.4em 0;text-align:center;}
+  figure svg{max-width:100%;height:auto;color:var(--ink);}
+  figcaption{font-size:.82rem;color:var(--ink-muted);margin-top:6px;}
+
+  table.truth{border-collapse:collapse;margin:1em auto;font-family:"JetBrains Mono",monospace;font-size:.9rem;}
+  table.truth th,table.truth td{border:1px solid var(--border);padding:5px 16px;text-align:center;}
+  table.truth th{background:var(--surface-2);}
+
+  .wide{overflow-x:auto;}
+
+  .hint-box{background:var(--accent-soft);border:1px dashed var(--accent);border-radius:8px;padding:10px 14px;margin:0;font-size:.9rem;}
+  .exercise .src{font-size:.76rem;color:var(--ink-muted);margin-top:10px;font-family:"JetBrains Mono",monospace;}
+
+  .exercise details{margin:.5em 0 0;}
+  .exercise summary{
+    cursor:pointer;list-style:none;display:flex;align-items:center;gap:6px;
+    font-family:"JetBrains Mono",monospace;font-size:.72rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+    color:var(--accent-ink);padding:6px 0;user-select:none;
+  }
+  .exercise summary::-webkit-details-marker{display:none;}
+  .exercise summary::before{content:"▸";display:inline-block;color:var(--accent);font-size:.85rem;transition:transform .15s ease;}
+  .exercise details[open] summary::before{transform:rotate(90deg);}
+  .exercise details > .hint-box, .exercise details > .solution{margin-top:2px;}
+  .exercise details > .solution{border-top:none;padding-top:0;}
+
+  .sources{font-size:.86rem;color:var(--ink-muted);}
+  .sources ul{padding-left:1.2em;}
+
+  footer{margin-top:40px;color:var(--ink-muted);font-size:.78rem;text-align:center;}
+  .quiz ol{padding-left:1.3em;}
+  .quiz li{margin-bottom:.9em;}
+  .quiz details summary{cursor:pointer;font-size:.85rem;color:var(--accent);font-weight:600;}
+  .quiz details p{margin:.3em 0 0;font-size:.93rem;}
+</style>
+</head>
+<body>
+<script src="chapters-data.js?v=4"></script>
+<script src="site-nav.js?v=2" data-current="chapitre-7-trigonometrie.html"></script>
+<main>
+  <header class="top">
+    <div class="eyebrow">MPSI · MATHÉMATIQUES · CHAPITRE 07</div>
+    <h1>Trigonométrie</h1>
+    <nav><a href="#s1">I. Cercle trigonométrique</a> · <a href="#s2">II. Formules</a> · <a href="#s3">III. Transformations</a> · <a href="#s4">IV. Équations</a> · <a href="#exercices">Exercices</a> · <a href="#quiz">Quiz</a> · <a href="#sources">Sources</a></nav>
+  </header>
+
+  <div class="toc">
+    <h2>Sommaire</h2>
+    <ol>
+      <li><a href="#s1">Cercle trigonométrique, cosinus, sinus, tangente</a></li>
+      <li><a href="#s2">Formules d'addition et de duplication</a></li>
+      <li><a href="#s3">Linéarisation, produits et sommes, $a\cos x+b\sin x$</a></li>
+      <li><a href="#s4">Équations et inéquations trigonométriques</a></li>
+      <li><a href="#exercices">Exercices d'entraînement</a></li>
+      <li><a href="#quiz">Quiz express (5 questions)</a></li>
+    </ol>
+  </div>
+
+  <div class="remark">Chapitre rédigé <b>en avance</b>, à partir du programme officiel de MPSI, avant son traitement en classe. Les notations et les numéros de résultats peuvent différer de ceux du professeur : en cas de doute, c'est le cours du professeur qui fait foi.</div>
+
+  <!-- ============ I ============ -->
+  <h2 id="s1">I. Cercle trigonométrique, cosinus, sinus, tangente</h2>
+  <h3>1. Congruence modulo $2\pi$</h3>
+  <p>On rappelle (chapitre 5) que pour $x,y\in\mathbb{R}$ et $\alpha>0$, $x\equiv y\,[\alpha]$ signifie qu'il existe $k\in\mathbb{Z}$ tel que $x=y+k\alpha$. En trigonométrie, on travaille surtout modulo $2\pi$ et modulo $\pi$ : deux réels congrus modulo $2\pi$ repèrent le <b>même point</b> du cercle trigonométrique.</p>
+
+  <h3>2. Définitions</h3>
+  <div class="def-box">
+    <div class="label">Définition 1</div>
+    <p>Le plan est muni d'un repère orthonormé $(O,\vec\imath,\vec\jmath)$. Le <b>cercle trigonométrique</b> $\mathcal{C}$ est le cercle de centre $O$ et de rayon $1$. À tout réel $x$ on associe le point $M(x)$ de $\mathcal{C}$ tel que l'angle orienté $(\vec\imath,\overrightarrow{OM})$ mesure $x$ radians.</p>
+    <p>Le <b>cosinus</b> et le <b>sinus</b> de $x$ sont l'abscisse et l'ordonnée de $M(x)$ : $M(x)=(\cos x,\sin x)$.</p>
+    <p>Pour $x\not\equiv\frac\pi2\,[\pi]$, on définit la <b>tangente</b> : $\tan x=\dfrac{\sin x}{\cos x}$.</p>
+  </div>
+
+  <figure role="img" aria-label="Cercle trigonometrique de centre O et de rayon 1. Un point M sur le cercle forme un angle x avec l'axe des abscisses. La projection de M sur l'axe horizontal donne cos x, sa projection sur l'axe vertical donne sin x. La droite OM prolongee coupe la tangente verticale au cercle en x egal 1 au point T, dont l'ordonnee est tan x.">
+    <svg viewBox="0 0 300 290">
+      <line x1="30" y1="150" x2="280" y2="150" stroke="currentColor" stroke-width="1"/>
+      <line x1="150" y1="275" x2="150" y2="25" stroke="currentColor" stroke-width="1"/>
+      <polygon points="280,150 273,146 273,154" fill="currentColor"/>
+      <polygon points="150,25 146,32 154,32" fill="currentColor"/>
+      <circle cx="150" cy="150" r="100" fill="none" stroke="currentColor" stroke-width="1.6"/>
+      <line x1="250" y1="40" x2="250" y2="270" stroke="var(--ink-muted)" stroke-width="1" stroke-dasharray="4 4"/>
+      <line x1="150" y1="150" x2="250" y2="66.1" stroke="var(--ink-muted)" stroke-width="1" stroke-dasharray="4 4"/>
+      <line x1="150" y1="150" x2="226.6" y2="85.7" stroke="currentColor" stroke-width="1.6"/>
+      <line x1="226.6" y1="85.7" x2="226.6" y2="150" stroke="var(--accent)" stroke-width="1.2" stroke-dasharray="3 3"/>
+      <line x1="226.6" y1="85.7" x2="150" y2="85.7" stroke="var(--accent)" stroke-width="1.2" stroke-dasharray="3 3"/>
+      <line x1="150" y1="150" x2="226.6" y2="150" stroke="var(--accent)" stroke-width="4" opacity=".7"/>
+      <line x1="150" y1="150" x2="150" y2="85.7" stroke="var(--red)" stroke-width="4" opacity=".7"/>
+      <line x1="250" y1="150" x2="250" y2="66.1" stroke="var(--green)" stroke-width="4" opacity=".75"/>
+      <path d="M175 150 A25 25 0 0 0 169.2 133.9" fill="none" stroke="currentColor" stroke-width="1.2"/>
+      <circle cx="226.6" cy="85.7" r="3.5" fill="currentColor"/>
+      <circle cx="250" cy="66.1" r="3.5" fill="var(--green)"/>
+      <text x="180" y="143" font-size="12" fill="currentColor">x</text>
+      <text x="228" y="78" font-size="12" fill="currentColor">M</text>
+      <text x="256" y="66" font-size="12" fill="var(--green)">T</text>
+      <text x="138" y="166" font-size="12" fill="currentColor">O</text>
+      <text x="188" y="166" font-size="11" text-anchor="middle" fill="var(--accent)">cos x</text>
+      <text x="144" y="122" font-size="11" text-anchor="end" fill="var(--red)">sin x</text>
+      <text x="256" y="112" font-size="11" fill="var(--green)">tan x</text>
+      <text x="254" y="166" font-size="11" fill="currentColor">1</text>
+      <text x="140" y="46" font-size="11" text-anchor="end" fill="currentColor">1</text>
+    </svg>
+    <figcaption>$\cos x$ et $\sin x$ sont les coordonnées de $M$. La droite $(OM)$ coupe la tangente au cercle au point d'abscisse $1$ en $T(1,\tan x)$ (théorème de Thalès).</figcaption>
+  </figure>
+
+  <div class="prop-box">
+    <div class="label">Proposition 1 (propriétés immédiates)</div>
+    <ul>
+      <li>Pour tout $x\in\mathbb{R}$ : $\cos^2x+\sin^2x=1$, et $-1\leq\cos x\leq1$, $-1\leq\sin x\leq1$.</li>
+      <li>$\cos$ et $\sin$ sont $2\pi$-périodiques ; $\tan$ est $\pi$-périodique.</li>
+      <li>$\cos$ est paire ; $\sin$ et $\tan$ sont impaires.</li>
+      <li>Là où $\tan$ est définie : $1+\tan^2x=\dfrac1{\cos^2x}$.</li>
+    </ul>
+    <p><b>Démonstration du dernier point :</b> $1+\tan^2x=\dfrac{\cos^2x+\sin^2x}{\cos^2x}=\dfrac1{\cos^2x}$.</p>
+  </div>
+
+  <h3>3. Angles associés</h3>
+  <p>Ces formules se lisent directement sur le cercle, par symétrie. Il vaut mieux savoir les retrouver avec un dessin que les apprendre par cœur.</p>
+  <div class="wide">
+    <table class="truth">
+      <tr><th></th><th>$-x$</th><th>$\pi-x$</th><th>$\pi+x$</th><th>$\frac\pi2-x$</th><th>$\frac\pi2+x$</th></tr>
+      <tr><th>$\cos$</th><td>$\cos x$</td><td>$-\cos x$</td><td>$-\cos x$</td><td>$\sin x$</td><td>$-\sin x$</td></tr>
+      <tr><th>$\sin$</th><td>$-\sin x$</td><td>$\sin x$</td><td>$-\sin x$</td><td>$\cos x$</td><td>$\cos x$</td></tr>
+    </table>
+  </div>
+
+  <h3>4. Valeurs remarquables</h3>
+  <div class="wide">
+    <table class="truth">
+      <tr><th>$x$</th><td>$0$</td><td>$\frac\pi6$</td><td>$\frac\pi4$</td><td>$\frac\pi3$</td><td>$\frac\pi2$</td></tr>
+      <tr><th>$\cos x$</th><td>$1$</td><td>$\frac{\sqrt3}2$</td><td>$\frac{\sqrt2}2$</td><td>$\frac12$</td><td>$0$</td></tr>
+      <tr><th>$\sin x$</th><td>$0$</td><td>$\frac12$</td><td>$\frac{\sqrt2}2$</td><td>$\frac{\sqrt3}2$</td><td>$1$</td></tr>
+      <tr><th>$\tan x$</th><td>$0$</td><td>$\frac{\sqrt3}3$</td><td>$1$</td><td>$\sqrt3$</td><td>—</td></tr>
+    </table>
+  </div>
+  <div class="remark">Moyen mnémotechnique : les sinus de $0,\frac\pi6,\frac\pi4,\frac\pi3,\frac\pi2$ valent $\frac{\sqrt0}2,\frac{\sqrt1}2,\frac{\sqrt2}2,\frac{\sqrt3}2,\frac{\sqrt4}2$. Les cosinus sont les mêmes valeurs dans l'ordre inverse.</div>
+
+  <!-- ============ II ============ -->
+  <h2 id="s2">II. Formules d'addition et de duplication</h2>
+  <div class="prop-box">
+    <div class="label">Théorème 1 (formules d'addition)</div>
+    <p>Pour tous $a,b\in\mathbb{R}$ :</p>
+    <p>$$\cos(a-b)=\cos a\cos b+\sin a\sin b\qquad\cos(a+b)=\cos a\cos b-\sin a\sin b$$ $$\sin(a+b)=\sin a\cos b+\cos a\sin b\qquad\sin(a-b)=\sin a\cos b-\cos a\sin b$$</p>
+    <p>Et si $a$, $b$ et $a+b$ ne sont pas congrus à $\frac\pi2$ modulo $\pi$ : $\ \tan(a+b)=\dfrac{\tan a+\tan b}{1-\tan a\tan b}$.</p>
+  </div>
+  <div class="method-box">
+    <div class="label">Démonstration</div>
+    <p><b>$\cos(a-b)$ :</b> soient $\vec u=(\cos a,\sin a)$ et $\vec v=(\cos b,\sin b)$, deux vecteurs unitaires qui font entre eux un angle $a-b$. Le produit scalaire se calcule de deux façons : avec les coordonnées, $\vec u\cdot\vec v=\cos a\cos b+\sin a\sin b$ ; avec l'angle, $\vec u\cdot\vec v=\|\vec u\|\,\|\vec v\|\cos(a-b)=\cos(a-b)$.</p>
+    <p><b>$\cos(a+b)$ :</b> on remplace $b$ par $-b$, avec $\cos(-b)=\cos b$ et $\sin(-b)=-\sin b$.</p>
+    <p><b>$\sin(a+b)$ :</b> $\sin(a+b)=\cos\!\left(\frac\pi2-a-b\right)=\cos\!\left(\left(\frac\pi2-a\right)-b\right)=\sin a\cos b+\cos a\sin b$, en utilisant $\cos(\frac\pi2-a)=\sin a$ et $\sin(\frac\pi2-a)=\cos a$. Pour $\sin(a-b)$, on remplace encore $b$ par $-b$.</p>
+    <p><b>$\tan(a+b)$ :</b> on écrit $\tan(a+b)=\dfrac{\sin a\cos b+\cos a\sin b}{\cos a\cos b-\sin a\sin b}$ et on divise le numérateur et le dénominateur par $\cos a\cos b\neq0$.</p>
+  </div>
+
+  <div class="prop-box">
+    <div class="label">Corollaire (formules de duplication)</div>
+    <p>En prenant $b=a$ : $$\sin2a=2\sin a\cos a\qquad\cos2a=\cos^2a-\sin^2a=2\cos^2a-1=1-2\sin^2a$$ et, là où c'est défini, $\tan2a=\dfrac{2\tan a}{1-\tan^2a}$.</p>
+  </div>
+  <div class="warning-box">
+    <div class="label">Erreur classique</div>
+    <p>$\cos(a+b)\neq\cos a+\cos b$ et $\sin2a\neq2\sin a$. Test rapide : avec $a=b=\frac\pi2$, $\cos(a+b)=\cos\pi=-1$, alors que $\cos a+\cos b=0$.</p>
+  </div>
+
+  <!-- ============ III ============ -->
+  <h2 id="s3">III. Linéarisation, produits et sommes, $a\cos x+b\sin x$</h2>
+  <h3>1. Linéarisation</h3>
+  <div class="prop-box">
+    <div class="label">Proposition 2</div>
+    <p>$$\cos^2a=\frac{1+\cos2a}2\qquad\sin^2a=\frac{1-\cos2a}2$$</p>
+    <p>On les obtient en isolant $\cos^2a$ dans $\cos2a=2\cos^2a-1$, et $\sin^2a$ dans $\cos2a=1-2\sin^2a$. Elles servent surtout à calculer des primitives, comme celle de $\cos^2$ (chapitre 12).</p>
+  </div>
+
+  <h3>2. Transformer un produit en somme, et inversement</h3>
+  <div class="prop-box">
+    <div class="label">Proposition 3 (produit → somme)</div>
+    <p>$$\cos a\cos b=\tfrac12\big[\cos(a-b)+\cos(a+b)\big]\qquad\sin a\sin b=\tfrac12\big[\cos(a-b)-\cos(a+b)\big]$$ $$\sin a\cos b=\tfrac12\big[\sin(a+b)+\sin(a-b)\big]$$</p>
+    <p><b>Démonstration :</b> on ajoute ou on soustrait membre à membre les formules d'addition. Par exemple, $\cos(a-b)+\cos(a+b)=2\cos a\cos b$.</p>
+  </div>
+  <div class="prop-box">
+    <div class="label">Proposition 4 (somme → produit)</div>
+    <p>Pour tous $p,q\in\mathbb{R}$ :</p>
+    <p>$$\cos p+\cos q=2\cos\tfrac{p+q}2\cos\tfrac{p-q}2\qquad\cos p-\cos q=-2\sin\tfrac{p+q}2\sin\tfrac{p-q}2$$ $$\sin p+\sin q=2\sin\tfrac{p+q}2\cos\tfrac{p-q}2\qquad\sin p-\sin q=2\cos\tfrac{p+q}2\sin\tfrac{p-q}2$$</p>
+    <p><b>Démonstration :</b> on pose $a=\frac{p+q}2$ et $b=\frac{p-q}2$, de sorte que $a+b=p$ et $a-b=q$, puis on applique la Proposition 3.</p>
+  </div>
+  <div class="remark">Il est inutile de retenir ces huit formules : il suffit de savoir les redémontrer à partir des formules d'addition. Pour vérifier un signe, on teste avec des valeurs simples, par exemple $p=\frac\pi2$ et $q=0$.</div>
+
+  <h3>3. Transformer $a\cos x+b\sin x$</h3>
+  <div class="prop-box">
+    <div class="label">Proposition 5</div>
+    <p>Soient $(a,b)\neq(0,0)$ et $R=\sqrt{a^2+b^2}$. Il existe $\varphi\in\mathbb{R}$ tel que $\cos\varphi=\dfrac aR$ et $\sin\varphi=\dfrac bR$, et alors, pour tout $x\in\mathbb{R}$ : $$a\cos x+b\sin x=R\cos(x-\varphi).$$</p>
+    <p><b>Démonstration :</b> $\left(\frac aR\right)^2+\left(\frac bR\right)^2=1$, donc le point $\left(\frac aR,\frac bR\right)$ est sur le cercle trigonométrique : c'est $M(\varphi)$ pour un certain $\varphi$. Puis $R\cos(x-\varphi)=R(\cos x\cos\varphi+\sin x\sin\varphi)=a\cos x+b\sin x$.</p>
+  </div>
+  <div class="method-box">
+    <div class="label">Méthode</div>
+    <p>Pour résoudre $a\cos x+b\sin x=c$ : on calcule $R$, on factorise par $R$, on reconnaît $\cos\varphi$ et $\sin\varphi$ parmi les valeurs remarquables, puis on se ramène à $\cos(x-\varphi)=\frac cR$ (voir l'exercice B).</p>
+  </div>
+
+  <h3>4. Formules en $\tan\frac x2$</h3>
+  <p>Pour $x\not\equiv\pi\,[2\pi]$, en posant $t=\tan\frac x2$ : $$\cos x=\frac{1-t^2}{1+t^2}\qquad\sin x=\frac{2t}{1+t^2}.$$ Démonstration : $\cos x=\cos^2\frac x2-\sin^2\frac x2$ et $\sin x=2\sin\frac x2\cos\frac x2$. On divise par $1=\cos^2\frac x2+\sin^2\frac x2$, puis numérateur et dénominateur par $\cos^2\frac x2$.</p>
+
+  <!-- ============ IV ============ -->
+  <h2 id="s4">IV. Équations et inéquations trigonométriques</h2>
+  <div class="prop-box">
+    <div class="label">Théorème 2</div>
+    <p>Pour tous $x,a\in\mathbb{R}$ :</p>
+    <ul>
+      <li>$\cos x=\cos a\iff x\equiv a\,[2\pi]$ ou $x\equiv-a\,[2\pi]$ ;</li>
+      <li>$\sin x=\sin a\iff x\equiv a\,[2\pi]$ ou $x\equiv\pi-a\,[2\pi]$ ;</li>
+      <li>$\tan x=\tan a\iff x\equiv a\,[\pi]$ (pour $x,a\not\equiv\frac\pi2\,[\pi]$).</li>
+    </ul>
+    <p><b>Idée de la preuve :</b> sur le cercle, les points d'abscisse $\cos a$ sont $M(a)$ et son symétrique par rapport à l'axe des abscisses, $M(-a)$. Les points d'ordonnée $\sin a$ sont $M(a)$ et son symétrique par rapport à l'axe des ordonnées, $M(\pi-a)$.</p>
+  </div>
+  <div class="method-box">
+    <div class="label">Méthode — résoudre $\cos x=c$</div>
+    <p>1. Si $|c|>1$, il n'y a aucune solution. 2. Sinon, on trouve un $a$ tel que $\cos a=c$ (valeur remarquable, ou $a=\arccos c$, qu'on verra au chapitre 10). 3. On écrit $\cos x=\cos a$ et on applique le Théorème 2. 4. Si on cherche les solutions dans un intervalle, on donne à $k$ toutes les valeurs entières qui conviennent.</p>
+  </div>
+  <div class="exercise">
+    <div class="tag">Exemple</div>
+    <p class="statement">Résoudre $\sin x=-\frac12$ sur $\mathbb{R}$, puis sur $[0,2\pi[$.</p>
+    <div class="solution">
+      <p>$-\frac12=\sin\left(-\frac\pi6\right)$. Donc $x\equiv-\frac\pi6\,[2\pi]$ ou $x\equiv\pi+\frac\pi6=\frac{7\pi}6\,[2\pi]$. L'ensemble des solutions est $\left\{-\frac\pi6+2k\pi,\ \frac{7\pi}6+2k\pi\ \middle|\ k\in\mathbb{Z}\right\}$.</p>
+      <p>Sur $[0,2\pi[$ : $-\frac\pi6+2\pi=\frac{11\pi}6$ et $\frac{7\pi}6$. Les solutions sont $\frac{7\pi}6$ et $\frac{11\pi}6$.</p>
+    </div>
+  </div>
+  <div class="method-box">
+    <div class="label">Méthode — inéquations</div>
+    <p>On résout d'abord l'équation associée, puis on lit la réponse <b>sur le cercle</b>. Exemple : sur $]-\pi,\pi]$, $\cos x\geq\frac12\iff x\in\left[-\frac\pi3,\frac\pi3\right]$, car ce sont les points du cercle d'abscisse au moins $\frac12$.</p>
+  </div>
+  <div class="prop-box">
+    <div class="label">Proposition 6 (une inégalité utile)</div>
+    <p>Pour tout $x\in\mathbb{R}$ : $|\sin x|\leq|x|$.</p>
+    <p style="font-size:.88rem;color:var(--ink-muted)">Interprétation : sur le cercle, la longueur $|\sin x|$ de la projection est inférieure à la longueur $|x|$ de l'arc. La démonstration rigoureuse sera faite avec la dérivation (chapitre 11).</p>
+  </div>
+
+  <!-- ============ EXERCICES ============ -->
+  <h2 id="exercices">Exercices d'entraînement</h2>
+  <p style="color:var(--ink-muted);font-size:.9rem">Trois exercices classiques, un par grande technique du chapitre. Pour chacun : l'énoncé, un indice si tu sèches, puis la correction complète.</p>
+
+  <div class="exercise">
+    <div class="tag">Exercice A — équation avec un angle double</div>
+    <p class="statement">Résoudre $\cos(2x)=\cos x$ sur $\mathbb{R}$, puis donner les solutions dans $[0,2\pi[$.</p>
+    <details class="disclosure"><summary>Indice</summary>
+      <div class="hint-box">C'est directement une équation du type $\cos X=\cos a$, avec $X=2x$ et $a=x$ : applique le Théorème 2.</div>
+    </details>
+    <details class="disclosure"><summary>Correction</summary>
+      <div class="solution">
+      <p>D'après le Théorème 2 : $2x\equiv x\,[2\pi]$ ou $2x\equiv-x\,[2\pi]$.</p>
+      <p>Premier cas : $2x=x+2k\pi$, donc $x=2k\pi$ ($k\in\mathbb{Z}$). Second cas : $3x=2k\pi$, donc $x=\frac{2k\pi}3$ ($k\in\mathbb{Z}$). Le premier ensemble est inclus dans le second (prendre $k$ multiple de $3$). Donc l'ensemble des solutions est $\left\{\frac{2k\pi}3\ \middle|\ k\in\mathbb{Z}\right\}$.</p>
+      <p>Dans $[0,2\pi[$ : $0$, $\frac{2\pi}3$ et $\frac{4\pi}3$. Vérification pour $x=\frac{2\pi}3$ : $\cos\frac{4\pi}3=-\frac12=\cos\frac{2\pi}3$.</p>
+      </div>
+    </details>
+  </div>
+
+  <div class="exercise">
+    <div class="tag">Exercice B — équation $a\cos x+b\sin x=c$</div>
+    <p class="statement">Résoudre sur $\mathbb{R}$ : $\ \sqrt3\cos x-\sin x=1$.</p>
+    <details class="disclosure"><summary>Indice</summary>
+      <div class="hint-box">Ici $a=\sqrt3$, $b=-1$, donc $R=2$. Divise par $2$ et reconnais $\cos\frac\pi6$ et $\sin\frac\pi6$.</div>
+    </details>
+    <details class="disclosure"><summary>Correction</summary>
+      <div class="solution">
+      <p>$R=\sqrt{3+1}=2$. En divisant par $2$ : $\frac{\sqrt3}2\cos x-\frac12\sin x=\frac12$, c'est-à-dire $\cos\frac\pi6\cos x-\sin\frac\pi6\sin x=\frac12$, soit $\cos\left(x+\frac\pi6\right)=\frac12=\cos\frac\pi3$.</p>
+      <p>Donc $x+\frac\pi6\equiv\frac\pi3\,[2\pi]$ ou $x+\frac\pi6\equiv-\frac\pi3\,[2\pi]$, c'est-à-dire $x\equiv\frac\pi6\,[2\pi]$ ou $x\equiv-\frac\pi2\,[2\pi]$.</p>
+      <p>Vérification : pour $x=\frac\pi6$, $\sqrt3\cdot\frac{\sqrt3}2-\frac12=\frac32-\frac12=1$. Pour $x=-\frac\pi2$, $\sqrt3\cdot0-(-1)=1$.</p>
+      </div>
+    </details>
+  </div>
+
+  <div class="exercise">
+    <div class="tag">Exercice C — valeurs exactes</div>
+    <p class="statement">Calculer la valeur exacte de $\cos\frac\pi{12}$, puis celle de $\tan\frac\pi8$.</p>
+    <details class="disclosure"><summary>Indice</summary>
+      <div class="hint-box">$\frac\pi{12}=\frac\pi3-\frac\pi4$. Pour $\tan\frac\pi8$, utilise $\tan\frac\pi4=1$ et la formule de duplication de la tangente, puis choisis la bonne racine.</div>
+    </details>
+    <details class="disclosure"><summary>Correction</summary>
+      <div class="solution">
+      <p><b>$\cos\frac\pi{12}$ :</b> $\cos\left(\frac\pi3-\frac\pi4\right)=\cos\frac\pi3\cos\frac\pi4+\sin\frac\pi3\sin\frac\pi4=\frac12\cdot\frac{\sqrt2}2+\frac{\sqrt3}2\cdot\frac{\sqrt2}2=\dfrac{\sqrt2+\sqrt6}4$.</p>
+      <p><b>$\tan\frac\pi8$ :</b> on pose $t=\tan\frac\pi8$. Comme $\frac\pi8\in\left]0,\frac\pi2\right[$, on a $t>0$. La formule $\tan2a=\frac{2\tan a}{1-\tan^2a}$ avec $a=\frac\pi8$ donne $1=\frac{2t}{1-t^2}$, donc $t^2+2t-1=0$. Les racines sont $-1\pm\sqrt2$, et la seule positive est $t=\sqrt2-1$. Donc $\tan\frac\pi8=\sqrt2-1$.</p>
+      </div>
+    </details>
+  </div>
+
+  <!-- ============ QUIZ ============ -->
+  <h2 id="quiz">Quiz express</h2>
+  <div class="quiz">
+    <ol>
+      <li>Que vaut $\cos(\pi-x)$ ?
+        <details><summary>Réponse</summary><p>$-\cos x$ : les points $M(x)$ et $M(\pi-x)$ sont symétriques par rapport à l'axe des ordonnées.</p></details></li>
+      <li>Résoudre $\cos x=\frac12$ sur $\mathbb{R}$.
+        <details><summary>Réponse</summary><p>$x\equiv\frac\pi3\,[2\pi]$ ou $x\equiv-\frac\pi3\,[2\pi]$.</p></details></li>
+      <li>Pour quels réels $\tan x$ est-elle définie ?
+        <details><summary>Réponse</summary><p>Pour $x\not\equiv\frac\pi2\,[\pi]$, c'est-à-dire là où $\cos x\neq0$.</p></details></li>
+      <li>Exprimer $\cos^2x$ en fonction de $\cos2x$.
+        <details><summary>Réponse</summary><p>$\cos^2x=\dfrac{1+\cos2x}2$.</p></details></li>
+      <li>A-t-on $\sin(2x)=2\sin x$ ?
+        <details><summary>Réponse</summary><p>Non, $\sin2x=2\sin x\cos x$. Contre-exemple : pour $x=\frac\pi2$, $\sin\pi=0$ mais $2\sin\frac\pi2=2$.</p></details></li>
+    </ol>
+  </div>
+
+  <h2 id="sources">Sources</h2>
+  <div class="sources">
+    <p>Ce chapitre a été rédigé en avance, sans les notes de Léane, à partir du programme officiel de mathématiques de MPSI (partie « Trigonométrie »), dans l'ordre de la table des matières du recueil d'exercices de la classe. Toutes les formules ont été redémontrées et contrôlées sur des valeurs test, les exercices ont été résolus intégralement et vérifiés, et la figure a été construite à l'échelle (angle de 40°).</p>
+    <ul>
+      <li>Formules d'addition démontrées par le produit scalaire ; les autres formules en sont déduites.</li>
+      <li>L'étude complète des fonctions $\cos$, $\sin$, $\tan$ (dérivées, courbes) et des fonctions réciproques $\arccos$, $\arcsin$, $\arctan$ viendra au chapitre 10 (Fonctions usuelles).</li>
+      <li>Exercices A, B et C : exercices classiques, corrigés rédigés pour cette page.</li>
+    </ul>
+    <p>Quand Léane aura traité le chapitre en classe, ses notes permettront d'aligner les notations et la numérotation sur celles du professeur.</p>
+  </div>
+
+  <footer>Le Cahier de Léane — MPSI · Mathématiques · Chapitre 07</footer>
+</main>
+
+</body>
+</html>
