@@ -8,14 +8,14 @@ window.SITE_CHAPTERS = [
   { subject: "Mathématiques", title: "Chapitre 4 — Systèmes linéaires", url: "chapitre-4-systemes-lineaires.html", addedAt: "2026-09-20" },
   { subject: "Mathématiques", title: "Chapitre 5 — Relations d'ordre, relations d'équivalence", url: "chapitre-5-relations.html", addedAt: "2026-09-20" },
   { subject: "Mathématiques", title: "Chapitre 6 — Propriétés de ℝ", url: "chapitre-6-proprietes-de-r.html", addedAt: "2026-09-27" },
-  { subject: "Mathématiques", title: "Chapitre 7 — Trigonométrie", url: "chapitre-7-trigonometrie.html", addedAt: "2026-09-27" }
+  { subject: "Mathématiques", title: "Chapitre 7 — Trigonométrie", url: "chapitre-7-trigonometrie.html", addedAt: "2026-09-27" },
+  { subject: "Mathématiques", title: "Chapitre 8 — Nombres complexes", url: "chapitre-8-nombres-complexes.html", addedAt: "2026-09-28" }
 ];
 
 // Chapitres prévus mais pas encore rédigés, dans l'ordre de la progression
 // du professeur. Quand un chapitre est publié, on retire sa ligne d'ici et
 // on l'ajoute dans SITE_CHAPTERS ci-dessus.
 window.SITE_UPCOMING = [
-  { subject: "Mathématiques", num: 8, title: "Chapitre 8 — Nombres complexes" },
   { subject: "Mathématiques", num: 9, title: "Chapitre 9 — Structures algébriques" },
   { subject: "Mathématiques", num: 10, title: "Chapitre 10 — Fonctions usuelles et généralités" },
   { subject: "Mathématiques", num: 11, title: "Chapitre 11 — Dérivation" },
